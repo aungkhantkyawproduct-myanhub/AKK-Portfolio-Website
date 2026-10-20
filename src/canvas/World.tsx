@@ -3,5 +3,7 @@ import { Stars } from '@react-three/drei';
 import Earth from './earth/Earth';
 import CameraRig from './CameraRig';
 import Seed from './seed/Seed';
-export default function World(){return <Canvas camera={{position:[0,6,24],fov:45}} dpr={[1,1.5]} gl={{antialias:true,logarithmicDepthBuffer:true}}><color attach="background" args={['#05070d']}/><ambientLight intensity={.5}/><directionalLight position={[-10,10,10]} intensity={3}/><Stars radius={80} depth={40} count={1600} factor={2} fade/><Earth/><CameraRig/><Seed/></Canvas>}
+import Tree from './tree/Tree';
+export default function World(){return <Canvas camera={{position:[0,6,24],fov:45}} dpr={[1,1.5]} gl={{antialias:true,logarithmicDepthBuffer:true}}><color attach="background" args={['#05070d']}/><ambientLight intensity={.5}/><directionalLight position={[-10,10,10]} intensity={3}/><Stars radius={80} depth={40} count={1600} factor={2} fade/><Earth/><CameraRig/><Seed/><Tree/></Canvas>}
+
 

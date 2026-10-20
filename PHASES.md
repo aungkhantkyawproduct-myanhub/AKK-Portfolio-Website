@@ -12,3 +12,7 @@ Simplified: cloud noise instead of a cloud texture; night-map loader ready, asse
 ## Phase 3
 Done: camera/target curves, pointer parallax and drag, fixed surface seed with displacement crack shader, soil cross-section, particles, CV summary and education. Build and 16 screenshots passed without page errors. Screenshot review prompted closer seed framing and longer capture settling.
 Simplified: sparkles suggest tending water/light; soil is stylized. Layered cloud descent and field-device performance remain unverified.
+
+## Phase 4
+Done: deterministic branching skeleton, merged branch geometry and leaves, shader-driven growth/wind, globe-wrapping roots, all four career sections, exact CV detail panels, animated metrics and AI project descriptions. Build and all 16 screenshots passed with no page errors.
+Simplified: merged leaf quads rather than instancing; two visible bullets plus full expandable career panels preserve reading space. Real-device frame rate remains unverified.
