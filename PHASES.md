@@ -20,3 +20,7 @@ Simplified: merged leaf quads rather than instancing; two visible bullets plus f
 ## Phase 5
 Done: world-tree pullback, nine keyboard-accessible skill realms, lifecycle ring, fruits, certifications, tools and contact. Incorporated follow-up: close rolled Earth hero, 23.4-degree tilt, analytical dipole lines with pulses, animated aurora ribbons, cloud-covered descent and grass replacing the soil cross-section. NASA night map is now bundled. Build and all 16 screenshots passed without page errors.
 Review findings: clouds linger too long at .15; mobile hero and tree lighting need polish. Simplified: orbital geometry is an artistic dipole, cloud layers are noise planes rather than raymarching; seasonal palette is shader-driven. No GPU speed claim.
+
+## Phase 6
+Done: user-activated synthesized audio, animated fullscreen menu, native modal focus/escape handling, clipboard toast, leaf cursor, per-character hero reveal, GSAP chapter reveals, restrained bloom/grain/vignette, and cloud timing/lighting polish. Build and 16 desktop/mobile captures passed without page errors.
+Simplified: no photographic audio recordings, depth of field or chromatic aberration; these effects were omitted to protect clarity and frame budget. Audio interaction and accessibility receive dedicated final checks.

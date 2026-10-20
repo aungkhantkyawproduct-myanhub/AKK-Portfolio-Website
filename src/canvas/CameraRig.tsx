@@ -1,7 +1,9 @@
 import { useEffect, useRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
-import { Vector3 } from 'three';
-import { cameraCurve, targetCurve, pathTime } from './cameraPath';
+import { CatmullRomCurve3, Vector3 } from 'three';
+import { cameraPoints, targetPoints, pathTime } from './cameraPath';
+const cameraCurve=new CatmullRomCurve3(cameraPoints.map(p=>new Vector3(...p)),false,'catmullrom',.25);
+const targetCurve=new CatmullRomCurve3(targetPoints.map(p=>new Vector3(...p)),false,'catmullrom',.25);
 import { useJourney } from '../app/store';
 export default function CameraRig(){const {gl}=useThree();const offset=useRef({x:0,y:0,drag:false,nudge:0});const target=useRef(new Vector3());
 useEffect(()=>{const el=gl.domElement;const move=(e:PointerEvent)=>{if(e.pointerType==='touch'&&!offset.current.drag)return;offset.current.x=(e.clientX/innerWidth-.5)*(offset.current.drag?1.3:.35);offset.current.y=(e.clientY/innerHeight-.5)*.25;};const down=()=>{offset.current.drag=true;};const up=()=>{offset.current.drag=false;offset.current.x=0;offset.current.y=0;};const nudge=()=>{offset.current.nudge=1;};el.addEventListener('pointermove',move);el.addEventListener('pointerdown',down);window.addEventListener('pointerup',up);window.addEventListener('camera-nudge',nudge);return()=>{el.removeEventListener('pointermove',move);el.removeEventListener('pointerdown',down);window.removeEventListener('pointerup',up);window.removeEventListener('camera-nudge',nudge);};},[gl]);
