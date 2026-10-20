@@ -16,3 +16,7 @@ Simplified: sparkles suggest tending water/light; soil is stylized. Layered clou
 ## Phase 4
 Done: deterministic branching skeleton, merged branch geometry and leaves, shader-driven growth/wind, globe-wrapping roots, all four career sections, exact CV detail panels, animated metrics and AI project descriptions. Build and all 16 screenshots passed with no page errors.
 Simplified: merged leaf quads rather than instancing; two visible bullets plus full expandable career panels preserve reading space. Real-device frame rate remains unverified.
+
+## Phase 5
+Done: world-tree pullback, nine keyboard-accessible skill realms, lifecycle ring, fruits, certifications, tools and contact. Incorporated follow-up: close rolled Earth hero, 23.4-degree tilt, analytical dipole lines with pulses, animated aurora ribbons, cloud-covered descent and grass replacing the soil cross-section. NASA night map is now bundled. Build and all 16 screenshots passed without page errors.
+Review findings: clouds linger too long at .15; mobile hero and tree lighting need polish. Simplified: orbital geometry is an artistic dipole, cloud layers are noise planes rather than raymarching; seasonal palette is shader-driven. No GPU speed claim.
