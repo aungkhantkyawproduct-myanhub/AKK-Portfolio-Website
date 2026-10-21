@@ -52,3 +52,11 @@ The mist loader is `src/ui/MistLoader.tsx`: layered animated SVG turbulence over
 `Environment.tsx` crops the backdrop to cover portrait and landscape views. `Descent.tsx` supplies nine moving cloud layers and curved grass blades. The horizon is a visual local/global transition concealed by cloud opacity, not a physical atmospheric simulation. `Sun.tsx` adds the restrained sunrise glow. The tree has smaller dense leaves, a broader canopy and intertwined buttress roots.
 
 Additional verification: `node scripts/profile-check.mjs` checks profile navigation, separation of CV history from lifecycle chapters, and profile accessibility. `node scripts/audit.mjs` runs Lighthouse against a production preview on port 4173. Local captures and reports are in ignored `artifacts/verification` and `artifacts/final`.
+
+## Latest visual corrections
+
+- Mature Yggdrasil now crossfades to the exact user-supplied artwork at `public/environments/yggdrasil-reference.png` between progress .62 and .74. This is an image-backed finale with live particles and interaction, not an identical reconstructed 3D model. Earlier stages still use procedural 3D growth. The reference is cropped responsively without stretching.
+- The meadow remains through Skills and Contact. Earth appears only during the orbital opening, and magnetic field lines are no longer rendered. Hero aurora remains.
+- Foreground grass uses fine tapered blades with time-driven wind displacement, plus subtle wind distortion restricted to the photographic meadow's grass. Reduced motion freezes both.
+- The seed uses an oval lathe, a seeded granular surface/bump texture, physically based rough material and a soft contact shadow; the striped emissive seed was removed.
+- Story panels use backdrop blur, stronger text contrast and hidden scrollbars. Vertical wheel/touch/keyboard access is retained for longer panels; horizontal overflow is clipped.

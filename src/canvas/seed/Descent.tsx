@@ -55,7 +55,7 @@ export default function Descent() {
 export function Grass() {
   const ground=useRef<ShaderMaterial>(null);
   const soilUniforms=useMemo(()=>({uOpacity:{value:1}}),[]);
-  const blades=useRef<MeshStandardMaterial>(null);
+  const wind=useMemo(()=>({uTime:{value:0},uOpacity:{value:1}}),[]);
   const group = useRef<Group>(null);
   const data = useMemo(() => {
     const positions: number[] = [],
@@ -65,15 +65,15 @@ export function Grass() {
       seed = (seed * 16807) % 2147483647;
       return seed / 2147483647;
     };
-    for (let i = 0; i < 22000; i++) {
+    for (let i = 0; i < 16000; i++) {
       const angle = random() * Math.PI * 2,
-        r = Math.sqrt(random()) * 15;
-      if (r < 0.43) continue;
+        r = Math.sqrt(random()) * 4;
+      if (r < 0.26) continue;
       const x = Math.cos(angle) * r,
         z = Math.sin(angle) * r;
-      const height = 0.09 + random() * 0.17;
+      const height = 0.07 + random() * 0.2;
       const green = new Color().setHSL(.29+random()*.07,.32,.12+random()*.14);
-      const width=.004+random()*.007, bend=.06+random()*.12;
+      const width=.002+random()*.003, bend=.06+random()*.12;
       const point=(t:number,side:number)=>[x+Math.sin(angle)*bend*t*t+Math.cos(angle)*width*(1-t)*side,.02+height*t,z+Math.cos(angle)*bend*t*t+Math.sin(angle)*width*(1-t)*side];
       for(let j=0;j<4;j++) {
         const a=j/4,b=(j+1)/4;
@@ -93,23 +93,22 @@ export function Grass() {
     g.computeVertexNormals();
     return g;
   }, []);
-  useFrame(() => {
+  useFrame(({clock}) => {
+    wind.uTime.value=useJourney.getState().reducedMotion?0:clock.elapsedTime;
     const p = useJourney.getState().scrollProgress;
     if (group.current) {
-      group.current.visible = p > 0.12 && p < 0.88;
-      const s = p > 0.82 ? 1 - (p - 0.82) / 0.06 : 1;
+      group.current.visible = p > 0.12 && p < 0.68;
+      const s = p > 0.55 ? Math.max(0,1 - (p - 0.55) / 0.13) : 1;
       soilUniforms.uOpacity.value=s;
-      if(blades.current) blades.current.opacity=s;
+      wind.uOpacity.value=s;
     }
   });
   return (
     <group ref={group}>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.015, 0]}>
-        <circleGeometry args={[15, 100]} />
-        <shaderMaterial ref={ground} uniforms={soilUniforms} transparent depthWrite={false} vertexShader={vert} fragmentShader={`varying vec2 vUv;uniform float uOpacity;float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}void main(){float r=length(vUv-.5)*2.;float a=(1.-smoothstep(.15,1.,r))*uOpacity;float n=h(floor(vUv*1700.));vec3 color=mix(vec3(.016,.043,.032),vec3(.045,.095,.067),n);gl_FragColor=vec4(color,a);}`} />
-      </mesh>
       <mesh geometry={data}>
-        <meshStandardMaterial ref={blades} vertexColors side={DoubleSide} roughness={0.9} transparent />
+        <shaderMaterial vertexColors side={DoubleSide} transparent uniforms={wind} depthWrite={false}
+          vertexShader={`uniform float uTime;varying vec3 vColor;varying float vDistance;void main(){vec3 p=position;float bend=pow(max(p.y-.02,0.)/.28,2.);float gust=sin(p.x*1.6+p.z*.9-uTime*1.7)+.35*sin(p.z*5.+uTime*2.3);p.x+=gust*.075*bend;p.z+=sin(p.x*2.-uTime)*.035*bend;vColor=color;vDistance=length(position.xz);gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`}
+          fragmentShader={`uniform float uOpacity;varying vec3 vColor;varying float vDistance;void main(){float fade=1.-smoothstep(1.6,4.,vDistance);gl_FragColor=vec4(vColor*.85,fade*uOpacity);}`} />
       </mesh>
     </group>
   );

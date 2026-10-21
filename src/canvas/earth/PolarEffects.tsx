@@ -92,7 +92,7 @@ export default function PolarEffects() {
     const hero = 1 - Math.min(1, Math.max(0, (p - 0.035) / 0.09));
     const end = Math.min(1, Math.max(0, (p - 0.7) / 0.12));
     uniforms.uOpacity.value =
-      Math.max(hero, end) * Math.min(1, 45 / camera.position.length());
+      hero * Math.min(1, 45 / camera.position.length());
     uniforms.uTime.value = useJourney.getState().reducedMotion
       ? 0
       : clock.elapsedTime;
@@ -100,17 +100,6 @@ export default function PolarEffects() {
   });
   return (
     <group ref={group} position={[0, -10, 0]} rotation={[-0.55, 0, -0.4084]}>
-      <lineSegments geometry={geo.fieldGeo}>
-        <shaderMaterial
-          ref={field}
-          vertexShader={fieldVertex}
-          fragmentShader={fieldFragment}
-          uniforms={uniforms}
-          transparent
-          depthWrite={false}
-          blending={AdditiveBlending}
-        />
-      </lineSegments>
       <mesh geometry={geo.ribbon}>
         <shaderMaterial
           ref={aurora}

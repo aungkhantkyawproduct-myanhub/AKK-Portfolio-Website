@@ -82,7 +82,7 @@ export default function Earth() {
   }, [uniforms]);
   useFrame((_, dt) => {
     const p=useJourney.getState().scrollProgress;
-    if(world.current) world.current.visible=p<.125 || p>.87;
+    if(world.current) world.current.visible=p<.125;
     if (globe.current) globe.current.rotation.y += dt * 0.012;
     if (cloud.current) cloud.current.rotation.y += dt * 0.018;
   });
