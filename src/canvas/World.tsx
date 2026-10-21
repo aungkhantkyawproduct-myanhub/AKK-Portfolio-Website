@@ -6,10 +6,11 @@ import Seed from "./seed/Seed";
 import Tree from "./tree/Tree";
 import Realms from "./tree/Realms";
 import PolarEffects from "./earth/PolarEffects";
-import Descent, { Grass } from "./seed/Descent";
+import Descent from "./seed/Descent";
 import Effects from "./Effects";
 import Quality from "./Quality";
 import Environment from "./Environment";
+import Meadow from "./seed/Meadow";
 import Sun from "./earth/Sun";
 import { useJourney } from "../app/store";
 import { Preload } from "@react-three/drei";
@@ -41,7 +42,7 @@ export default function World() {
       <PolarEffects />
       <CameraRig />
       <Seed />
-      <Grass />
+      <Meadow />
       <Descent />
       <Tree />
       <Realms />

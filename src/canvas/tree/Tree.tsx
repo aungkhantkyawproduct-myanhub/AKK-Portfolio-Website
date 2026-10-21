@@ -16,10 +16,10 @@ import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js
 import { useJourney } from "../../app/store";
 import { createSkeleton } from "./skeleton";
 import { palette } from "../../styles/palette";
-const vertex = `attribute vec3 aStart;attribute float aBirth;uniform float uGrowth;uniform float uTime;varying vec3 vN;varying vec3 vP;varying float vG;
-void main(){float g=smoothstep(aBirth,aBirth+.12,uGrowth);vec3 p=mix(aStart,position,g);p.x+=sin(uTime*.45+p.y*.65)*.045*max(p.y,0.)*g;vN=normalize(normalMatrix*normal);vP=position;vG=g;gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`;
-const fragment = `uniform float uOpacity;uniform float uLocal;uniform vec3 uBark;uniform vec3 uGold;varying vec3 vN;varying vec3 vP;varying float vG;void main(){if(vG<.005||(uLocal>.5&&vP.y<0.))discard;float grooves=sin(vP.y*1.4+sin(vP.x*19.+vP.y*.5)*2.+vP.z*22.)*.5+.5;float vein=pow(grooves,28.);float l=.3+max(dot(normalize(vN),normalize(vec3(-1,1,1))),0.)*.8;vec3 c=(uBark+vec3(.08,.055,.025))*l+vec3(.08,.8,.73)*vein*.3;gl_FragColor=vec4(c,uOpacity);}`;
-const leafVertex = `attribute vec3 aCenter;attribute float aBirth;uniform float uGrowth;uniform float uTime;varying vec2 vUv;varying float vG;void main(){vUv=uv;float g=smoothstep(aBirth,aBirth+.1,uGrowth);vec3 p=aCenter+(position-aCenter)*g;p.x+=sin(uTime*.8+p.y+p.z)*.06*max(p.y,0.);vG=g;gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`;
+const vertex = `attribute vec3 aStart;attribute float aBirth;uniform float uGrowth;uniform float uTime;varying vec2 vBarkUv;varying vec3 vN;varying vec3 vP;varying float vG;
+void main(){vBarkUv=uv;float g=smoothstep(aBirth,aBirth+.12,uGrowth);vec3 p=mix(aStart,position,g);p.x+=sin(uTime*.45+p.y*.65)*.012*max(p.y,0.)*g;vN=normalize(normalMatrix*normal);vP=position;vG=g;gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`;
+const fragment = `uniform float uOpacity;uniform float uLocal;uniform vec3 uBark;uniform vec3 uGold;varying vec2 vBarkUv;varying vec3 vN;varying vec3 vP;varying float vG;void main(){if(vG<.005||(uLocal>.5&&vP.y<0.))discard;float grooves=sin(vBarkUv.x*100.+sin(vP.y*1.2)*.6)*.5+.5;float vein=pow(grooves,28.);float l=.3+max(dot(normalize(vN),normalize(vec3(-1,1,1))),0.)*.8;vec3 c=(uBark+vec3(.08,.055,.025))*(.7+grooves*.3)*l+vec3(.08,.8,.73)*vein*.06;gl_FragColor=vec4(c,uOpacity);}`;
+const leafVertex = `attribute vec3 aCenter;attribute float aBirth;uniform float uGrowth;uniform float uTime;varying vec2 vUv;varying float vG;void main(){vUv=uv;float g=smoothstep(aBirth,aBirth+.1,uGrowth);vec3 p=aCenter+(position-aCenter)*g;p.x+=sin(uTime*.8+p.y+p.z)*.018*max(p.y,0.);vG=g;gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`;
 const leafFragment = `uniform float uOpacity;uniform float uSeason;uniform vec3 uGreen;uniform vec3 uGold;varying vec2 vUv;varying float vG;void main(){vec2 q=vUv*2.-1.;if(abs(q.x)+q.y*q.y>1.||vG<.01)discard;vec3 c=mix(uGreen,uGold,uSeason);float vein=1.-smoothstep(.015,.055,abs(q.x));c*=.45+(.25+q.y*.2);c+=vec3(.03,.06,.03)*vein;gl_FragColor=vec4(c,uOpacity);}`;
 export default function Tree() {
   const group = useRef<Group>(null);
@@ -122,7 +122,7 @@ export default function Tree() {
   useFrame(({ clock }) => {
     const p = useJourney.getState().scrollProgress;
     uniforms.uLocal.value = 1;
-    uniforms.uOpacity.value=1-Math.min(1,Math.max(0,(p-.62)/.12));
+    uniforms.uOpacity.value=1;
     uniforms.uGrowth.value = Math.max(0, Math.min(1, (p - 0.24) / 0.59));
     uniforms.uTime.value = useJourney.getState().reducedMotion
       ? 0
@@ -130,13 +130,13 @@ export default function Tree() {
     uniforms.uSeason.value =
       p > 0.7 ? (Math.sin((p - 0.7) * 26) * 0.5 + 0.5) * 0.22 : 0;
     if (group.current) {
-      group.current.visible = p > 0.235 && p < .74;
+      group.current.visible = p > 0.235;
       const size = 0.18 + 0.82 * Math.min(1, Math.max(0, (p - 0.25) / 0.49));
       group.current.scale.setScalar(size);
     }
   });
   return (
-    <group ref={group}>
+    <group ref={group} name="growing-tree">
       <mesh geometry={data.branches} frustumCulled={false}>
         <shaderMaterial
           ref={bark}

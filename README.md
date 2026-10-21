@@ -1,6 +1,6 @@
 # Aung Khant Kyaw — From seed to scale
 
-A static React 18 / TypeScript portfolio with one persistent Three.js canvas, an independently rotating NASA-textured Earth, polar aurora and magnetic fields, a cloud descent to a seed on grass, and a procedural growing world tree.
+A static React 18 / TypeScript portfolio with one persistent Three.js canvas, an independently rotating NASA-textured Earth, polar aurora, a cloud descent to a seed on grass, and a procedural growing world tree.
 
 ## Run and build
 
@@ -21,9 +21,9 @@ Vite serves the local development preview at http://127.0.0.1:5173. `npm run bui
 - **Camera and chapter timing:** `src/canvas/cameraPath.ts`. `cameraPoints` and `targetPoints` correspond to `boundaries`. `CameraRig.tsx` constructs two Catmull–Rom curves. The hero has a −15° roll; the globe axis is tilted 23.4°. Local ground and the tree share the globe's north surface position `(0,0,0)`; Earth remains centered at `(0,-10,0)`. This is a poetic local patch rather than a geospatial terrain simulation.
 - **Pacing:** `pacing.scrub` controls ScrollTrigger smoothing. The 1000vh rail is in `App.module.css`; boundaries map to a single GSAP timeline. In development, `window.__debugProgress(0.8)` jumps to a checkpoint.
 - **Palette:** `src/styles/palette.ts`, applied to CSS variables at startup; tree shaders consume its colors. Earth and aurora spectral colors live in their shaders.
-- **Tree:** `src/canvas/tree/skeleton.ts` contains the deterministic seed, recursive branching and spherical roots. Geometry is generated once, then merged. The branch/leaf vertex shaders in `Tree.tsx` use `uGrowth`, birth attributes and time-based wind; the tree scales continuously during growth.
+- **Tree:** `src/canvas/tree/skeleton.ts` contains the deterministic seed, recursive branching and buttress roots. Geometry is generated once, then merged. The branch/leaf vertex shaders in `Tree.tsx` use `uGrowth`, birth attributes and time-based wind; the tree scales continuously during growth.
 - **Earth and polar effects:** `src/canvas/earth/`. `PolarEffects.tsx` uses the analytic dipole `r=L·sin²θ`, animated pulses, and noise-driven aurora ribbons. Hero effects fade through descent and return at the reveal.
-- **Cloud descent and grass:** `src/canvas/seed/Descent.tsx`; stacked noise planes conceal the local ground appearing. `Seed.tsx` contains the lathe and crack shader.
+- **Cloud descent and grass:** `src/canvas/seed/Descent.tsx` provides cloud planes; `Meadow.tsx` provides the fixed ground and instanced wind-driven blades. `Seed.tsx` contains the lathe and crack shader.
 - **Audio:** `src/audio/ambient.ts`. It synthesizes a quiet evolving pad and filtered wind after explicit opt-in. See `public/audio/README.md` for optional recordings.
 - **Textures:** NASA day (2K progressive preview, 8K desktop upgrade) and night WebP maps are bundled. See `public/textures/README.md`. Missing maps are tolerated; procedural continents remain available. Source JPGs are retained outside the build in `assets/source/`.
 
@@ -43,9 +43,9 @@ The checkpoint script uses installed Microsoft Edge via Playwright. Change `chan
 
 The scene is lazy-loaded. Quality starts from screen size/hardware concurrency and can drop after a six-second frame-time probe. Low tier uses DPR 1, fewer leaves/stars and no postprocessing; other tiers cap DPR at 2 desktop and 1.5 mobile. The probe is available as `window.__sceneStats` for diagnostics; headless timing is not a real-device benchmark.
 
-The tree and grass remain procedural 3D art rather than scanned photogrammetry. A generated meadow/aurora backdrop supplies photographic environmental detail; it is not a replacement for the live growing tree. Clouds use layered noise rather than volumetric raymarching; foliage uses merged quads; bark uses shader veins; normal mapping, recorded environmental foley, DOF and chromatic aberration are intentionally omitted. Ocean highlights are inferred from the day map, not a separate scientific ocean mask. Fonts request Google Fonts and have local serif/sans/mono fallbacks. GPU performance and Lighthouse targets must be assessed on the intended host and real devices; do not treat development screenshots as a 60fps guarantee.
+The tree and grass remain procedural 3D art rather than scanned photogrammetry. The live scene uses a procedural animated sky and meadow. The generated image is used only in the loader. Clouds use layered noise rather than volumetric raymarching; foliage uses merged quads; bark uses shader veins; normal mapping, recorded environmental foley, DOF and chromatic aberration are intentionally omitted. Ocean highlights are inferred from the day map, not a separate scientific ocean mask. Fonts request Google Fonts and have local serif/sans/mono fallbacks. GPU performance and Lighthouse targets must be assessed on the intended host and real devices; do not treat development screenshots as a 60fps guarantee.
 
-## Reference revision
+## Historical reference revision (superseded below)
 
 The mist loader is `src/ui/MistLoader.tsx`: layered animated SVG turbulence over a meadow, a recursively generated tree silhouette and an asset-ready indicator. The landscape is `public/environments/meadow.webp`, created with the imagegen generate mode. Prompt: �Photorealistic cinematic wide-angle empty meadow at blue hour, fine dew-covered grass, distant low hills, natural teal aurora and stars, low cyan mist, empty center for a live 3D tree, no people, no text.� The source PNG is retained alongside it. The supplied stock Earth image was used for composition only, not embedded.
 
@@ -53,10 +53,14 @@ The mist loader is `src/ui/MistLoader.tsx`: layered animated SVG turbulence over
 
 Additional verification: `node scripts/profile-check.mjs` checks profile navigation, separation of CV history from lifecycle chapters, and profile accessibility. `node scripts/audit.mjs` runs Lighthouse against a production preview on port 4173. Local captures and reports are in ignored `artifacts/verification` and `artifacts/final`.
 
-## Latest visual corrections
+## Current scene architecture (supersedes image-backed revision)
 
-- Mature Yggdrasil now crossfades to the exact user-supplied artwork at `public/environments/yggdrasil-reference.png` between progress .62 and .74. This is an image-backed finale with live particles and interaction, not an identical reconstructed 3D model. Earlier stages still use procedural 3D growth. The reference is cropped responsively without stretching.
-- The meadow remains through Skills and Contact. Earth appears only during the orbital opening, and magnetic field lines are no longer rendered. Hero aurora remains.
-- Foreground grass uses fine tapered blades with time-driven wind displacement, plus subtle wind distortion restricted to the photographic meadow's grass. Reduced motion freezes both.
-- The seed uses an oval lathe, a seeded granular surface/bump texture, physically based rough material and a soft contact shadow; the striped emissive seed was removed.
-- Story panels use backdrop blur, stronger text contrast and hidden scrollbars. Vertical wheel/touch/keyboard access is retained for longer panels; horizontal overflow is clipped.
+The latest recording review replaced the camera-attached meadow image and final-tree crossfade with one world-anchored environment. `Environment.tsx` contains a procedural sky dome with time-driven cloud noise, aurora rays and distant hills. `seed/Meadow.tsx` renders a single ground plane and instanced wind-driven blades. There is no photograph behind the local meadow and no second grass surface. The supplied images remain reference assets and loader artwork only.
+
+The same procedural tree now grows from sprout through the final chapters. No tree artwork swap occurs. `cameraPath.ts` uses a steady local pullback; pointer parallax is limited to the orbital hero. All desktop story cards occupy the right reading column; mobile reserves the upper region for text and lower region for the subject. Longer mobile cards remain internally scrollable with hidden chrome. The profile handoff hides the fixed contact overlay as soon as the profile enters.
+
+Run `node scripts/continuous-check.mjs` to verify fixed sky/meadow transforms, reversible growth, idle animation and desktop seed/card separation. A procedural game-like scene is delivered; it is not a photorealistic reconstruction of the supplied tree illustration. Real-device GPU performance remains unverified.
+
+## GitHub-ready package
+
+Extract `akk-portfolio-source.zip`, then upload the extracted files and folders into your repository root (where `package.json` lives). Do not upload only the ZIP as your site's source. The archive contains all build inputs, optimized runtime assets, lockfile and instructions; it excludes node_modules, .git, test captures, private screen recordings and large raw NASA masters. Run `npm ci` then `npm run build`. The separate `akk-portfolio-dist.zip` contains the production files for a root-domain static host. See `GITHUB-UPLOAD.md` for deployment-path limitations.

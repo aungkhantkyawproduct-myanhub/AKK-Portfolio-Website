@@ -573,3 +573,9 @@
 .chapter:not(.hero){padding:26px 30px;border:1px solid #b9dedb18;border-radius:16px;background:linear-gradient(115deg,#07141dd9,#07141d91);backdrop-filter:blur(18px) saturate(.7);-webkit-backdrop-filter:blur(18px) saturate(.7);box-shadow:0 15px 70px #02091050;overflow-x:hidden;scrollbar-width:none;max-width:calc(100vw - 70px)}
 .chapter::-webkit-scrollbar{display:none;width:0;height:0}.chapter:not(.hero):before{display:none}.chapter p{color:#d0dbde}.chapter{box-sizing:border-box}.linear .chapter:not(.hero){padding:25px}
 @media(max-width:600px){.chapter:not(.hero){padding:20px;width:calc(100% - 64px);left:24px;right:auto;max-height:75svh}.chapter.right{left:24px;right:auto}.chapter h2{font-size:36px}}
+
+/* Stable reading column: subject left, copy right, without alternating across the tree. */
+.chapter:not(.hero),.chapter.right:not(.hero){left:auto;right:7%;top:18%;width:35%;max-width:520px;max-height:73svh;padding:26px 28px;background:linear-gradient(120deg,#08151ed9,#08151ead)}
+.chapter:not(.hero) h2{font-size:clamp(34px,3.5vw,54px);line-height:1.06}.chapter:not(.hero) p{font-size:13px;line-height:1.8}
+@media(max-width:600px){.chapter:not(.hero),.chapter.right:not(.hero){left:20px;right:44px;top:12%;width:auto;max-width:none;max-height:40svh;padding:18px 20px}.chapter:not(.hero) h2{font-size:30px;margin:14px 0}.chapter:not(.hero) p{font-size:12px;line-height:1.7}.chapter:not(.hero) .eyebrow{font-size:8px}}
+.linear .chapter:not(.hero),.linear .chapter.right:not(.hero){position:relative;inset:auto;width:min(620px,100%);max-height:none}

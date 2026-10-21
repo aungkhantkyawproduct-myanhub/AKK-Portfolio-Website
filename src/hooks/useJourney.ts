@@ -95,7 +95,7 @@ export function useScrollJourney() {
       }
     };
     window.addEventListener("keydown", keyboard);
-    const profileScroll = () => useJourney.setState({ profileActive: scrollY > distance() + innerHeight * .35 });
+    const profileScroll = () => useJourney.setState({ profileActive: scrollY > distance() + 1 });
     window.addEventListener("scroll", profileScroll, { passive: true });
     return () => {
       timeline.scrollTrigger?.kill();

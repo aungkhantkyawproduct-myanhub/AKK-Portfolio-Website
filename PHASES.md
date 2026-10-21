@@ -33,3 +33,9 @@ Limits: procedural tree/grass remain stylized rather than photographic scans. Di
 
 ## Visual correction checkpoint
 Removed orbital magnetic lines and the late Earth pedestal; kept the meadow through Nine Realms and Contact. Added exact-reference image-backed mature tree reveal, wind-driven fine grass plus meadow motion, natural rough seed, blurred reading panels and hidden scrollbars. The final tree is deliberately the supplied artwork rather than a claimed exact procedural reconstruction. Production build and all 16 desktop/mobile screenshots passed with no page errors.
+
+## Continuous-world correction and GitHub package
+Reviewed the supplied 25.3-second recording. Removed the camera-attached photo plane, duplicated grass layer and mature-tree artwork swap. Replaced them with a fixed sky dome, procedural animated clouds/aurora, distant hills, one ground plane and instanced wind-driven blades. The same procedural tree now remains through the final stage. Camera path uses a stable pullback; local pointer parallax is disabled. Desktop copy has a dedicated right column; mobile subject framing sits below the reading panel. Fixed the contact/profile handoff and sky far-plane clipping on mobile.
+Verified: strict TypeScript/production build, forward/reverse growth equality, constant sky/meadow world transforms, idle sky animation, seed/card horizontal separation, and the profile navigation handoff. Original photorealism and real-device frame-rate targets are still not certified. GitHub source and root-host production ZIPs omit dependencies, private recordings and captures.
+
+Release verification: all 16 desktop/mobile captures completed without page errors. Interaction regression checks passed and the contact view returned zero axe WCAG A/AA violations. Release archives are source-only and dist-only respectively; no performance guarantee is made.
