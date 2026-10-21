@@ -1,0 +1,8 @@
+.loader{position:fixed;inset:0;z-index:200;background:#071016;overflow:hidden;display:grid;place-items:center;animation:enter .8s both}
+.landscape{position:absolute;inset:-3%;background:linear-gradient(#02070bb0,#07101750),url('/environments/meadow.webp') center/cover;filter:saturate(.3) brightness(.55)}
+.silhouette{position:absolute;width:100%;height:100%;inset:0;opacity:.8}
+.mist{position:absolute;inset:-30%;filter:url(#mist);background:linear-gradient(transparent 25%,#b9d5da88 65%,transparent);opacity:.55;animation:drift 17s ease-in-out infinite alternate;mix-blend-mode:screen;pointer-events:none}
+.second{animation-duration:23s;animation-direction:alternate-reverse;opacity:.3;transform:scale(1.5)}
+.copy{position:relative;text-align:center;color:#f0eee4;text-shadow:0 2px 24px #000;max-width:80%}
+.copy>span{font:11px monospace;letter-spacing:.45em}.copy p{font:clamp(25px,3.5vw,49px) Georgia,serif;font-style:italic;max-width:630px;line-height:1.3}.copy i{display:block;width:42px;height:42px;border-radius:50%;margin:38px auto 20px;mask:radial-gradient(transparent 61%,#000 64%)}.copy small{font:9px monospace;letter-spacing:.18em;text-transform:uppercase}
+@keyframes drift{from{transform:translate(-8%,3%) scale(1.1)}to{transform:translate(9%,-4%) scale(1.25)}}@keyframes enter{from{opacity:0}to{opacity:1}}@media(prefers-reduced-motion:reduce){.mist,.loader{animation:none}}

@@ -1,12 +1,128 @@
-import { useMemo, useRef } from 'react';
-import { useFrame } from '@react-three/fiber';
-import { AdditiveBlending, BufferAttribute, BufferGeometry, Color, DoubleSide, Group, ShaderMaterial, Vector3 } from 'three';
-import { useJourney } from '../../app/store';
-const fieldVertex=`attribute float aFlow;varying float vFlow;varying float vFade;void main(){vFlow=aFlow;vFade=abs(normalize(position).y);gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`;
-const fieldFragment=`uniform float uTime;uniform float uOpacity;varying float vFlow;varying float vFade;void main(){float pulse=pow(max(0.,sin(vFlow*18.-uTime*.7)),18.);vec3 c=mix(vec3(.16,.6,.75),vec3(.5,.32,.8),vFlow);gl_FragColor=vec4(c,(.055+pulse*.45)*uOpacity*(.2+vFade*.8));}`;
-const auroraVertex=`uniform float uTime;varying vec2 vUv;varying vec3 vP;void main(){vUv=uv;vP=position;vec3 p=position;p.xz*=1.+sin(uv.x*32.+uTime*.23+uv.y*3.)*.018; p.y+=sin(uv.x*24.-uTime*.3)*uv.y*.25;gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`;
-const auroraFragment=`uniform float uTime;uniform float uOpacity;varying vec2 vUv;varying vec3 vP;float h(float x){return fract(sin(x*127.1)*43758.5453);}float noise(float x){float i=floor(x),f=fract(x);return mix(h(i),h(i+1.),f*f*(3.-2.*f));}void main(){float x=vUv.x;float y=vUv.y;float rays=pow(noise(x*290.+uTime*.12)*noise(x*73.-uTime*.17),.65);float wave=.65+.35*sin(x*43.+uTime*.4);float edge=smoothstep(0.,.12,y)*(1.-smoothstep(.35,1.,y));vec3 c=mix(vec3(.1,1.,.46),vec3(.1,.65,.8),smoothstep(.05,.5,y));c=mix(c,vec3(.55,.16,.88),smoothstep(.45,1.,y));gl_FragColor=vec4(c,rays*edge*wave*uOpacity*.8);}`;
-export default function PolarEffects(){const group=useRef<Group>(null);const field=useRef<ShaderMaterial>(null);const aurora=useRef<ShaderMaterial>(null);const uniforms=useMemo(()=>({uTime:{value:0},uOpacity:{value:1}}),[]);
-const geo=useMemo(()=>{const positions:number[]=[],flow:number[]=[];for(const L of [12,14,17,21])for(let a=0;a<12;a++){const longitude=a/12*Math.PI*2;const min=Math.asin(Math.sqrt(10.2/L));let last:Vector3|undefined;for(let j=0;j<=100;j++){const theta=min+(Math.PI-2*min)*j/100;const r=L*Math.sin(theta)**2;const p=new Vector3(r*Math.sin(theta)*Math.cos(longitude),r*Math.cos(theta),r*Math.sin(theta)*Math.sin(longitude));if(last){positions.push(...last.toArray(),...p.toArray());flow.push((j-1)/100,j/100);}last=p;}}const fieldGeo=new BufferGeometry();fieldGeo.setAttribute('position',new BufferAttribute(new Float32Array(positions),3));fieldGeo.setAttribute('aFlow',new BufferAttribute(new Float32Array(flow),1));const pos:number[]=[],uv:number[]=[];for(const hemisphere of [1,-1])for(let i=0;i<256;i++){const corners=[[i,0],[i+1,0],[i+1,1],[i,0],[i+1,1],[i,1]];for(const [j,y] of corners){const a=j/256*Math.PI*2;const lat=.38+Math.sin(a*5)*.035;const radius=10.18+y*1.1;pos.push(radius*Math.sin(lat)*Math.cos(a),hemisphere*radius*Math.cos(lat),radius*Math.sin(lat)*Math.sin(a));uv.push(j/256,y);}}const ribbon=new BufferGeometry();ribbon.setAttribute('position',new BufferAttribute(new Float32Array(pos),3));ribbon.setAttribute('uv',new BufferAttribute(new Float32Array(uv),2));return {fieldGeo,ribbon};},[]);
-useFrame(({clock,camera})=>{const p=useJourney.getState().scrollProgress;const hero=1-Math.min(1,Math.max(0,(p-.035)/.09));const end=Math.min(1,Math.max(0,(p-.7)/.12));uniforms.uOpacity.value=Math.max(hero,end)*Math.min(1,45/camera.position.length());uniforms.uTime.value=useJourney.getState().reducedMotion?0:clock.elapsedTime;if(group.current)group.current.visible=uniforms.uOpacity.value>.005;});
-return <group ref={group} position={[0,-10,0]} rotation={[.14,0,-.4084]}><lineSegments geometry={geo.fieldGeo}><shaderMaterial ref={field} vertexShader={fieldVertex} fragmentShader={fieldFragment} uniforms={uniforms} transparent depthWrite={false} blending={AdditiveBlending}/></lineSegments><mesh geometry={geo.ribbon}><shaderMaterial ref={aurora} vertexShader={auroraVertex} fragmentShader={auroraFragment} uniforms={uniforms} transparent side={DoubleSide} depthWrite={false} blending={AdditiveBlending}/></mesh></group>}
+import { useMemo, useRef } from "react";
+import { useFrame } from "@react-three/fiber";
+import {
+  AdditiveBlending,
+  BufferAttribute,
+  BufferGeometry,
+  Color,
+  DoubleSide,
+  Group,
+  ShaderMaterial,
+  Vector3,
+} from "three";
+import { useJourney } from "../../app/store";
+const fieldVertex = `attribute float aFlow;varying float vFlow;varying float vFade;void main(){vFlow=aFlow;vFade=abs(normalize(position).y);gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`;
+const fieldFragment = `uniform float uTime;uniform float uOpacity;varying float vFlow;varying float vFade;void main(){float pulse=pow(max(0.,sin(vFlow*18.-uTime*.7)),18.);vec3 c=mix(vec3(.16,.6,.75),vec3(.5,.32,.8),vFlow);gl_FragColor=vec4(c,(.055+pulse*.45)*uOpacity*(.2+vFade*.8));}`;
+const auroraVertex = `uniform float uTime;varying vec2 vUv;varying vec3 vP;void main(){vUv=uv;vP=position;vec3 p=position;p.xz*=1.+sin(uv.x*32.+uTime*.23+uv.y*3.)*.018; p.y+=sin(uv.x*24.-uTime*.3)*uv.y*.25;gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`;
+const auroraFragment = `uniform float uTime;uniform float uOpacity;varying vec2 vUv;varying vec3 vP;float h(float x){return fract(sin(x*127.1)*43758.5453);}float noise(float x){float i=floor(x),f=fract(x);return mix(h(i),h(i+1.),f*f*(3.-2.*f));}void main(){float x=vUv.x;float y=vUv.y;float rays=pow(noise(x*290.+uTime*.12)*noise(x*73.-uTime*.17),.65);float wave=.65+.35*sin(x*43.+uTime*.4);float edge=smoothstep(0.,.12,y)*(1.-smoothstep(.35,1.,y));vec3 c=mix(vec3(.1,1.,.46),vec3(.1,.65,.8),smoothstep(.05,.5,y));c=mix(c,vec3(.55,.16,.88),smoothstep(.45,1.,y));gl_FragColor=vec4(c,rays*edge*wave*uOpacity*.8);}`;
+export default function PolarEffects() {
+  const group = useRef<Group>(null);
+  const field = useRef<ShaderMaterial>(null);
+  const aurora = useRef<ShaderMaterial>(null);
+  const uniforms = useMemo(
+    () => ({ uTime: { value: 0 }, uOpacity: { value: 1 } }),
+    [],
+  );
+  const geo = useMemo(() => {
+    const positions: number[] = [],
+      flow: number[] = [];
+    for (const L of [12, 14, 17, 21])
+      for (let a = 0; a < 12; a++) {
+        const longitude = (a / 12) * Math.PI * 2;
+        const min = Math.asin(Math.sqrt(10.2 / L));
+        let last: Vector3 | undefined;
+        for (let j = 0; j <= 100; j++) {
+          const theta = min + ((Math.PI - 2 * min) * j) / 100;
+          const r = L * Math.sin(theta) ** 2;
+          const p = new Vector3(
+            r * Math.sin(theta) * Math.cos(longitude),
+            r * Math.cos(theta),
+            r * Math.sin(theta) * Math.sin(longitude),
+          );
+          if (last) {
+            positions.push(...last.toArray(), ...p.toArray());
+            flow.push((j - 1) / 100, j / 100);
+          }
+          last = p;
+        }
+      }
+    const fieldGeo = new BufferGeometry();
+    fieldGeo.setAttribute(
+      "position",
+      new BufferAttribute(new Float32Array(positions), 3),
+    );
+    fieldGeo.setAttribute(
+      "aFlow",
+      new BufferAttribute(new Float32Array(flow), 1),
+    );
+    const pos: number[] = [],
+      uv: number[] = [];
+    for (const hemisphere of [1, -1])
+      for (let i = 0; i < 256; i++) {
+        const corners = [
+          [i, 0],
+          [i + 1, 0],
+          [i + 1, 1],
+          [i, 0],
+          [i + 1, 1],
+          [i, 1],
+        ];
+        for (const [j, y] of corners) {
+          const a = (j / 256) * Math.PI * 2;
+          const lat = 0.38 + Math.sin(a * 5) * 0.035;
+          const radius = 10.18 + y * 1.1;
+          pos.push(
+            radius * Math.sin(lat) * Math.cos(a),
+            hemisphere * radius * Math.cos(lat),
+            radius * Math.sin(lat) * Math.sin(a),
+          );
+          uv.push(j / 256, y);
+        }
+      }
+    const ribbon = new BufferGeometry();
+    ribbon.setAttribute(
+      "position",
+      new BufferAttribute(new Float32Array(pos), 3),
+    );
+    ribbon.setAttribute("uv", new BufferAttribute(new Float32Array(uv), 2));
+    return { fieldGeo, ribbon };
+  }, []);
+  useFrame(({ clock, camera }) => {
+    const p = useJourney.getState().scrollProgress;
+    const hero = 1 - Math.min(1, Math.max(0, (p - 0.035) / 0.09));
+    const end = Math.min(1, Math.max(0, (p - 0.7) / 0.12));
+    uniforms.uOpacity.value =
+      Math.max(hero, end) * Math.min(1, 45 / camera.position.length());
+    uniforms.uTime.value = useJourney.getState().reducedMotion
+      ? 0
+      : clock.elapsedTime;
+    if (group.current) group.current.visible = uniforms.uOpacity.value > 0.005;
+  });
+  return (
+    <group ref={group} position={[0, -10, 0]} rotation={[-0.55, 0, -0.4084]}>
+      <lineSegments geometry={geo.fieldGeo}>
+        <shaderMaterial
+          ref={field}
+          vertexShader={fieldVertex}
+          fragmentShader={fieldFragment}
+          uniforms={uniforms}
+          transparent
+          depthWrite={false}
+          blending={AdditiveBlending}
+        />
+      </lineSegments>
+      <mesh geometry={geo.ribbon}>
+        <shaderMaterial
+          ref={aurora}
+          vertexShader={auroraVertex}
+          fragmentShader={auroraFragment}
+          uniforms={uniforms}
+          transparent
+          side={DoubleSide}
+          depthWrite={false}
+          blending={AdditiveBlending}
+        />
+      </mesh>
+    </group>
+  );
+}

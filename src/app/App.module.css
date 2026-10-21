@@ -1,6 +1,570 @@
-.canvas{position:fixed;inset:0;z-index:0}.header{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:center;justify-content:space-between;padding:30px 4.4%;font-size:10px;letter-spacing:.18em;text-transform:uppercase}.header nav{display:flex;gap:34px}.header button{text-transform:uppercase;font-size:10px;letter-spacing:.16em}.header .logo{font-size:25px;font-weight:600;letter-spacing:-1px}.logo span{color:var(--teal);font-size:20px;margin-left:7px}.sound span{margin-left:14px;color:var(--teal)}.scroll{height:1000vh;position:relative;pointer-events:none}.overlay{position:fixed;inset:0;pointer-events:none}.chapter{position:absolute;left:7%;top:22%;width:min(510px,39vw);transition:opacity .65s,visibility .65s;pointer-events:auto}.chapter.right{left:auto;right:10%}.chapter h2{font:400 clamp(42px,4.7vw,76px)/.98 'Cormorant Garamond',Georgia,serif;letter-spacing:-.035em;margin:24px 0}.chapter p{font-size:14px;line-height:1.8;color:var(--muted);max-width:470px}.eyebrow,.identity{font:10px 'Space Mono',monospace;letter-spacing:.18em;text-transform:uppercase;color:var(--teal)}.hero{left:7%;top:18%;width:86%;text-align:center}.hero .eyebrow{color:var(--gold);font-size:9px;letter-spacing:.27em}.identity{margin-top:35px;font-size:10px;color:var(--muted)}.hero h1{font:400 clamp(42px,6.8vw,112px)/1.1 'Cormorant Garamond',Georgia,serif;letter-spacing:-.045em;text-transform:uppercase;margin:14px 0 16px;white-space:nowrap}.hero h1 span{display:inline-block;animation:reveal 1.4s both}.hero .tagline{max-width:none;font:italic 400 clamp(20px,2vw,30px) 'Cormorant Garamond',serif;color:var(--ink)}.heroBottom{position:fixed;left:4.4%;right:4.4%;bottom:40px;display:flex;justify-content:space-between;text-align:left;font:9px/2 'Space Mono',monospace;text-transform:uppercase;letter-spacing:.14em}.heroBottom span:last-child{text-align:right}.heroBottom i{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--teal);margin-right:5px}.rail{position:fixed;right:26px;top:39%;z-index:15;display:flex;flex-direction:column;align-items:center;gap:22px}.rail>span{writing-mode:vertical-rl;font:9px 'Space Mono',monospace;text-transform:uppercase;letter-spacing:.16em}.track{width:1px;height:150px;background:#ffffff30;position:relative}.track>i{position:absolute;top:0;width:1px;background:var(--teal)}.track button{position:absolute;width:16px;height:16px;left:-7px;padding:0;transform:translateY(-50%)}.track button:after{content:'';display:block;width:3px;height:3px;background:#768080;border-radius:50%;margin:auto}.track button[aria-current=step]:after{background:var(--gold);box-shadow:0 0 12px var(--gold);width:6px;height:6px}.rail small{font:9px 'Space Mono',monospace;color:var(--muted)}.hint{position:fixed;bottom:42px;left:50%;transform:translateX(-50%);font:9px 'Space Mono',monospace;letter-spacing:.06em;text-align:center;transition:opacity .5s;pointer-events:none;color:var(--muted)}.hint span{display:block;font:24px serif;color:var(--gold);margin-bottom:18px}.loader{position:fixed;inset:0;z-index:100;background:var(--space);display:grid;place-content:center;text-align:center;gap:24px}.loader span{font-size:48px;color:var(--gold);animation:pulse 1s infinite}.loader p{font:10px 'Space Mono',monospace;letter-spacing:.2em;text-transform:uppercase}.skip{position:fixed;top:-80px;left:20px;z-index:200;background:var(--space);padding:15px}.skip:focus{top:10px}@keyframes pulse{50%{opacity:.3}}@keyframes reveal{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
-@media(max-width:600px){.header{padding:24px 22px}.header nav{gap:12px}.header nav button{font-size:8px;letter-spacing:.05em}.sound{position:fixed;bottom:25px;left:22px}.hero{top:20%;left:5%;width:90%}.hero h1{font-size:46px;white-space:normal;line-height:.95;max-width:330px;margin:24px auto}.identity{font-size:8px;letter-spacing:.08em;margin-top:28px}.hero .tagline{max-width:250px;margin:auto;font-size:25px}.heroBottom{bottom:65px;left:22px;right:22px;font-size:8px}.hint{bottom:130px;width:230px;font-size:8px}.rail{right:12px;top:42%;gap:14px}.track{height:105px}.chapter,.chapter.right{top:18%;left:7%;right:auto;width:80%}.chapter h2{font-size:44px}.chapter p{font-size:12px}.hero.chapter{width:90%;left:5%;top:19%}.eyebrow{font-size:8px}}
-@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
-.hero h1 span + span{margin-left:.14em}
-.chapter{top:17%;max-height:76svh;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#63877b44 transparent}.chapter h2{font-size:clamp(40px,4.25vw,65px)}.hero{top:16%;text-align:left;width:51%;overflow:visible}.hero h1{white-space:normal;font-size:clamp(65px,7.5vw,116px);max-width:650px;line-height:.85;margin:27px 0}.hero h1 span{display:block}.hero h1 span+span{margin:0}.hero .eyebrow{color:var(--teal)}.hero .identity{margin-top:28px}.hero .tagline{font-size:25px;max-width:320px;line-height:1.2}.heroBottom{pointer-events:none}.chapter:has(.heroBottom){max-height:none}.chapter:not(.hero){text-shadow:0 2px 16px #05070d}.chapter:not(.hero):before{content:"";position:absolute;inset:-35px;z-index:-1;background:radial-gradient(ellipse,#05070d99,transparent 72%);pointer-events:none}@media(max-width:600px){.hero.chapter{top:17%;left:7%;width:85%}.hero h1{font-size:58px;max-width:250px;margin:24px 0}.hero .tagline{margin:0;max-width:220px;font-size:23px}.chapter,.chapter.right{top:15%;max-height:76svh}.chapter h2{font-size:40px}.hero .identity{max-width:170px;line-height:1.8}.hero .eyebrow{font-size:7px}.heroBottom{bottom:70px}}
-.actions{display:flex;gap:26px;align-items:center}.header .menuButton{font-size:9px}.chapter{transition:none}.hero h1 .char{display:inline-block;margin:0;animation:reveal 1.2s both}.hero h1>span{animation:none}.hint{top:76%;left:7%;bottom:auto;transform:none;text-align:left;width:250px;line-height:1.8}.hint span{margin-bottom:14px}.loader small{font:10px Space Mono,monospace;color:var(--gold)}@media(max-width:600px){.header nav{display:none}.header .menuButton{font-size:9px}.hero.chapter{top:12%}.hero h1{font-size:44px;line-height:.9;max-width:200px;margin:18px 0}.hero .identity{margin-top:20px}.hero .tagline{font-size:19px;max-width:180px}.hint{top:47%;left:7%;width:150px;font-size:8px}.hero .eyebrow{font-size:7px}.hero .heroBottom{font-size:7px}}
+.canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 30px 4.4%;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.header nav {
+  display: flex;
+  gap: 34px;
+}
+.header button {
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+}
+.header .logo {
+  font-size: 25px;
+  font-weight: 600;
+  letter-spacing: -1px;
+}
+.logo span {
+  color: var(--teal);
+  font-size: 20px;
+  margin-left: 7px;
+}
+.sound span {
+  margin-left: 14px;
+  color: var(--teal);
+}
+.scroll {
+  height: 1000vh;
+  position: relative;
+  pointer-events: none;
+}
+.overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+.chapter {
+  position: absolute;
+  left: 7%;
+  top: 22%;
+  width: min(510px, 39vw);
+  transition:
+    opacity 0.65s,
+    visibility 0.65s;
+  pointer-events: auto;
+}
+.chapter.right {
+  left: auto;
+  right: 10%;
+}
+.chapter h2 {
+  font:
+    400 clamp(42px, 4.7vw, 76px)/0.98 "Cormorant Garamond",
+    Georgia,
+    serif;
+  letter-spacing: -0.035em;
+  margin: 24px 0;
+}
+.chapter p {
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--muted);
+  max-width: 470px;
+}
+.eyebrow,
+.identity {
+  font:
+    10px "Space Mono",
+    monospace;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--teal);
+}
+.hero {
+  left: 7%;
+  top: 18%;
+  width: 86%;
+  text-align: center;
+}
+.hero .eyebrow {
+  color: var(--gold);
+  font-size: 9px;
+  letter-spacing: 0.27em;
+}
+.identity {
+  margin-top: 35px;
+  font-size: 10px;
+  color: var(--muted);
+}
+.hero h1 {
+  font:
+    400 clamp(42px, 6.8vw, 112px)/1.1 "Cormorant Garamond",
+    Georgia,
+    serif;
+  letter-spacing: -0.045em;
+  text-transform: uppercase;
+  margin: 14px 0 16px;
+  white-space: nowrap;
+}
+.hero h1 span {
+  display: inline-block;
+  animation: reveal 1.4s both;
+}
+.hero .tagline {
+  max-width: none;
+  font:
+    italic 400 clamp(20px, 2vw, 30px) "Cormorant Garamond",
+    serif;
+  color: var(--ink);
+}
+.heroBottom {
+  position: fixed;
+  left: 4.4%;
+  right: 4.4%;
+  bottom: 40px;
+  display: flex;
+  justify-content: space-between;
+  text-align: left;
+  font:
+    9px/2 "Space Mono",
+    monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+.heroBottom span:last-child {
+  text-align: right;
+}
+.heroBottom i {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--teal);
+  margin-right: 5px;
+}
+.rail {
+  position: fixed;
+  right: 26px;
+  top: 39%;
+  z-index: 15;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+}
+.rail > span {
+  writing-mode: vertical-rl;
+  font:
+    9px "Space Mono",
+    monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+}
+.track {
+  width: 1px;
+  height: 150px;
+  background: #ffffff30;
+  position: relative;
+}
+.track > i {
+  position: absolute;
+  top: 0;
+  width: 1px;
+  background: var(--teal);
+}
+.track button {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  left: -7px;
+  padding: 0;
+  transform: translateY(-50%);
+}
+.track button:after {
+  content: "";
+  display: block;
+  width: 3px;
+  height: 3px;
+  background: #768080;
+  border-radius: 50%;
+  margin: auto;
+}
+.track button[aria-current="step"]:after {
+  background: var(--gold);
+  box-shadow: 0 0 12px var(--gold);
+  width: 6px;
+  height: 6px;
+}
+.rail small {
+  font:
+    9px "Space Mono",
+    monospace;
+  color: var(--muted);
+}
+.hint {
+  position: fixed;
+  bottom: 42px;
+  left: 50%;
+  transform: translateX(-50%);
+  font:
+    9px "Space Mono",
+    monospace;
+  letter-spacing: 0.06em;
+  text-align: center;
+  transition: opacity 0.5s;
+  pointer-events: none;
+  color: var(--muted);
+}
+.hint span {
+  display: block;
+  font: 24px serif;
+  color: var(--gold);
+  margin-bottom: 18px;
+}
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: var(--space);
+  display: grid;
+  place-content: center;
+  text-align: center;
+  gap: 24px;
+}
+.loader span {
+  font-size: 48px;
+  color: var(--gold);
+  animation: pulse 1s infinite;
+}
+.loader p {
+  font:
+    10px "Space Mono",
+    monospace;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.skip {
+  position: fixed;
+  top: -80px;
+  left: 20px;
+  z-index: 200;
+  background: var(--space);
+  padding: 15px;
+}
+.skip:focus {
+  top: 10px;
+}
+@keyframes pulse {
+  50% {
+    opacity: 0.3;
+  }
+}
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (max-width: 600px) {
+  .header {
+    padding: 24px 22px;
+  }
+  .header nav {
+    gap: 12px;
+  }
+  .header nav button {
+    font-size: 8px;
+    letter-spacing: 0.05em;
+  }
+  .sound {
+    position: fixed;
+    bottom: 25px;
+    left: 22px;
+  }
+  .hero {
+    top: 20%;
+    left: 5%;
+    width: 90%;
+  }
+  .hero h1 {
+    font-size: 46px;
+    white-space: normal;
+    line-height: 0.95;
+    max-width: 330px;
+    margin: 24px auto;
+  }
+  .identity {
+    font-size: 8px;
+    letter-spacing: 0.08em;
+    margin-top: 28px;
+  }
+  .hero .tagline {
+    max-width: 250px;
+    margin: auto;
+    font-size: 25px;
+  }
+  .heroBottom {
+    bottom: 65px;
+    left: 22px;
+    right: 22px;
+    font-size: 8px;
+  }
+  .hint {
+    bottom: 130px;
+    width: 230px;
+    font-size: 8px;
+  }
+  .rail {
+    right: 12px;
+    top: 42%;
+    gap: 14px;
+  }
+  .track {
+    height: 105px;
+  }
+  .chapter,
+  .chapter.right {
+    top: 18%;
+    left: 7%;
+    right: auto;
+    width: 80%;
+  }
+  .chapter h2 {
+    font-size: 44px;
+  }
+  .chapter p {
+    font-size: 12px;
+  }
+  .hero.chapter {
+    width: 90%;
+    left: 5%;
+    top: 19%;
+  }
+  .eyebrow {
+    font-size: 8px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *:before,
+  *:after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+.hero h1 span + span {
+  margin-left: 0.14em;
+}
+.chapter {
+  top: 17%;
+  max-height: 76svh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #63877b44 transparent;
+}
+.chapter h2 {
+  font-size: clamp(40px, 4.25vw, 65px);
+}
+.hero {
+  top: 16%;
+  text-align: left;
+  width: 51%;
+  overflow: visible;
+}
+.hero h1 {
+  white-space: normal;
+  font-size: clamp(65px, 7.5vw, 116px);
+  max-width: 650px;
+  line-height: 0.85;
+  margin: 27px 0;
+}
+.hero h1 span {
+  display: block;
+}
+.hero h1 span + span {
+  margin: 0;
+}
+.hero .eyebrow {
+  color: var(--teal);
+}
+.hero .identity {
+  margin-top: 28px;
+}
+.hero .tagline {
+  font-size: 25px;
+  max-width: 320px;
+  line-height: 1.2;
+}
+.heroBottom {
+  pointer-events: none;
+}
+.chapter:has(.heroBottom) {
+  max-height: none;
+}
+.chapter:not(.hero) {
+  text-shadow: 0 2px 16px #05070d;
+}
+.chapter:not(.hero):before {
+  content: "";
+  position: absolute;
+  inset: -35px;
+  z-index: -1;
+  background: radial-gradient(ellipse, #05070d99, transparent 72%);
+  pointer-events: none;
+}
+@media (max-width: 600px) {
+  .hero.chapter {
+    top: 17%;
+    left: 7%;
+    width: 85%;
+  }
+  .hero h1 {
+    font-size: 58px;
+    max-width: 250px;
+    margin: 24px 0;
+  }
+  .hero .tagline {
+    margin: 0;
+    max-width: 220px;
+    font-size: 23px;
+  }
+  .chapter,
+  .chapter.right {
+    top: 15%;
+    max-height: 76svh;
+  }
+  .chapter h2 {
+    font-size: 40px;
+  }
+  .hero .identity {
+    max-width: 170px;
+    line-height: 1.8;
+  }
+  .hero .eyebrow {
+    font-size: 7px;
+  }
+  .heroBottom {
+    bottom: 70px;
+  }
+}
+.actions {
+  display: flex;
+  gap: 26px;
+  align-items: center;
+}
+.header .menuButton {
+  font-size: 9px;
+}
+.chapter {
+  transition: none;
+}
+.hero h1 .char {
+  display: inline-block;
+  margin: 0;
+  animation: reveal 1.2s both;
+}
+.hero h1 > span {
+  animation: none;
+}
+.hint {
+  top: 76%;
+  left: 7%;
+  bottom: auto;
+  transform: none;
+  text-align: left;
+  width: 250px;
+  line-height: 1.8;
+}
+.hint span {
+  margin-bottom: 14px;
+}
+.loader small {
+  font:
+    10px Space Mono,
+    monospace;
+  color: var(--gold);
+}
+@media (max-width: 600px) {
+  .header nav {
+    display: none;
+  }
+  .header .menuButton {
+    font-size: 9px;
+  }
+  .hero.chapter {
+    top: 12%;
+  }
+  .hero h1 {
+    font-size: 44px;
+    line-height: 0.9;
+    max-width: 200px;
+    margin: 18px 0;
+  }
+  .hero .identity {
+    margin-top: 20px;
+  }
+  .hero .tagline {
+    font-size: 19px;
+    max-width: 180px;
+  }
+  .hint {
+    top: 47%;
+    left: 7%;
+    width: 150px;
+    font-size: 8px;
+  }
+  .hero .eyebrow {
+    font-size: 7px;
+  }
+  .hero .heroBottom {
+    font-size: 7px;
+  }
+}
+.linear {
+  height: auto;
+  pointer-events: auto;
+}
+.linear .overlay {
+  position: relative;
+  pointer-events: auto;
+  padding: 100px 7%;
+}
+.linear .chapter,
+.linear .chapter.right {
+  position: relative;
+  inset: auto;
+  width: min(620px, 100%);
+  max-height: none;
+  overflow: visible;
+  margin: 0 0 120px;
+  padding: 40px 0;
+  opacity: 1 !important;
+  transform: none !important;
+  scroll-margin-top: 100px;
+}
+.linear .heroBottom {
+  position: relative;
+  inset: auto;
+  margin-top: 50px;
+}
+.linear .chapter:before {
+  display: none;
+}
+.linear .hero h1 {
+  font-size: clamp(52px, 7vw, 100px);
+}
+.hero.chapter{top:12%;left:7%;width:86%;text-align:center}.hero .identity{margin-top:14px}.hero h1{font-size:clamp(38px,5.1vw,78px);line-height:1.05;max-width:none;margin:15px 0}.hero h1>span{display:inline-block;margin-right:.22em}.hero h1>span+span{margin-left:.22em}.hero .tagline{max-width:none;font-size:22px;margin-top:10px}.hero .eyebrow{font-size:8px}.hint{top:auto;bottom:105px;left:4.4%;font-size:9px}.hero .identity{max-width:none}.header{background:linear-gradient(#05070d66,transparent)}
+@media(max-width:600px){.hero.chapter{top:14%;width:84%;left:8%}.hero h1{font-size:42px;max-width:320px;margin:18px auto}.hero h1>span{display:inline-block}.hero .tagline{font-size:20px;max-width:270px;margin:auto}.hero .identity{font-size:8px;margin-top:20px}.hint{top:auto;bottom:110px;width:160px}.chapter:not(.hero){top:13%;}.hero .heroBottom{bottom:30px}.hero .eyebrow{font-size:7px}}
+
+.track{height:224px}.track button{width:24px;height:24px;left:-11px}

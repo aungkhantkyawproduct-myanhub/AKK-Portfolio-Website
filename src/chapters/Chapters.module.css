@@ -1,2 +1,258 @@
-.body{margin-top:26px}.summary{font-size:12px!important;line-height:1.7!important}.education{margin-top:22px;border-top:1px solid #ffffff20;display:grid;gap:10px;padding-top:17px;font-size:10px;line-height:1.6;color:var(--muted)}.education>div{display:flex;gap:13px}.education span{color:var(--gold);font:9px 'Space Mono',monospace}.job{margin-top:24px;border-top:1px solid #ffffff26;padding-top:20px}.job small{font:9px 'Space Mono',monospace;color:var(--gold);letter-spacing:.08em}.job h3{font-size:20px;margin:9px 0 5px;font-weight:500}.job p{font-size:12px!important}.job ul{padding:0;list-style:none;display:grid;gap:12px;margin:18px 0}.job li{font-size:12px;line-height:1.65;color:var(--muted);border-left:1px solid #84b8a650;padding-left:13px}.job li:hover{border-color:var(--gold);color:var(--ink)}.link{font:10px 'Space Mono',monospace;text-transform:uppercase;letter-spacing:.12em;color:var(--teal);padding:12px 0}.results{display:flex;gap:25px;margin:24px 0}.result b{display:block;font:40px 'Cormorant Garamond',serif;color:var(--gold)}.result span{font:8px/1.6 'Space Mono',monospace;text-transform:uppercase;display:block;max-width:100px}.projects{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0}.projects button{text-align:left;padding:17px;border:1px solid #c1d9c52a;background:#0c151b88;font-size:12px;line-height:1.5}.projects i{display:block;color:var(--gold);font-size:22px;margin-bottom:10px}.skills{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:22px}.skills button{border-bottom:1px solid #a8d3c23a;padding:12px 4px;text-align:left;font-size:11px;line-height:1.6}.skills span{color:var(--gold);display:block;font:9px 'Space Mono',monospace;margin-bottom:8px}.tools{display:flex;flex-wrap:wrap;gap:7px;margin-top:18px}.tools span{border:1px solid #ffffff20;padding:5px 8px;font-size:9px;color:var(--muted)}.certs{margin-top:18px;font-size:11px;color:var(--muted)}.certs ul{padding-left:15px;line-height:1.9}.contact{margin-top:30px}.contact>a{font-size:clamp(12px,1.2vw,17px);border-bottom:1px solid #ffffff50;padding-bottom:8px;display:inline-block}.contact button{color:var(--gold);margin-left:14px;font-size:10px}.contactLinks{display:flex;gap:22px;margin:24px 0;font-size:12px}.status{font:9px 'Space Mono',monospace;letter-spacing:.04em;color:var(--teal)}.status:before{content:'●';margin-right:8px}.footer{margin-top:44px;display:flex;justify-content:space-between;font:8px 'Space Mono',monospace;color:var(--muted)}
-@media(max-width:600px){.body{margin-top:15px}.summary{font-size:11px!important;line-height:1.6!important}.education{font-size:9px;gap:7px;margin-top:12px;padding-top:12px}.job{margin-top:15px;padding-top:14px}.job h3{font-size:18px}.job li{font-size:11px}.job ul{gap:8px}.results{gap:16px;margin:15px 0}.result b{font-size:32px}.result span{font-size:7px}.projects button{font-size:10px;padding:12px}.skills{gap:6px;margin-top:15px}.skills button{font-size:10px;padding:8px 2px}.contactLinks{gap:14px;font-size:11px}.footer{margin-top:25px}.contact button{margin:14px 0;display:block}}
+.body {
+  margin-top: 26px;
+}
+.summary {
+  font-size: 12px !important;
+  line-height: 1.7 !important;
+}
+.education {
+  margin-top: 22px;
+  border-top: 1px solid #ffffff20;
+  display: grid;
+  gap: 10px;
+  padding-top: 17px;
+  font-size: 10px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+.education > div {
+  display: flex;
+  gap: 13px;
+}
+.education span {
+  color: var(--gold);
+  font:
+    9px "Space Mono",
+    monospace;
+}
+.job {
+  margin-top: 24px;
+  border-top: 1px solid #ffffff26;
+  padding-top: 20px;
+}
+.job small {
+  font:
+    9px "Space Mono",
+    monospace;
+  color: var(--gold);
+  letter-spacing: 0.08em;
+}
+.job h3 {
+  font-size: 20px;
+  margin: 9px 0 5px;
+  font-weight: 500;
+}
+.job p {
+  font-size: 12px !important;
+}
+.job ul {
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 12px;
+  margin: 18px 0;
+}
+.job li {
+  font-size: 12px;
+  line-height: 1.65;
+  color: var(--muted);
+  border-left: 1px solid #84b8a650;
+  padding-left: 13px;
+}
+.job li:hover {
+  border-color: var(--gold);
+  color: var(--ink);
+}
+.link {
+  font:
+    10px "Space Mono",
+    monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--teal);
+  padding: 12px 0;
+}
+.results {
+  display: flex;
+  gap: 25px;
+  margin: 24px 0;
+}
+.result b {
+  display: block;
+  font:
+    40px "Cormorant Garamond",
+    serif;
+  color: var(--gold);
+}
+.result span {
+  font:
+    8px/1.6 "Space Mono",
+    monospace;
+  text-transform: uppercase;
+  display: block;
+  max-width: 100px;
+}
+.projects {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 18px 0;
+}
+.projects button {
+  text-align: left;
+  padding: 17px;
+  border: 1px solid #c1d9c52a;
+  background: #0c151b88;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.projects i {
+  display: block;
+  color: var(--gold);
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+.skills {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 22px;
+}
+.skills button {
+  border-bottom: 1px solid #a8d3c23a;
+  padding: 12px 4px;
+  text-align: left;
+  font-size: 11px;
+  line-height: 1.6;
+}
+.skills span {
+  color: var(--gold);
+  display: block;
+  font:
+    9px "Space Mono",
+    monospace;
+  margin-bottom: 8px;
+}
+.tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 18px;
+}
+.tools span {
+  border: 1px solid #ffffff20;
+  padding: 5px 8px;
+  font-size: 9px;
+  color: var(--muted);
+}
+.certs {
+  margin-top: 18px;
+  font-size: 11px;
+  color: var(--muted);
+}
+.certs ul {
+  padding-left: 15px;
+  line-height: 1.9;
+}
+.contact {
+  margin-top: 30px;
+}
+.contact > a {
+  font-size: clamp(12px, 1.2vw, 17px);
+  border-bottom: 1px solid #ffffff50;
+  padding-bottom: 8px;
+  display: inline-block;
+}
+.contact button {
+  color: var(--gold);
+  margin-left: 14px;
+  font-size: 10px;
+}
+.contactLinks {
+  display: flex;
+  gap: 22px;
+  margin: 24px 0;
+  font-size: 12px;
+}
+.status {
+  font:
+    9px "Space Mono",
+    monospace;
+  letter-spacing: 0.04em;
+  color: var(--teal);
+}
+.status:before {
+  content: "●";
+  margin-right: 8px;
+}
+.footer {
+  margin-top: 44px;
+  display: flex;
+  justify-content: space-between;
+  font:
+    8px "Space Mono",
+    monospace;
+  color: var(--muted);
+}
+@media (max-width: 600px) {
+  .body {
+    margin-top: 15px;
+  }
+  .summary {
+    font-size: 11px !important;
+    line-height: 1.6 !important;
+  }
+  .education {
+    font-size: 9px;
+    gap: 7px;
+    margin-top: 12px;
+    padding-top: 12px;
+  }
+  .job {
+    margin-top: 15px;
+    padding-top: 14px;
+  }
+  .job h3 {
+    font-size: 18px;
+  }
+  .job li {
+    font-size: 11px;
+  }
+  .job ul {
+    gap: 8px;
+  }
+  .results {
+    gap: 16px;
+    margin: 15px 0;
+  }
+  .result b {
+    font-size: 32px;
+  }
+  .result span {
+    font-size: 7px;
+  }
+  .projects button {
+    font-size: 10px;
+    padding: 12px;
+  }
+  .skills {
+    gap: 6px;
+    margin-top: 15px;
+  }
+  .skills button {
+    font-size: 10px;
+    padding: 8px 2px;
+  }
+  .contactLinks {
+    gap: 14px;
+    font-size: 11px;
+  }
+  .footer {
+    margin-top: 25px;
+  }
+  .contact button {
+    margin: 14px 0;
+    display: block;
+  }
+}
+.storyNote{font-size:14px;line-height:1.9;max-width:390px;color:var(--muted)}

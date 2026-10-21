@@ -1,29 +1,231 @@
-export interface Experience { role: string; company: string; dates: string; bullets: string[] }
+export interface Experience {
+  role: string;
+  company: string;
+  dates: string;
+  bullets: string[];
+}
 export const content = {
- name: 'Aung Khant Kyaw', role: 'AI Product Owner · Product Manager', tagline: 'I grow digital products from seed to scale.', location: 'Bangkok, Thailand', email: 'aungkhantkyaw.product@gmail.com', phone: '+66 61 763 8050', linkedin: 'https://linkedin.com/in/aungkhantkyawofficial', status: 'Open for new opportunities',
- summary: 'Product Manager / Product Owner with 6+ years of experience translating business needs into B2C, B2B and platform products across life insurance, digital payments and SaaS. Former Senior Product Analyst at AIA Myanmar, partnering with actuarial, analytics and engineering teams on insurance product enhancements and digital journeys. Current product experience includes Travel AI Assistant and Weather & Disaster Alert AI Assistant initiatives. Strong in stakeholder discovery, roadmap and backlog ownership, requirements definition, Agile delivery, validation, product analytics and adoption. Reported outcomes include 40% insurance product revenue growth, a 2.5x increase in purchase rate and 15% faster time-to-market.',
- chapters: [
-  {stage:'The world', title:'From seed to scale.', eyebrow:'A living portfolio · 2026', line:'Scroll to begin the journey'},
-  {stage:'Ideate', title:'Great things begin small.', eyebrow:'01 / The seed', line:"Every product begins as something small. A question. A user’s frustration. A seed."},
-  {stage:'Validate', title:'Give an idea its first roots.', eyebrow:'02 / The sprout', line:'Listen. Sketch. Test. Find the ground worth growing in.'},
-  {stage:'Build', title:'Turn possibility into product.', eyebrow:'03 / The sapling', line:'Strong roots. Clear direction. One thoughtful release at a time.'},
-  {stage:'Launch', title:'Let the work bear fruit.', eyebrow:'04 / The young tree', line:'Bring products into the world. Make their impact measurable.'},
-  {stage:'Measure → Enhance', title:'A launch isn’t the end. It’s the first season.', eyebrow:'05 / The world tree', line:'Discover → Build → Launch → Measure → Learn → Enhance'},
-  {stage:'Nine realms', title:'Connected by curiosity.', eyebrow:'06 / The nine realms', line:'Different disciplines. One connected product practice.'},
-  {stage:'The canopy', title:'Have a product to build? Let’s grow it together.', eyebrow:'07 / A new beginning', line:'Back to the seed ↺'}
- ],
- experience: [
- {role:'Junior Web Designer Intern',company:'Yoon Han Thar Co., Ltd.',dates:'Oct 2019 – Jan 2020',bullets:['Supported client requirement discussions, wireframes and web prototypes, and contributed to the delivery of a petrol import/export management web solution.']},
- {role:'Product Owner',company:'Citizens Pay',dates:'Dec 2020 – Mar 2024',bullets:['Led Consumer App product and system migration initiatives; owned backlogs, refined user stories and acceptance criteria and coordinated multiple releases.','Facilitated release planning, regular demonstrations and stakeholder updates, communicating product progress and key metrics.','Managed vendor relationships and cross-team dependencies across digital payments, rewards, promotions and marketing integrations.','Delivered customer engagement features including rewards, cashback and spin-the-wheel campaigns in partnership with marketing and commercial stakeholders.','Developed English/Burmese in-app terminology and localization materials to support a consistent customer experience.']},
- {role:'Senior Product Analyst',company:'AIA Myanmar',dates:'Apr 2024 – Dec 2024',bullets:['Supported roadmap development, backlog prioritization and product analytics for life insurance digital initiatives, informed by stakeholder needs, user research and market trends.','Partnered with actuarial, analytics and engineering teams to design and improve insurance products and riders; reported results included 40% product revenue growth and a 2.5x increase in product purchase rate.','Helped enhance iPOS web experiences for insurance product and rider attachment; related improvements increased product adoption by 45%, while ensuring requirements aligned with engineering delivery.']},
- {role:'Product Manager',company:'Digit7s',dates:'Jan 2025 – Present',bullets:['Own product roadmaps and prioritized backlogs for a SaaS gamification platform, digital wallet and sports entertainment products serving 12K+ users, alongside other consumer application initiatives.','Lead the development of a comprehensive travel platform with super-app capabilities, driving product discovery, validation, and end-to-end feature delivery.','Spearhead the development of an AI-powered weather and disaster alerts app for the Google Cloud AI Builder Cup tournament.','Lead discovery and validation through market research, prototypes and usability tests; reduced time-to-market by 15% for major features.','Translate user and stakeholder feedback into functional requirements, user stories and acceptance criteria; coordinate sprint and release plans in Jira.','Align engineering, UI/UX, QA, operations, business stakeholders and vendors on product scope, delivery dependencies, go-to-market execution and post-release adoption.']}
- ] satisfies Experience[],
- projects:[{name:'Travel AI Assistant',description:'Travel-focused AI assistant initiative within the current product portfolio; involved in applying product discovery, user-requirement and feature-prioritization practices to the use case.',url:''},{name:'Weather & Disaster Alert AI Assistant',description:'Weather and disaster-alert AI assistant initiative within the current product portfolio; involved in applying user-journey definition, requirements and cross-team coordination practices to the use case.',url:'https://myanaid-7b3dd.web.app/'}],
- education:['Bachelor of Science (Hons) · University of Lancashire · 2020–2021','BTEC Level 5 Higher National Diploma · Youth International University · 2017–2019','BTEC IT and Computing Learner of the Year 2020 — Pearson'],
- skills:[['Discovery & Research','Use-case discovery and prioritization, stakeholder interviews, user research, prototyping'],['Strategy & Roadmaps','Roadmaps, backlogs, KPI/success metrics, GTM and adoption'],['Requirements','BRD/PRD, user stories, acceptance criteria'],['Agile Delivery','Agile/Scrum, QA and release coordination, Jira'],['AI Product','AI assistant initiatives, GenAI product fundamentals (training)'],['Analytics','Mixpanel, Google Analytics, product analytics'],['Design & Prototyping','Figma, Maze'],['Domains','Insurance, Fintech, Digital payments, SaaS, Consumer apps'],['Languages & Localization','Burmese — Native. English — Professional working proficiency (EF SET: 78/100, C2)']],
- tools:['Jira','Trello','Productboard','Figma','Maze','Mixpanel','Google Analytics','Notion'],
- certifications:['Generative AI for Product Managers — LinkedIn Learning','AI for Product Management — Pendo','Analytics in Insurance — Great Learning','Aha! Product Management Professional Certificate — Aha!','Product Strategy Micro-Certification (PSC) — Product School','Product Analytics Micro-Certification (PAC) — Product School'],
- results:[['40%','Product revenue growth'],['2.5×','Product purchase rate'],['45%','Product adoption · iPOS'],['15%','Faster time-to-market'],['12K+','Users across Digit7s products']],
- markers:[{name:'Bangkok',description:'Current base · Bangkok, Thailand'},{name:'Yangon',description:'Professional roots · AIA Myanmar and Citizens Pay'}],
- ui:{wordmark:'AKK',nav:['Journey','Work','Skills','Contact'],soundOn:'Sound on',soundOff:'Sound off',hint:'Scroll or drag to explore. Click markers to discover.',mobileHint:'Swipe to explore. Tap markers.',copyright:'© 2026 AUNG KHANT KYAW',close:'Close',copy:'Copy email',copied:'Email copied',copyFailed:'Please select and copy the email address.',explore:'Explore project ↗',read:'Read the full story',menu:'Menu',loading:'Planting a possibility',skills:'Explore the nine realms',certifications:'Always growing',tools:'Tools of the craft',skip:'Skip to content',back:'Back to the seed ↺',details:'Explore experience',sound:'Toggle ambient sound'}
+  profile: {
+    eyebrow: "Beyond the journey",
+    title: "The person behind the product.",
+    introduction: "Experience, education and the work that shaped my practice.",
+    experience: "Professional experience",
+    education: "Education & recognition",
+    results: "Selected outcomes",
+    about: "About",
+    explore: "Explore my experience & education ↗",
+  },
+  storyNotes: [
+    "",
+    "Begin with the problem, not the solution. Give an idea the attention, context and curiosity it needs to take root.",
+    "Bring assumptions into the light. Explore the use case, prototype the experience and learn from real feedback.",
+    "Turn a shared direction into clear requirements. Build in small increments, with care for both the user and the system.",
+    "Release with intention. Connect delivery, quality and adoption so a product has room to thrive.",
+    "Watch what grows. Listen, measure and learn. Every season is an opportunity to make the product better.",
+    "",
+    "",
+  ],
+  name: "Aung Khant Kyaw",
+  role: "AI Product Owner · Product Manager",
+  tagline: "I grow digital products from seed to scale.",
+  location: "Bangkok, Thailand",
+  email: "aungkhantkyaw.product@gmail.com",
+  phone: "+66 61 763 8050",
+  linkedin: "https://linkedin.com/in/aungkhantkyawofficial",
+  status: "Open for new opportunities",
+  summary:
+    "Product Manager / Product Owner with 6+ years of experience translating business needs into B2C, B2B and platform products across life insurance, digital payments and SaaS. Former Senior Product Analyst at AIA Myanmar, partnering with actuarial, analytics and engineering teams on insurance product enhancements and digital journeys. Current product experience includes Travel AI Assistant and Weather & Disaster Alert AI Assistant initiatives. Strong in stakeholder discovery, roadmap and backlog ownership, requirements definition, Agile delivery, validation, product analytics and adoption. Reported outcomes include 40% insurance product revenue growth, a 2.5x increase in purchase rate and 15% faster time-to-market.",
+  chapters: [
+    {
+      stage: "The world",
+      title: "From seed to scale.",
+      eyebrow: "A living portfolio · 2026",
+      line: "Scroll to begin the journey",
+    },
+    {
+      stage: "Ideate",
+      title: "Great things begin small.",
+      eyebrow: "01 / The seed",
+      line: "Every product begins as something small. A question. A user’s frustration. A seed.",
+    },
+    {
+      stage: "Validate",
+      title: "Give an idea its first roots.",
+      eyebrow: "02 / The sprout",
+      line: "Listen. Sketch. Test. Find the ground worth growing in.",
+    },
+    {
+      stage: "Build",
+      title: "Turn possibility into product.",
+      eyebrow: "03 / The sapling",
+      line: "Strong roots. Clear direction. One thoughtful release at a time.",
+    },
+    {
+      stage: "Launch",
+      title: "Let the work bear fruit.",
+      eyebrow: "04 / The young tree",
+      line: "Bring products into the world. Make their impact measurable.",
+    },
+    {
+      stage: "Measure → Enhance",
+      title: "A launch isn’t the end. It’s the first season.",
+      eyebrow: "05 / The world tree",
+      line: "Discover → Build → Launch → Measure → Learn → Enhance",
+    },
+    {
+      stage: "Nine realms",
+      title: "Connected by curiosity.",
+      eyebrow: "06 / The nine realms",
+      line: "Different disciplines. One connected product practice.",
+    },
+    {
+      stage: "The canopy",
+      title: "Have a product to build? Let’s grow it together.",
+      eyebrow: "07 / A new beginning",
+      line: "Back to the seed ↺",
+    },
+  ],
+  experience: [
+    {
+      role: "Junior Web Designer Intern",
+      company: "Yoon Han Thar Co., Ltd.",
+      dates: "Oct 2019 – Jan 2020",
+      bullets: [
+        "Supported client requirement discussions, wireframes and web prototypes, and contributed to the delivery of a petrol import/export management web solution.",
+      ],
+    },
+    {
+      role: "Product Owner",
+      company: "Citizens Pay",
+      dates: "Dec 2020 – Mar 2024",
+      bullets: [
+        "Led Consumer App product and system migration initiatives; owned backlogs, refined user stories and acceptance criteria and coordinated multiple releases.",
+        "Facilitated release planning, regular demonstrations and stakeholder updates, communicating product progress and key metrics.",
+        "Managed vendor relationships and cross-team dependencies across digital payments, rewards, promotions and marketing integrations.",
+        "Delivered customer engagement features including rewards, cashback and spin-the-wheel campaigns in partnership with marketing and commercial stakeholders.",
+        "Developed English/Burmese in-app terminology and localization materials to support a consistent customer experience.",
+      ],
+    },
+    {
+      role: "Senior Product Analyst",
+      company: "AIA Myanmar",
+      dates: "Apr 2024 – Dec 2024",
+      bullets: [
+        "Supported roadmap development, backlog prioritization and product analytics for life insurance digital initiatives, informed by stakeholder needs, user research and market trends.",
+        "Partnered with actuarial, analytics and engineering teams to design and improve insurance products and riders; reported results included 40% product revenue growth and a 2.5x increase in product purchase rate.",
+        "Helped enhance iPOS web experiences for insurance product and rider attachment; related improvements increased product adoption by 45%, while ensuring requirements aligned with engineering delivery.",
+      ],
+    },
+    {
+      role: "Product Manager",
+      company: "Digit7s",
+      dates: "Jan 2025 – Present",
+      bullets: [
+        "Own product roadmaps and prioritized backlogs for a SaaS gamification platform, digital wallet and sports entertainment products serving 12K+ users, alongside other consumer application initiatives.",
+        "Lead the development of a comprehensive travel platform with super-app capabilities, driving product discovery, validation, and end-to-end feature delivery.",
+        "Spearhead the development of an AI-powered weather and disaster alerts app for the Google Cloud AI Builder Cup tournament.",
+        "Lead discovery and validation through market research, prototypes and usability tests; reduced time-to-market by 15% for major features.",
+        "Translate user and stakeholder feedback into functional requirements, user stories and acceptance criteria; coordinate sprint and release plans in Jira.",
+        "Align engineering, UI/UX, QA, operations, business stakeholders and vendors on product scope, delivery dependencies, go-to-market execution and post-release adoption.",
+      ],
+    },
+  ] satisfies Experience[],
+  projects: [
+    {
+      name: "Travel AI Assistant",
+      description:
+        "Travel-focused AI assistant initiative within the current product portfolio; involved in applying product discovery, user-requirement and feature-prioritization practices to the use case.",
+      url: "",
+    },
+    {
+      name: "Weather & Disaster Alert AI Assistant",
+      description:
+        "Weather and disaster-alert AI assistant initiative within the current product portfolio; involved in applying user-journey definition, requirements and cross-team coordination practices to the use case.",
+      url: "https://myanaid-7b3dd.web.app/",
+    },
+  ],
+  education: [
+    "Bachelor of Science (Hons) · University of Lancashire · 2020–2021",
+    "BTEC Level 5 Higher National Diploma · Youth International University · 2017–2019",
+    "BTEC IT and Computing Learner of the Year 2020 — Pearson",
+  ],
+  skills: [
+    [
+      "Discovery & Research",
+      "Use-case discovery and prioritization, stakeholder interviews, user research, prototyping",
+    ],
+    [
+      "Strategy & Roadmaps",
+      "Roadmaps, backlogs, KPI/success metrics, GTM and adoption",
+    ],
+    ["Requirements", "BRD/PRD, user stories, acceptance criteria"],
+    ["Agile Delivery", "Agile/Scrum, QA and release coordination, Jira"],
+    [
+      "AI Product",
+      "AI assistant initiatives, GenAI product fundamentals (training)",
+    ],
+    ["Analytics", "Mixpanel, Google Analytics, product analytics"],
+    ["Design & Prototyping", "Figma, Maze"],
+    ["Domains", "Insurance, Fintech, Digital payments, SaaS, Consumer apps"],
+    [
+      "Languages & Localization",
+      "Burmese — Native. English — Professional working proficiency (EF SET: 78/100, C2)",
+    ],
+  ],
+  tools: [
+    "Jira",
+    "Trello",
+    "Productboard",
+    "Figma",
+    "Maze",
+    "Mixpanel",
+    "Google Analytics",
+    "Notion",
+  ],
+  certifications: [
+    "Generative AI for Product Managers — LinkedIn Learning",
+    "AI for Product Management — Pendo",
+    "Analytics in Insurance — Great Learning",
+    "Aha! Product Management Professional Certificate — Aha!",
+    "Product Strategy Micro-Certification (PSC) — Product School",
+    "Product Analytics Micro-Certification (PAC) — Product School",
+  ],
+  results: [
+    ["40%", "Product revenue growth"],
+    ["2.5×", "Product purchase rate"],
+    ["45%", "Product adoption · iPOS"],
+    ["15%", "Faster time-to-market"],
+    ["12K+", "Users across Digit7s products"],
+  ],
+  markers: [
+    { name: "Bangkok", description: "Current base · Bangkok, Thailand" },
+    {
+      name: "Yangon",
+      description: "Professional roots · AIA Myanmar and Citizens Pay",
+    },
+  ],
+  ui: {
+    wordmark: "AKK",
+    nav: ["Journey", "Experience", "Skills", "Contact"],
+    soundOn: "Sound on",
+    soundOff: "Sound off",
+    hint: "Scroll or drag to explore. Click markers to discover.",
+    mobileHint: "Swipe to explore. Tap markers.",
+    copyright: "© 2026 AUNG KHANT KYAW",
+    close: "Close",
+    copy: "Copy email",
+    copied: "Email copied",
+    copyFailed: "Please select and copy the email address.",
+    explore: "Explore project ↗",
+    read: "Read the full story",
+    menu: "Menu",
+    loading: "Planting a possibility",
+    skills: "Explore the nine realms",
+    certifications: "Always growing",
+    tools: "Tools of the craft",
+    skip: "Skip to content",
+    back: "Back to the seed ↺",
+    details: "Explore experience",
+    sound: "Toggle ambient sound",
+  },
 } as const;
