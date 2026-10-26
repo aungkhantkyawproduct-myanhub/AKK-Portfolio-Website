@@ -54,13 +54,13 @@ export default function CameraRig() {
     const t = pathTime(p);
     const pos = cameraCurve.getPoint(t);
     const look = targetCurve.getPoint(t);
-    if (innerWidth < 600 && p > .1) {
-      pos.z *= 1.75;
-      look.x=0;
-      look.y+=.65+8.35*Math.min(1,Math.max(0,(p-.25)/.45));
+    if (innerWidth < 600 && p > 0.1) {
+      pos.z *= 1.9;
+      look.x = 0;
+      look.y += 0.65 + 11.35 * Math.min(1, Math.max(0, (p - 0.25) / 0.45));
     }
     // Pointer parallax is orbital-only. Local scenes stay stable while reading.
-    if (!reducedMotion && p < .1) {
+    if (!reducedMotion && p < 0.1) {
       pos.x += offset.current.x;
       pos.y += offset.current.y;
       pos.z -= offset.current.nudge;

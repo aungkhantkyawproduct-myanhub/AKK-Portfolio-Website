@@ -12,12 +12,26 @@ export const pacing = { scrub: 1.2, height: 1000 };
 export const earthCenter = [0, -10, 0] as const;
 // Points correspond to boundaries above. Earth surface / tree origin is (0,0,0).
 export const cameraPoints = [
- [0,3,10],[0,1.3,5],[0,1.3,5],[0,2.8,9],[0,6,25],
- [0,10,43],[0,11,50],[0,11,50],[0,11,50],
+  [0, 3, 10],
+  [0, 1.3, 5],
+  [0, 1.3, 5],
+  [0, 3.5, 13],
+  [0, 8, 33],
+  [0, 11, 40],
+  [0, 12, 43],
+  [0, 12, 43],
+  [0, 12, 43],
 ];
 export const targetPoints = [
- [0,-2,0],[1,.45,0],[1,.45,0],[1.8,1.2,0],[4.5,3,0],
- [8,5,0],[9,6,0],[9,6,0],[9,6,0],
+  [0, -2, 0],
+  [1, 0.45, 0],
+  [1, 0.45, 0],
+  [2.5, 3, 0],
+  [5.5, 7, 0],
+  [7, 12, 0],
+  [7.5, 13, 0],
+  [7.5, 13, 0],
+  [7.5, 13, 0],
 ];
 export function pathTime(p: number) {
   const i = Math.min(

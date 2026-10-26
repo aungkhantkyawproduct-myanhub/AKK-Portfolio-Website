@@ -4,6 +4,6 @@ export const palette = {
   muted: "#acb7bc",
   teal: "#8adbd9",
   gold: "#dec394",
-  green: "#79bda2",
+  green: "#4b9274",
   bark: "#3d3c32",
 };

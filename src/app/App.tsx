@@ -29,7 +29,7 @@ function Rail() {
               aria-label={c.chapters[i].stage}
               aria-current={chapter === i ? "step" : undefined}
               key={v}
-              style={{ top: `${i / 7 * 100}%` }}
+              style={{ top: `${(i / 7) * 100}%` }}
               onClick={() => navigate(v + 0.001)}
             />
           ))}
@@ -90,7 +90,13 @@ export default function App() {
     const animation = gsap.fromTo(
       section,
       { opacity: 0, y: 16 },
-      { opacity: 1, y: 0, duration: 0.7, ease: "power2.out", clearProps: "transform" },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.7,
+        ease: "power2.out",
+        clearProps: "transform",
+      },
     );
     return () => {
       animation.kill();
@@ -115,7 +121,7 @@ export default function App() {
           </CanvasBoundary>
         )}
       </div>
-      <header className={s.header}>
+      <header className={s.header} data-profile={profile}>
         <button className={s.logo} onClick={() => navigate(0)}>
           {c.ui.wordmark}
           <span>✳</span>
@@ -149,7 +155,12 @@ export default function App() {
         className={`${s.scroll} ${linear ? s.linear : ""}`}
         tabIndex={-1}
       >
-        <div ref={overlay} className={s.overlay} style={{ opacity: profile && !linear ? 0 : 1 }} inert={profile && !linear ? "" : undefined}>
+        <div
+          ref={overlay}
+          className={s.overlay}
+          style={{ opacity: profile && !linear ? 0 : 1 }}
+          inert={profile && !linear ? "" : undefined}
+        >
           {c.chapters.map((ch, i) => (
             <section
               key={ch.stage}
@@ -162,10 +173,10 @@ export default function App() {
                 visibility: linear || chapter === i ? "visible" : "hidden",
               }}
             >
-              <div className={s.eyebrow}>{ch.eyebrow}</div>
+              {i !== 0 && <div className={s.eyebrow}>{ch.eyebrow}</div>}
               {i === 0 ? (
                 <>
-                  <div className={s.identity}>{c.role}</div>
+                  <div className={s.identity}>{c.heroRole}</div>
                   <h1 aria-label={c.name}>
                     {c.name.split(" ").map((n, j) => (
                       <span key={n} aria-hidden="true">
@@ -206,9 +217,7 @@ export default function App() {
       </main>
       <Profile />
       {!linear && <Rail />}
-      {!loaded && (
-        <MistLoader progress={progress} />
-      )}
+      {!loaded && <MistLoader progress={progress} />}
     </>
   );
 }

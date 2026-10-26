@@ -27,6 +27,7 @@ export const content = {
   ],
   name: "Aung Khant Kyaw",
   role: "AI Product Owner · Product Manager",
+  heroRole: "Product Owner · Product Manager",
   tagline: "I grow digital products from seed to scale.",
   location: "Bangkok, Thailand",
   email: "aungkhantkyaw.product@gmail.com",

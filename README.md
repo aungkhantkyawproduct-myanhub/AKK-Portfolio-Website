@@ -64,3 +64,13 @@ Run `node scripts/continuous-check.mjs` to verify fixed sky/meadow transforms, r
 ## GitHub-ready package
 
 Extract `akk-portfolio-source.zip`, then upload the extracted files and folders into your repository root (where `package.json` lives). Do not upload only the ZIP as your site's source. The archive contains all build inputs, optimized runtime assets, lockfile and instructions; it excludes node_modules, .git, test captures, private screen recordings and large raw NASA masters. Run `npm ci` then `npm run build`. The separate `akk-portfolio-dist.zip` contains the production files for a root-domain static host. See `GITHUB-UPLOAD.md` for deployment-path limitations.
+
+## October 21 visual refinement
+
+The hero omits the portfolio-year eyebrow and uses “Product Owner · Product Manager”. The CV identity and SEO role remain authoritative. `earth/MyanmarBeacon.tsx` anchors an additive light beacon at 21.9° N, 95.9° E inside the rotating Earth group; it therefore follows the geography rather than the screen. The sun uses a smooth disc and corona without graphic starburst spokes.
+
+The tree has one seeded, curved branching skeleton with 17 staggered primary boughs, tapered buttress roots, leaf clusters and juvenile leaves. Sequential segment births prevent detached growth. The camera keeps the mature crown visible and the roots near the lower edge, with a separate portrait framing adjustment. Custom tree, sky and grass shaders include the Three.js output color conversion so quality changes preserve the lighting.
+
+The local sky uses a lighter atmospheric density, stars, a faint nebula, slow cloud noise and animated aurora curtains. The biography has a transparent section background, so the same live canvas continues behind its chronological career trail and readable glass panels. There is no background image swap or hard section backdrop.
+
+To regenerate the two handoff archives after building, run `python scripts/package_release.py`. The packager uses an explicit source allowlist and checks ZIP integrity; SHA-256 hashes are written to `release/checksums.json`.

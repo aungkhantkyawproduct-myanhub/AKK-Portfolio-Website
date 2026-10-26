@@ -12,6 +12,7 @@ import {
 } from "three";
 import { useJourney } from "../../app/store";
 import { content } from "../../content/content";
+import MyanmarBeacon from "./MyanmarBeacon";
 import {
   earthVertex,
   earthFragment,
@@ -81,14 +82,15 @@ export default function Earth() {
     };
   }, [uniforms]);
   useFrame((_, dt) => {
-    const p=useJourney.getState().scrollProgress;
-    if(world.current) world.current.visible=p<.125;
+    const p = useJourney.getState().scrollProgress;
+    if (world.current) world.current.visible = p < 0.125;
     if (globe.current) globe.current.rotation.y += dt * 0.012;
     if (cloud.current) cloud.current.rotation.y += dt * 0.018;
   });
   return (
     <group ref={world} position={[0, -10, 0]} rotation={[-0.55, 0, -0.4084]}>
       <group ref={globe} rotation={[0, -4.4, 0]}>
+        <MyanmarBeacon />
         <mesh>
           <sphereGeometry args={[10, 96, 64]} />
           <shaderMaterial

@@ -5,8 +5,11 @@ const browser=await chromium.launch({channel:"msedge",headless:true});
 const context=await browser.newContext({viewport:{width:1440,height:900}});
 const page=await context.newPage();
 await page.goto("http://127.0.0.1:5173");
-await page.getByRole("status").first().screenshot({path:"artifacts/verification/loader.png"});
+await page.waitForFunction(()=>!!window.__debugProgress);
+await page.waitForFunction(()=>!document.querySelector('[role="status"]'));
 await page.waitForTimeout(5500);
+await expect(page.locator('[data-chapter="0"]')).not.toContainText('A living portfolio');
+await expect(page.locator('[data-chapter="0"]')).toContainText('Product Owner · Product Manager');
 await page.locator("header").getByRole("button",{name:"Experience",exact:true}).click();
 await page.waitForTimeout(3500);
 await expect(page.locator("#profile")).toBeInViewport();
@@ -17,7 +20,12 @@ for (const chapter of [1,2,3,4,5]) {
   await expect(page.locator(`[data-chapter="${chapter}"]`)).not.toContainText("University of Lancashire");
 }
 await page.screenshot({path:"artifacts/verification/profile.png"});
+expect(await page.locator('#profile').evaluate(el=>getComputedStyle(el).backgroundColor)).toBe('rgba(0, 0, 0, 0)');
 const axe=await new AxeBuilder({page}).withTags(["wcag2a","wcag2aa"]).analyze();
 await fs.writeFile("artifacts/verification/profile-axe.json",JSON.stringify(axe.violations,null,2));
 console.log("Profile navigation and content checks passed; axe violations:",axe.violations.length);
+await page.setViewportSize({width:390,height:844});
+await page.locator('#profile').evaluate(el=>el.scrollIntoView({block:'start'}));
+await page.waitForTimeout(1500);
+await page.screenshot({path:'artifacts/verification/profile-mobile.png'});
 await browser.close();

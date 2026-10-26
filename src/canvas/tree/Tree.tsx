@@ -17,10 +17,16 @@ import { useJourney } from "../../app/store";
 import { createSkeleton } from "./skeleton";
 import { palette } from "../../styles/palette";
 const vertex = `attribute vec3 aStart;attribute float aBirth;uniform float uGrowth;uniform float uTime;varying vec2 vBarkUv;varying vec3 vN;varying vec3 vP;varying float vG;
-void main(){vBarkUv=uv;float g=smoothstep(aBirth,aBirth+.12,uGrowth);vec3 p=mix(aStart,position,g);p.x+=sin(uTime*.45+p.y*.65)*.012*max(p.y,0.)*g;vN=normalize(normalMatrix*normal);vP=position;vG=g;gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`;
-const fragment = `uniform float uOpacity;uniform float uLocal;uniform vec3 uBark;uniform vec3 uGold;varying vec2 vBarkUv;varying vec3 vN;varying vec3 vP;varying float vG;void main(){if(vG<.005||(uLocal>.5&&vP.y<0.))discard;float grooves=sin(vBarkUv.x*100.+sin(vP.y*1.2)*.6)*.5+.5;float vein=pow(grooves,28.);float l=.3+max(dot(normalize(vN),normalize(vec3(-1,1,1))),0.)*.8;vec3 c=(uBark+vec3(.08,.055,.025))*(.7+grooves*.3)*l+vec3(.08,.8,.73)*vein*.06;gl_FragColor=vec4(c,uOpacity);}`;
+void main(){vBarkUv=uv;float g=smoothstep(aBirth,aBirth+.005,uGrowth);vec3 p=mix(aStart,position,g);p.x+=sin(uTime*.45+p.y*.65)*.012*max(p.y,0.)*g;vN=normalize(normalMatrix*normal);vP=p;vG=g;gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`;
+const fragment = `uniform float uOpacity;uniform float uLocal;uniform vec3 uBark;uniform vec3 uGold;varying vec2 vBarkUv;varying vec3 vN;varying vec3 vP;varying float vG;void main(){if(vG<.005||(uLocal>.5&&vP.y<0.))discard;float grain=sin(vBarkUv.x*85.+sin(vP.y*3.)*.9)*.5+.5;float grooves=mix(grain,sin(vP.y*35.+vBarkUv.x*13.)*.5+.5,.14);float vein=pow(.5+.5*sin(atan(vP.z,vP.x)*9.+vP.y*.65+sin(vP.y*.9)),48.);float l=.3+max(dot(normalize(vN),normalize(vec3(-1,1,1))),0.)*.8;vec3 c=(uBark+vec3(.025,.012,.008))*(.7+grooves*.3)*l+vec3(.06,.75,.69)*vein*.12;gl_FragColor=vec4(c,uOpacity);
+#include <tonemapping_fragment>
+#include <colorspace_fragment>
+}`;
 const leafVertex = `attribute vec3 aCenter;attribute float aBirth;uniform float uGrowth;uniform float uTime;varying vec2 vUv;varying float vG;void main(){vUv=uv;float g=smoothstep(aBirth,aBirth+.1,uGrowth);vec3 p=aCenter+(position-aCenter)*g;p.x+=sin(uTime*.8+p.y+p.z)*.018*max(p.y,0.);vG=g;gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`;
-const leafFragment = `uniform float uOpacity;uniform float uSeason;uniform vec3 uGreen;uniform vec3 uGold;varying vec2 vUv;varying float vG;void main(){vec2 q=vUv*2.-1.;if(abs(q.x)+q.y*q.y>1.||vG<.01)discard;vec3 c=mix(uGreen,uGold,uSeason);float vein=1.-smoothstep(.015,.055,abs(q.x));c*=.45+(.25+q.y*.2);c+=vec3(.03,.06,.03)*vein;gl_FragColor=vec4(c,uOpacity);}`;
+const leafFragment = `uniform float uOpacity;uniform float uSeason;uniform vec3 uGreen;uniform vec3 uGold;varying vec2 vUv;varying float vG;void main(){vec2 q=vUv*2.-1.;if(abs(q.x)+q.y*q.y>1.||vG<.01)discard;vec3 c=mix(uGreen,uGold,uSeason);float vein=1.-smoothstep(.015,.055,abs(q.x));c*=.19+q.y*.08+fract(sin(vUv.x*78.+vUv.y*17.)*43.)*.16;c+=vec3(.03,.06,.03)*vein;gl_FragColor=vec4(c,uOpacity);
+#include <tonemapping_fragment>
+#include <colorspace_fragment>
+}`;
 export default function Tree() {
   const group = useRef<Group>(null);
   const bark = useRef<ShaderMaterial>(null);
@@ -31,10 +37,10 @@ export default function Tree() {
     const parts = segments.map((s) => {
       const dir = s.end.clone().sub(s.start);
       const geo = new CylinderGeometry(
-        s.radius * 0.88,
+        s.endRadius ?? s.radius * 0.92,
         s.radius,
         dir.length(),
-        9,
+        12,
         3,
       );
       geo.applyMatrix4(
@@ -108,7 +114,7 @@ export default function Tree() {
   }, [tier]);
   const uniforms = useMemo(
     () => ({
-      uOpacity: {value:1},
+      uOpacity: { value: 1 },
       uLocal: { value: 1 },
       uGrowth: { value: 0 },
       uTime: { value: 0 },
@@ -122,7 +128,7 @@ export default function Tree() {
   useFrame(({ clock }) => {
     const p = useJourney.getState().scrollProgress;
     uniforms.uLocal.value = 1;
-    uniforms.uOpacity.value=1;
+    uniforms.uOpacity.value = 1;
     uniforms.uGrowth.value = Math.max(0, Math.min(1, (p - 0.24) / 0.59));
     uniforms.uTime.value = useJourney.getState().reducedMotion
       ? 0
