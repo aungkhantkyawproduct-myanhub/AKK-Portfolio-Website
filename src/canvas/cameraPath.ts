@@ -45,3 +45,8 @@ export function pathTime(p: number) {
     ? 1
     : (i + (p - boundaries[i]) / (boundaries[i + 1] - boundaries[i])) / 8;
 }
+
+export const profileCamera = {
+  position: [-4, 22, 60] as const,
+  target: [0, 21, 0] as const,
+};

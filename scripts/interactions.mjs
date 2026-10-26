@@ -87,7 +87,7 @@ await page.screenshot({
 await page.emulateMedia({ reducedMotion: "reduce" });
 await page.waitForTimeout(800);
 await expect(page.locator("canvas")).toHaveCount(0);
-await expect(page.locator("section:not([aria-hidden])")).toHaveCount(9);
+await expect(page.locator("section[data-chapter]:not([aria-hidden])")).toHaveCount(8);
 await page.screenshot({
   path: "artifacts/verification/reduced-motion.png",
   animations: "disabled",
@@ -102,7 +102,7 @@ await page.waitForFunction(
   { timeout: 60000 },
 );
 await expect(page.locator("canvas")).toHaveCount(0);
-await expect(page.locator("section:not([aria-hidden])")).toHaveCount(9);
+await expect(page.locator("section[data-chapter]:not([aria-hidden])")).toHaveCount(8);
 await page.screenshot({
   path: "artifacts/verification/fallback.png",
   animations: "disabled",
@@ -139,3 +139,4 @@ console.log(
   "axe violations:",
   accessibility.violations.length,
 );
+

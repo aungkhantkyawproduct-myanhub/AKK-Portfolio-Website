@@ -207,6 +207,7 @@ export const content = {
   ],
   ui: {
     wordmark: "AKK",
+    linkedin: "LinkedIn ↗",
     nav: ["Journey", "Experience", "Skills", "Contact"],
     soundOn: "Sound on",
     soundOff: "Sound off",

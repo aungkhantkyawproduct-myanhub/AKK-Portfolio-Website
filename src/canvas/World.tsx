@@ -1,3 +1,6 @@
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { Group } from "three";
+import { useFrame } from "@react-three/fiber";
 import { Canvas } from "@react-three/fiber";
 import { Stars } from "@react-three/drei";
 import Earth from "./earth/Earth";
@@ -14,8 +17,37 @@ import Meadow from "./seed/Meadow";
 import Sun from "./earth/Sun";
 import { useJourney } from "../app/store";
 import { Preload } from "@react-three/drei";
+function JourneyWorld({ children }: { children: ReactNode }) {
+  const group = useRef<Group>(null);
+  useFrame(() => {
+    if (group.current)
+      group.current.visible = useJourney.getState().profileBlend < 0.995;
+  });
+  return (
+    <group ref={group} name="journey-world">
+      {children}
+    </group>
+  );
+}
 export default function World() {
   const tier = useJourney((s) => s.qualityTier);
+  const requested = useJourney((s) => s.scrollProgress > 0.015);
+  const [localReady, setLocalReady] = useState(false);
+  useEffect(() => {
+    if (requested) setLocalReady(true);
+  }, [requested]);
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>;
+    const prepare = () => {
+      timer = setTimeout(() => setLocalReady(true), 1200);
+    };
+    window.addEventListener("journey-ready", prepare);
+    if (document.documentElement.dataset.journeyReady === "true") prepare();
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("journey-ready", prepare);
+    };
+  }, []);
   return (
     <Canvas
       camera={{ position: [0, 3, 12.7], fov: 45, near: 0.05, far: 250 }}
@@ -27,28 +59,30 @@ export default function World() {
       gl={{ antialias: tier !== "low", powerPreference: "high-performance" }}
     >
       <color attach="background" args={["#05070d"]} />
-      <ambientLight intensity={0.7} />
-      <directionalLight position={[-10, 10, 10]} intensity={2} />
-      <Stars
-        radius={100}
-        depth={40}
-        count={tier === "low" ? 3500 : 8000}
-        factor={3.5}
-        fade
-      />
-      <Earth />
-      <Sun />
-      <Environment />
-      <PolarEffects />
-      <CameraRig />
-      <Seed />
-      <Meadow />
-      <Descent />
-      <Tree />
-      <Realms />
-      <Effects />
-      <Quality />
-      <Preload all />
+      <JourneyWorld>
+        <ambientLight intensity={0.7} />
+        <directionalLight position={[-10, 10, 10]} intensity={2} />
+        <Stars
+          radius={100}
+          depth={40}
+          count={tier === "low" ? 3500 : 8000}
+          factor={3.5}
+          fade
+        />
+        <Earth />
+        <Sun />
+        {localReady && <Environment />}
+        <PolarEffects />
+        <CameraRig />
+        {localReady && <Seed />}
+        {localReady && <Meadow />}
+        {localReady && <Descent />}
+        {localReady && <Tree />}
+        {localReady && <Realms />}
+        <Effects />
+        <Quality />
+        <Preload />
+      </JourneyWorld>
     </Canvas>
   );
 }

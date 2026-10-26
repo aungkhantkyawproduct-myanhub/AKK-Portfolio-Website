@@ -140,3 +140,5 @@
   position: fixed;
   inset: 0;
 }
+/* Detail views share the full-screen focus treatment instead of a card shell. */
+.dialog{background:transparent;border:0;border-radius:0;box-shadow:none;width:min(760px,90vw)}.dialog::backdrop{background:#030910ed;backdrop-filter:blur(16px)}.panel{padding:65px 38px}.panel h2{font-size:clamp(42px,5vw,68px);text-wrap:balance}.panel p{font-size:14px;line-height:1.95}

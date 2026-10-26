@@ -1,4 +1,10 @@
-@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@400;500;600&family=Space+Mono&display=swap");
+@font-face {
+  font-family: Inter;
+  src: url("/fonts/inter-latin.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
 .earth-marker {
   display: flex;
   align-items: center;
@@ -135,4 +141,22 @@ html[data-linear="true"] .header {
   }
 }
 
-html,body{scrollbar-width:none;overflow-x:hidden}html::-webkit-scrollbar,body::-webkit-scrollbar{display:none;width:0;height:0}
+html,
+body {
+  scrollbar-width: none;
+  overflow-x: hidden;
+}
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+:root {
+  --font-family: Inter, Arial, sans-serif;
+}
+body,
+body * {
+  font-family: var(--font-family) !important;
+}

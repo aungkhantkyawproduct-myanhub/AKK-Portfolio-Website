@@ -6,13 +6,18 @@ import { useJourney } from "../app/store";
 import { boundaries, pacing } from "../canvas/cameraPath";
 gsap.registerPlugin(ScrollTrigger);
 let lenis: Lenis | undefined;
-const distance = () => Math.max(1, (document.getElementById("story")?.offsetHeight ?? innerHeight) - innerHeight);
+const distance = () =>
+  Math.max(
+    1,
+    (document.getElementById("story")?.offsetHeight ?? innerHeight) -
+      innerHeight,
+  );
 export function navigateItem(index: number) {
   if (index === 1) {
     const profile = document.getElementById("profile");
     if (profile && lenis) lenis.scrollTo(profile);
     else profile?.scrollIntoView({ behavior: "smooth" });
-  } else navigate([0, 0, .91, .98][index]);
+  } else navigate([0, 0, 0.91, 0.98][index]);
 }
 export function navigate(p: number) {
   if (document.documentElement.dataset.linear === "true") {
@@ -60,14 +65,8 @@ export function useScrollJourney() {
     gsap.ticker.add(tick);
     const debug = (p: number) => {
       const v = Math.max(0, Math.min(1, p));
-      lenis?.scrollTo(
-        v * distance(),
-        { immediate: true },
-      );
-      window.scrollTo(
-        0,
-        v * distance(),
-      );
+      lenis?.scrollTo(v * distance(), { immediate: true });
+      window.scrollTo(0, v * distance());
       timeline.progress(v);
       state.setProgress(v);
     };
@@ -95,7 +94,19 @@ export function useScrollJourney() {
       }
     };
     window.addEventListener("keydown", keyboard);
-    const profileScroll = () => useJourney.setState({ profileActive: scrollY > distance() + 1 });
+    const profileScroll = () => {
+      const profile = document.getElementById("profile");
+      const past = Math.max(0, scrollY - distance());
+      useJourney.setState({
+        profileActive: past > 1,
+        profileBlend: Math.min(1, past / innerHeight),
+        profileProgress: Math.min(
+          1,
+          past / Math.max(1, profile?.offsetHeight ?? innerHeight),
+        ),
+      });
+    };
+    profileScroll();
     window.addEventListener("scroll", profileScroll, { passive: true });
     return () => {
       timeline.scrollTrigger?.kill();

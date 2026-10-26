@@ -47,7 +47,7 @@ The tree and grass remain procedural 3D art rather than scanned photogrammetry. 
 
 ## Historical reference revision (superseded below)
 
-The mist loader is `src/ui/MistLoader.tsx`: layered animated SVG turbulence over a meadow, a recursively generated tree silhouette and an asset-ready indicator. The landscape is `public/environments/meadow.webp`, created with the imagegen generate mode. Prompt: “Photorealistic cinematic wide-angle empty meadow at blue hour, fine dew-covered grass, distant low hills, natural teal aurora and stars, low cyan mist, empty center for a live 3D tree, no people, no text.” The source PNG is retained alongside it. The supplied stock Earth image was used for composition only, not embedded.
+The mist loader is `src/ui/MistLoader.tsx`: layered animated SVG turbulence over a meadow, a recursively generated tree silhouette and an asset-ready indicator. The landscape is `public/environments/meadow.webp`, created with the imagegen generate mode. Prompt: ï¿½Photorealistic cinematic wide-angle empty meadow at blue hour, fine dew-covered grass, distant low hills, natural teal aurora and stars, low cyan mist, empty center for a live 3D tree, no people, no text.ï¿½ The source PNG is retained alongside it. The supplied stock Earth image was used for composition only, not embedded.
 
 `Environment.tsx` crops the backdrop to cover portrait and landscape views. `Descent.tsx` supplies nine moving cloud layers and curved grass blades. The horizon is a visual local/global transition concealed by cloud opacity, not a physical atmospheric simulation. `Sun.tsx` adds the restrained sunrise glow. The tree has smaller dense leaves, a broader canopy and intertwined buttress roots.
 
@@ -84,3 +84,26 @@ The supplied AKK logo is displayed directly from `public/brand/reference.png` us
 `src/canvas/earth/myanmarBoundary.json` comes from Natural Earth's public-domain 1:110m country boundaries: https://github.com/nvkelso/natural-earth-vector/blob/master/geojson/ne_110m_admin_0_countries.geojson . The outline and up to 16 light columns are attached to the rotating globe. Rotation starts as the fog begins opening, preventing GPU preload time from advancing the initial geography out of frame. The angular velocity is then constant and independent of scrolling.
 
 Run `node scripts/hero-reveal-check.mjs` for desktop/mobile loading, 100% reveal, hero, rail and sound-toggle checks. The original video and review frames are excluded from release archives.
+
+## Current open storytelling presentation
+
+The latest reference recording was reviewed at multiple points (including its full-frame type, slow scene changes, and closing editorial layout). The portfolio keeps its own Earth/seed/tree theme and assets. The live reference page's interactive browser load timed out; the supplied recording was the visual source.
+
+Chapter content now sits on the world with a full-viewport, softly masked darkness/blur treatment in `App.module.css`. There are no rounded card shells. Project links, skill lists, tool labels and detail dialogs use the same open treatment. The career/education content is still separate from the product lifecycle.
+
+`Profile.tsx` is a spacious editorial sequence with newest-first experience: introduction, exact CV summary and metrics, four career chapters, education/recognition, certifications/tools and contact. GSAP gently moves each passage into place without dimming its text, with a static readable document for reduced motion. `ProfileAtmosphere.tsx` blends into a distinct teal/violet aurora field over one viewport as the biography arrives; its soft aurora curtains ripple over time. The tree camera rises during the handoff. The persistent Canvas remains mounted; scene geometry stops drawing once fully behind the biography.
+
+`BrandMark.tsx` now converts the supplied mark's luminance to actual SVG alpha. Black background pixels become transparent; the glyphs retain their supplied shapes. Screen blending is no longer used. The original screenshot is retained only as the logo's source.
+
+`node scripts/open-story-check.mjs` captures the logo against a colored swatch and verifies borderless chapter/biography surfaces, a partial background blend during the handoff, and desktop/mobile profile readability. Recording files remain excluded from packages.
+
+## Latest readability and startup update
+
+Inter is the only text family across the interface. Its 48 KB Latin variable WOFF2 is hosted locally at `public/fonts/inter-latin.woff2`, with the OFL license alongside it; there are no runtime Google Fonts requests. The navigation gains a smoothly faded dark backdrop and 18px blur after scrolling. About is a larger, double-ring typographic circle. Experience is presented newest first: Digit7s, AIA Myanmar, Citizens Pay, then Yoon Han Thar.
+
+The biography's line artwork has been replaced by low-opacity animated aurora curtains. Time-based path motion and a dark central reading veil preserve contrast; reduced motion freezes the curtains. The open editorial layout and actual logo alpha remain in place.
+
+The intro is now 1.9 seconds by design: a one-second smooth count and a 0.9-second mist clearing. The percentage represents the intro, not network byte completion. The hero appears immediately afterward with a temporary masked Earth poster while its one persistent WebGL canvas starts; the poster dissolves once the first frames and low-resolution Earth texture are ready. Tree/meadow geometry is deferred until after the hero is visible or the visitor starts the journey. Background rendering and texture downloads never hold the intro open. External network/bootstrap time and real-device GPU speed are still environment-dependent.
+
+`hero-reveal-check.mjs` records Performance API marks and asserts that the intro stays below three seconds on desktop and mobile. The current local headless measurements are about 1.91 and 1.92 seconds. `open-story-check.mjs` also checks the newest-first order, Inter typography, blurred navigation, card-free surfaces, progressive backdrop and mobile readability.
+

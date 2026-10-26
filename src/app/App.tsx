@@ -10,6 +10,7 @@ import gsap from "gsap";
 import { content as c } from "../content/content";
 import { useJourney } from "./store";
 import { useScrollJourney, navigate, navigateItem } from "../hooks/useJourney";
+import ProfileAtmosphere from "../ui/ProfileAtmosphere";
 import Profile from "../chapters/Profile";
 import BrandMark from "../ui/BrandMark";
 import SoundIcon from "../ui/SoundIcon";
@@ -60,11 +61,30 @@ export default function App() {
   const chapter = useJourney((v) => v.activeChapter);
   const sound = useJourney((v) => v.soundOn);
   const profile = useJourney((v) => v.profileActive);
+  const profileBlend = useJourney((v) => v.profileBlend);
   const reduced = useJourney((v) => v.reducedMotion);
   const [loaded, setLoaded] = useState(false);
+  const [worldStarted, setWorldStarted] = useState(false);
+  const [worldPainted, setWorldPainted] = useState(false);
+  useEffect(() => {
+    const painted = () => setWorldPainted(true);
+    window.addEventListener("world-painted", painted);
+    return () => window.removeEventListener("world-painted", painted);
+  }, []);
   const [menu, setMenu] = useState(false);
+  const [scrolled, setScrolled] = useState(() => scrollY > 16);
+  useEffect(() => {
+    const update = () => setScrolled(scrollY > 16);
+    window.addEventListener("scroll", update, { passive: true });
+    return () => window.removeEventListener("scroll", update);
+  }, []);
   const [assetReady, setAssetReady] = useState(false);
-  const finishLoading = useCallback(() => setLoaded(true), []);
+  const finishLoading = useCallback(() => {
+    setLoaded(true);
+    setTimeout(() => setWorldStarted(true), 60);
+    document.documentElement.dataset.journeyReady = "true";
+    window.dispatchEvent(new Event("journey-ready"));
+  }, []);
   const [failed, setFailed] = useState(() => !supportsWebGL());
   const linear = reduced || failed;
   const overlay = useRef<HTMLDivElement>(null);
@@ -121,15 +141,27 @@ export default function App() {
         <div className={s.canvas}>
           {linear ? (
             <Fallback />
-          ) : (
+          ) : worldStarted ? (
             <CanvasBoundary onFailure={() => setFailed(true)}>
               <Suspense fallback={null}>
                 <World />
               </Suspense>
             </CanvasBoundary>
+          ) : null}
+          {!linear && (
+            <div
+              className={s.heroPoster}
+              data-hidden={worldPainted && assetReady}
+              aria-hidden="true"
+            />
           )}
+          <ProfileAtmosphere />
         </div>
-        <header className={s.header} data-profile={profile}>
+        <header
+          className={s.header}
+          data-profile={profile}
+          data-scrolled={scrolled}
+        >
           <button
             className={s.logo}
             aria-label={c.ui.wordmark}
@@ -139,7 +171,7 @@ export default function App() {
           </button>
           <nav>
             {c.ui.nav.map((n, i) => (
-              <button key={n} onClick={() => navigateItem(i)}>
+              <button key={n} aria-label={n} onClick={() => navigateItem(i)}>
                 {n}
               </button>
             ))}
@@ -171,7 +203,8 @@ export default function App() {
           <div
             ref={overlay}
             className={s.overlay}
-            style={{ opacity: profile && !linear ? 0 : 1 }}
+            data-focus={chapter > 0}
+            style={{ opacity: !linear ? 1 - Math.min(1, profileBlend * 2) : 1 }}
             inert={profile && !linear ? "" : undefined}
           >
             {c.chapters.map((ch, i) => (
@@ -204,7 +237,7 @@ export default function App() {
                 ) : (
                   <>
                     <h2>{ch.title}</h2>
-                    <p>{ch.line}</p>
+                    {i !== 7 && <p>{ch.line}</p>}
                     <ChapterBody chapter={i} />
                   </>
                 )}

@@ -4,6 +4,8 @@ export const useJourney = create<{
   scrollProgress: number;
   activeChapter: number;
   profileActive: boolean;
+  profileBlend: number;
+  profileProgress: number;
   soundOn: boolean;
   qualityTier: "high" | "medium" | "low";
   reducedMotion: boolean;
@@ -13,6 +15,8 @@ export const useJourney = create<{
   scrollProgress: 0,
   activeChapter: 0,
   profileActive: false,
+  profileBlend: 0,
+  profileProgress: 0,
   soundOn: false,
   qualityTier:
     innerWidth < 600

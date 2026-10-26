@@ -32,46 +32,37 @@ export default function MistLoader({
   const reduced = useJourney((s) => s.reducedMotion);
   const [progress, setProgress] = useState(0),
     [clearing, setClearing] = useState(false);
-  const start = useRef(performance.now()),
-    value = useRef(0);
+  const start = useRef(performance.now());
   useEffect(() => {
-    let frame = 0,
-      last = performance.now();
+    performance.mark("portfolio-loader-start");
+    let frame = 0;
+    const countDuration = reduced ? 200 : 1000,
+      totalDuration = reduced ? 400 : 1900;
     const tick = (now: number) => {
-      const elapsed = Math.max(0, now - start.current),
-        dt = Math.max(0, Math.min(250, now - last));
-      last = now;
-      const canFinish = ready && elapsed > (reduced ? 300 : 3400);
-      const target = canFinish
-        ? 100
-        : Math.min(92, 12 + 80 * (1 - Math.exp(-elapsed / 2000)));
-      value.current +=
-        (target - value.current) *
-        (1 - Math.exp(-dt / (canFinish ? 260 : 450)));
-      setProgress(Math.floor(value.current));
-      if (canFinish && value.current > 99.7) {
-        setProgress(100);
-        setClearing(true);
-        return;
-      }
-      frame = requestAnimationFrame(tick);
+      const t = Math.max(0, Math.min(1, (now - start.current) / countDuration));
+      setProgress(Math.round((1 - Math.pow(1 - t, 2)) * 100));
+      if (t < 1) frame = requestAnimationFrame(tick);
     };
     frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
-  }, [ready, reduced]);
-  useEffect(() => {
+    const clear = setTimeout(() => {
+      setProgress(100);
+      setClearing(true);
+      document.documentElement.dataset.heroRevealed = "true";
+      window.dispatchEvent(new Event("hero-reveal"));
+    }, countDuration);
+    const finish = setTimeout(() => {
+      performance.mark("portfolio-loader-finish");
+      onComplete();
+    }, totalDuration);
     const before = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
+      cancelAnimationFrame(frame);
+      clearTimeout(clear);
+      clearTimeout(finish);
       document.body.style.overflow = before;
     };
-  }, []);
-  useEffect(() => {
-    if (!clearing) return;
-    window.dispatchEvent(new Event("hero-reveal"));
-    const timer = setTimeout(onComplete, reduced ? 500 : 4200);
-    return () => clearTimeout(timer);
-  }, [clearing, reduced, onComplete]);
+  }, [reduced, onComplete]);
   return (
     <div
       className={`${s.loader} ${clearing ? s.clearing : ""}`}
@@ -79,6 +70,7 @@ export default function MistLoader({
       aria-live="polite"
       aria-label={`${c.ui.loading} ${progress}%`}
       data-phase={clearing ? "revealing" : "loading"}
+      data-assets-ready={ready}
     >
       <div className={s.landscape} />
       <svg className={s.silhouette} viewBox="0 0 1000 700" aria-hidden="true">

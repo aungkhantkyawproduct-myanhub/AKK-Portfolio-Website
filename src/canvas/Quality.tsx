@@ -2,6 +2,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useRef } from "react";
 import { useJourney } from "../app/store";
 export default function Quality() {
+  const painted = useRef(0);
   const samples = useRef({ frames: 0, time: 0, done: false });
   const { gl, scene, camera } = useThree();
   useEffect(() => {
@@ -58,6 +59,13 @@ export default function Quality() {
     return () => gl.domElement.removeEventListener("webglcontextlost", lost);
   }, [gl]);
   useFrame((_, dt) => {
+    if (painted.current < 3) {
+      painted.current++;
+      if (painted.current === 3)
+        requestAnimationFrame(() =>
+          window.dispatchEvent(new Event("world-painted")),
+        );
+    }
     if (document.hidden || samples.current.done) return;
     const s = samples.current;
     s.time += dt;

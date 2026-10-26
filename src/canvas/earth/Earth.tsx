@@ -24,7 +24,7 @@ export default function Earth() {
   const globe = useRef<Group>(null);
   const world = useRef<Group>(null);
   const cloud = useRef<Group>(null);
-  const orbitLive = useRef(false);
+  const orbitLive = useRef(document.documentElement.dataset.heroRevealed === "true");
   useEffect(() => {
     const reveal = () => {
       orbitLive.current = true;

@@ -1,7 +1,12 @@
 import { useEffect, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { CatmullRomCurve3, Vector3 } from "three";
-import { cameraPoints, targetPoints, pathTime } from "./cameraPath";
+import {
+  cameraPoints,
+  targetPoints,
+  pathTime,
+  profileCamera,
+} from "./cameraPath";
 const cameraCurve = new CatmullRomCurve3(
   cameraPoints.map((p) => new Vector3(...p)),
   false,
@@ -58,6 +63,11 @@ export default function CameraRig() {
       pos.z *= 1.9;
       look.x = 0;
       look.y += 0.65 + 11.35 * Math.min(1, Math.max(0, (p - 0.25) / 0.45));
+    }
+    const blend = useJourney.getState().profileBlend;
+    if (blend > 0 && !reducedMotion) {
+      pos.lerp(new Vector3(...profileCamera.position), blend);
+      look.lerp(new Vector3(...profileCamera.target), blend);
     }
     // Pointer parallax is orbital-only. Local scenes stay stable while reading.
     if (!reducedMotion && p < 0.1) {

@@ -1009,3 +1009,121 @@
 .linear .heroBottom span:first-child {
   position: static;
 }
+/* Full-frame focus lighting replaces all chapter card surfaces. */
+.overlay {
+  isolation: isolate;
+}
+.overlay::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: #030b14cc;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  mask-image: linear-gradient(90deg, transparent 24%, #000 78%);
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+.overlay[data-focus="true"]::before {
+  opacity: 1;
+}
+.chapter:not(.hero),
+.chapter.right:not(.hero) {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  padding: 0;
+  max-height: 76svh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.chapter:not(.hero)::before,
+.chapter:not(.hero)::after {
+  display: none;
+}
+.chapter:not(.hero) h2 {
+  text-wrap: balance;
+}
+.chapter:not(.hero) p {
+  color: #d1d9d9;
+  text-shadow: 0 2px 16px #030910;
+}
+@media (max-width: 600px) {
+  .overlay::before {
+    mask-image: linear-gradient(#000 0%, #000 57%, transparent 85%);
+    background: #030b14bf;
+  }
+  .chapter:not(.hero),
+  .chapter.right:not(.hero) {
+    padding: 0;
+    max-height: 75svh;
+    top: 15%;
+    left: 26px;
+    right: 46px;
+  }
+  .chapter:not(.hero) h2 {
+    font-size: 34px;
+  }
+  .chapter:not(.hero) p {
+    font-size: 12px;
+    line-height: 1.8;
+  }
+}
+.linear .overlay::before {
+  display: none;
+}
+.linear .chapter:not(.hero) {
+  overflow: visible;
+  max-height: none;
+}
+.header {
+  backdrop-filter: blur(0);
+  -webkit-backdrop-filter: blur(0);
+  border-bottom: 1px solid transparent;
+  transition:
+    background 0.5s ease,
+    backdrop-filter 0.5s ease,
+    border-color 0.5s ease;
+}
+.header[data-scrolled="true"] {
+  background: #04101ac2;
+  backdrop-filter: blur(18px) saturate(1.15);
+  -webkit-backdrop-filter: blur(18px) saturate(1.15);
+  border-bottom-color: #bad5cc12;
+}
+.chapter:not(.hero) h2 {
+  font-weight: 500;
+  font-size: clamp(32px, 3.1vw, 48px);
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+}
+@media (max-width: 600px) {
+  .chapter:not(.hero) h2 {
+    font-size: 30px;
+    line-height: 1.18;
+  }
+}
+.heroPoster {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: url("/og.png") center/cover no-repeat;
+  mask-image: linear-gradient(
+    transparent 33%,
+    #000 48%,
+    #000 86%,
+    transparent 98%
+  );
+  opacity: 1;
+  transition: opacity 0.75s ease;
+}
+.heroPoster[data-hidden="true"] {
+  opacity: 0;
+}
