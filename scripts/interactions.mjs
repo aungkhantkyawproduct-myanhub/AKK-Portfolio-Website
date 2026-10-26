@@ -10,9 +10,13 @@ const context = await browser.newContext({
 const page = await context.newPage();
 const errors = [];
 page.on("pageerror", (e) => errors.push(e.message));
-await page.goto("http://127.0.0.1:5173");
+await page.goto("http://127.0.0.1:5173", { waitUntil: "domcontentloaded" });
 await page.waitForFunction(() => !!window.__debugProgress);
-await page.waitForTimeout(3000);
+await page.waitForFunction(
+  () => !document.querySelector("[role=status]"),
+  null,
+  { timeout: 60000 },
+);
 await expect(page.locator("canvas")).toHaveCount(1);
 await page.evaluate(
   () => (window.savedCanvas = document.querySelector("canvas")),
@@ -64,8 +68,13 @@ if (
 )
   throw Error("Canvas was remounted during journey");
 const stats = await page.evaluate(() => window.__sceneStats);
-const accessibility = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa"]).analyze();
-await page.getByRole("button", { name: /Back to the seed/ }).first().click();
+const accessibility = await new AxeBuilder({ page })
+  .withTags(["wcag2a", "wcag2aa"])
+  .analyze();
+await page
+  .getByRole("button", { name: /Back to the seed/ })
+  .first()
+  .click();
 await page.waitForTimeout(3600);
 await expect(page.locator('section[data-chapter="0"]')).toHaveAttribute(
   "aria-hidden",
@@ -84,8 +93,14 @@ await page.screenshot({
   animations: "disabled",
 });
 await page.emulateMedia({ reducedMotion: "no-preference" });
-await page.goto("http://127.0.0.1:5173/?fallback");
-await page.waitForTimeout(1000);
+await page.goto("http://127.0.0.1:5173/?fallback", {
+  waitUntil: "domcontentloaded",
+});
+await page.waitForFunction(
+  () => !document.querySelector("[role=status]"),
+  null,
+  { timeout: 60000 },
+);
 await expect(page.locator("canvas")).toHaveCount(0);
 await expect(page.locator("section:not([aria-hidden])")).toHaveCount(9);
 await page.screenshot({
@@ -118,4 +133,9 @@ await fs.writeFile(
 );
 await browser.close();
 if (errors.length) throw Error(errors.join("\n"));
-console.log("Interaction checks passed", stats, "axe violations:", accessibility.violations.length);
+console.log(
+  "Interaction checks passed",
+  stats,
+  "axe violations:",
+  accessibility.violations.length,
+);

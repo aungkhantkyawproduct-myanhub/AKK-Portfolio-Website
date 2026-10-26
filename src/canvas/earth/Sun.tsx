@@ -14,7 +14,7 @@ export default function Sun() {
       mesh.current.quaternion.copy(camera.quaternion);
       mesh.current.translateZ(-30);
       mesh.current.translateX(9);
-      mesh.current.translateY(9.5);
+      mesh.current.translateY(3.2);
     }
   });
   return (
@@ -27,7 +27,7 @@ export default function Sun() {
         blending={AdditiveBlending}
         uniforms={uniforms}
         vertexShader={`varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`}
-        fragmentShader={`varying vec2 vUv;uniform float uFade;void main(){vec2 p=vUv-.5;float r=length(p);float core=1.-smoothstep(.012,.022,r);float corona=exp(-r*38.)*.48;float halo=exp(-r*r*38.)*.065;vec3 light=vec3(1.,.97,.85)*core+vec3(1.,.77,.40)*corona+vec3(.55,.65,.82)*halo;gl_FragColor=vec4(light,uFade);}`}
+        fragmentShader={`varying vec2 vUv;uniform float uFade;void main(){vec2 p=vUv-.5;float r=length(p);float core=1.-smoothstep(.004,.009,r);float corona=exp(-r*52.)*.2;float halo=exp(-r*r*38.)*.065;vec3 light=vec3(1.,.97,.85)*core+vec3(.72,.86,1.)*corona+vec3(.55,.65,.82)*halo;gl_FragColor=vec4(light,uFade);}`}
       />
     </mesh>
   );

@@ -74,3 +74,13 @@ The tree has one seeded, curved branching skeleton with 17 staggered primary bou
 The local sky uses a lighter atmospheric density, stars, a faint nebula, slow cloud noise and animated aurora curtains. The biography has a transparent section background, so the same live canvas continues behind its chronological career trail and readable glass panels. There is no background image swap or hard section backdrop.
 
 To regenerate the two handoff archives after building, run `python scripts/package_release.py`. The packager uses an explicit source allowlist and checks ZIP integrity; SHA-256 hashes are written to `release/checksums.json`.
+
+## Reference hero and mist reveal
+
+The loader is now an explicit loading → revealing sequence. Scene readiness gates 100%; the displayed percentage is a staged readiness indicator, not a measurement of network bytes. After 100%, the lettering fades and three fog layers peel away over 4.2 seconds. Reduced-motion visitors receive a short fade. Background controls are inert during the loader, and body scrolling is restored when it finishes. The orbit ring uses an SVG circumference for an accurate fill.
+
+The supplied AKK logo is displayed directly from `public/brand/reference.png` using the cropped SVG viewport in `src/ui/BrandMark.tsx`; it is not redrawn. The reference image is used only for the mark. The orbital hero uses bold sans-serif typography and a lower horizon; the chapter progress rail keeps its original layout. The sound control is an SVG speaker/mute toggle with an accessible name and pressed state.
+
+`src/canvas/earth/myanmarBoundary.json` comes from Natural Earth's public-domain 1:110m country boundaries: https://github.com/nvkelso/natural-earth-vector/blob/master/geojson/ne_110m_admin_0_countries.geojson . The outline and up to 16 light columns are attached to the rotating globe. Rotation starts as the fog begins opening, preventing GPU preload time from advancing the initial geography out of frame. The angular velocity is then constant and independent of scrolling.
+
+Run `node scripts/hero-reveal-check.mjs` for desktop/mobile loading, 100% reveal, hero, rail and sound-toggle checks. The original video and review frames are excluded from release archives.

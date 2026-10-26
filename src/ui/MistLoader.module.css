@@ -1,8 +1,293 @@
-.loader{position:fixed;inset:0;z-index:200;background:#071016;overflow:hidden;display:grid;place-items:center;animation:enter .8s both}
-.landscape{position:absolute;inset:-3%;background:linear-gradient(#02070bb0,#07101750),url('/environments/meadow.webp') center/cover;filter:saturate(.3) brightness(.55)}
-.silhouette{position:absolute;width:100%;height:100%;inset:0;opacity:.8}
-.mist{position:absolute;inset:-30%;filter:url(#mist);background:linear-gradient(transparent 25%,#b9d5da88 65%,transparent);opacity:.55;animation:drift 17s ease-in-out infinite alternate;mix-blend-mode:screen;pointer-events:none}
-.second{animation-duration:23s;animation-direction:alternate-reverse;opacity:.3;transform:scale(1.5)}
-.copy{position:relative;text-align:center;color:#f0eee4;text-shadow:0 2px 24px #000;max-width:80%}
-.copy>span{font:11px monospace;letter-spacing:.45em}.copy p{font:clamp(25px,3.5vw,49px) Georgia,serif;font-style:italic;max-width:630px;line-height:1.3}.copy i{display:block;width:42px;height:42px;border-radius:50%;margin:38px auto 20px;mask:radial-gradient(transparent 61%,#000 64%)}.copy small{font:9px monospace;letter-spacing:.18em;text-transform:uppercase}
-@keyframes drift{from{transform:translate(-8%,3%) scale(1.1)}to{transform:translate(9%,-4%) scale(1.25)}}@keyframes enter{from{opacity:0}to{opacity:1}}@media(prefers-reduced-motion:reduce){.mist,.loader{animation:none}}
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  background: transparent;
+  isolation: isolate;
+  color: #f0eee4;
+}
+.landscape {
+  position: absolute;
+  inset: -3%;
+  background:
+    linear-gradient(#02070bb0, #07101788),
+    url("/environments/meadow.webp") center/cover;
+  filter: saturate(0.25) brightness(0.42);
+  transition:
+    opacity 3.2s ease,
+    filter 3.2s ease;
+  opacity: 1;
+}
+.silhouette {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  inset: 0;
+  opacity: 0.65;
+  transition:
+    opacity 2.4s ease,
+    filter 2.8s ease;
+}
+.filters {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+.mist {
+  position: absolute;
+  inset: -18%;
+  pointer-events: none;
+  filter: url(#mist-volume);
+  mix-blend-mode: screen;
+  will-change: transform, opacity;
+  background:
+    radial-gradient(ellipse at 20% 55%, #d9e4e8e8 0, transparent 48%),
+    radial-gradient(ellipse at 80% 40%, #9bbecde6 0, transparent 48%),
+    linear-gradient(transparent 15%, #b7cedbd9 65%, transparent 95%);
+  animation: drift 14s ease-in-out infinite alternate;
+}
+.far {
+  opacity: 0.55;
+  transform: scale(1.1);
+  animation-duration: 22s;
+}
+.middle {
+  opacity: 0.78;
+  animation-direction: alternate-reverse;
+  animation-duration: 17s;
+}
+.near {
+  opacity: 0.82;
+  inset: -35%;
+  animation-duration: 12s;
+  background:
+    radial-gradient(ellipse at 10% 72%, #dde6edf2, transparent 46%),
+    radial-gradient(ellipse at 100% 65%, #cbdce9eb, transparent 52%);
+}
+.veil {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 38%, transparent, #05101960);
+  transition: opacity 3s ease;
+}
+.copy {
+  position: relative;
+  text-align: center;
+  max-width: 85%;
+  text-shadow: 0 2px 32px #000;
+  transition:
+    opacity 1.4s ease,
+    transform 2s ease,
+    filter 1.8s ease;
+}
+.copy > svg {
+  width: 72px;
+  height: 28px;
+  opacity: 0.8;
+}
+.copy p {
+  font:
+    italic 400 clamp(28px, 3.6vw, 52px)/1.2 "Cormorant Garamond",
+    Georgia,
+    serif;
+  max-width: 600px;
+  margin: 28px auto 20px;
+  text-wrap: balance;
+}
+.copy small {
+  font:
+    9px "Space Mono",
+    monospace;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #d2dbdb;
+}
+.orbit {
+  position: relative;
+  width: 126px;
+  height: 126px;
+  margin: 25px auto 22px;
+}
+.orbit > svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.track {
+  fill: none;
+  stroke: #d4e4e22b;
+  stroke-width: 0.7;
+}
+.ticks {
+  fill: none;
+  stroke: #b4ded55c;
+  stroke-width: 2;
+  stroke-dasharray: 1 12;
+  transform-origin: center;
+  animation: rotate 60s linear infinite;
+}
+.fill {
+  fill: none;
+  stroke: url(#orbit-light);
+  stroke-width: 2;
+  stroke-dasharray: 358.142;
+  stroke-linecap: round;
+  transform: rotate(-90deg);
+  transform-origin: center;
+  filter: drop-shadow(0 0 5px #c9dfc5);
+  transition: stroke-dashoffset 0.15s linear;
+}
+.seed {
+  fill: #c8dfcc0c;
+  stroke: #d2dab1;
+  stroke-width: 0.8;
+  transform: translateY(-10px);
+  opacity: 0.85;
+}
+.orbit > span {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 25px;
+  font:
+    12px "Space Mono",
+    monospace;
+  letter-spacing: 0.04em;
+}
+.orbit sup {
+  font-size: 7px;
+  margin-left: 3px;
+  margin-bottom: 4px;
+}
+.clearing .landscape {
+  opacity: 0;
+  filter: saturate(0.1) brightness(0.8) blur(12px);
+}
+.clearing .silhouette {
+  opacity: 0;
+  filter: blur(12px);
+}
+.clearing .copy {
+  opacity: 0;
+  transform: translateY(-12px);
+  filter: blur(8px);
+}
+.clearing .veil {
+  opacity: 0;
+}
+.clearing .far {
+  animation: clear-far 4.2s ease-in-out forwards;
+}
+.clearing .middle {
+  animation: clear-left 4.2s cubic-bezier(0.22, 0.5, 0.2, 1) forwards;
+}
+.clearing .near {
+  animation: clear-right 4.2s cubic-bezier(0.22, 0.5, 0.2, 1) forwards;
+}
+@keyframes drift {
+  from {
+    transform: translate(-7%, 4%) scale(1.08);
+  }
+  to {
+    transform: translate(8%, -3%) scale(1.24);
+  }
+}
+@keyframes rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes clear-far {
+  0% {
+    opacity: 0.55;
+    transform: scale(1.1);
+  }
+  40% {
+    opacity: 0.48;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-22%) scale(1.55);
+  }
+}
+@keyframes clear-left {
+  0% {
+    opacity: 0.78;
+    transform: translateX(0) scale(1.1);
+  }
+  25% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-38%, 8%) scale(1.45);
+  }
+}
+@keyframes clear-right {
+  0% {
+    opacity: 0.82;
+    transform: translateX(0) scale(1.1);
+  }
+  25% {
+    opacity: 0.85;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(38%, -6%) scale(1.5);
+  }
+}
+@media (max-width: 600px) {
+  .orbit {
+    width: 112px;
+    height: 112px;
+  }
+  .copy p {
+    font-size: 34px;
+  }
+  .mist {
+    filter: blur(8px);
+    opacity: 0.7;
+  }
+  .near {
+    background:
+      radial-gradient(ellipse at 10% 72%, #dde6edb0, transparent 62%),
+      radial-gradient(ellipse at 100% 65%, #cbdce9b0, transparent 65%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mist,
+  .ticks {
+    animation: none;
+  }
+  .clearing .mist {
+    animation: none;
+    opacity: 0;
+    transition: opacity 0.45s;
+  }
+  .clearing .copy,
+  .landscape,
+  .silhouette,
+  .veil {
+    transition-duration: 0.45s;
+  }
+}
+.copy {
+  padding: 24px 30px;
+  background: radial-gradient(ellipse, #07101766, transparent 73%);
+  border-radius: 50%;
+}
+@media (max-width: 600px) {
+  .far {
+    filter: url(#mist-volume);
+    opacity: 0.5;
+  }
+  .copy {
+    padding: 20px 12px;
+  }
+}

@@ -32,8 +32,8 @@ export default function World() {
       <Stars
         radius={100}
         depth={40}
-        count={tier === "low" ? 650 : 1600}
-        factor={2}
+        count={tier === "low" ? 3500 : 8000}
+        factor={3.5}
         fade
       />
       <Earth />

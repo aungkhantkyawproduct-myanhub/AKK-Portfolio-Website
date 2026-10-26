@@ -4,16 +4,51 @@ import { useJourney } from "../app/store";
 export default function Quality() {
   const samples = useRef({ frames: 0, time: 0, done: false });
   const { gl, scene, camera } = useThree();
-  useEffect(()=>{
-    if(!import.meta.env.DEV)return;
-    Object.assign(window,{__worldDiagnostic:()=>{
-      const sky=scene.getObjectByName('sky'), meadow=scene.getObjectByName('meadow'), tree=scene.getObjectByName('growing-tree');
-      const materials:any[]=[];scene.traverse((o:any)=>{if(o.material?.uniforms)materials.push(o.material.uniforms);});
-      const projected=camera.position.clone().set(0,.15,0).project(camera);
-      return {camera:camera.position.toArray(),sky:sky?.matrixWorld.toArray(),meadow:meadow?.matrixWorld.toArray(),treeVisible:tree?.visible,growth:materials.find(u=>u.uGrowth)?.uGrowth.value,skyTime:(sky?.children.find((o:any)=>o.material?.uniforms?.uTime) as any)?.material.uniforms.uTime.value,seedScreen:[(projected.x+1)*innerWidth/2,(1-projected.y)*innerHeight/2]};
-    }});
-    return ()=>{delete (window as any).__worldDiagnostic;};
-  },[scene,camera]);
+  useEffect(() => {
+    if (!import.meta.env.DEV) return;
+    Object.assign(window, {
+      __worldDiagnostic: () => {
+        const sky = scene.getObjectByName("sky"),
+          meadow = scene.getObjectByName("meadow"),
+          tree = scene.getObjectByName("growing-tree");
+        const materials: any[] = [];
+        scene.traverse((o: any) => {
+          if (o.material?.uniforms) materials.push(o.material.uniforms);
+        });
+        const projected = camera.position
+          .clone()
+          .set(0, 0.15, 0)
+          .project(camera);
+        const origin = scene
+          .getObjectByName("myanmar-origin")
+          ?.getWorldPosition(camera.position.clone())
+          .project(camera);
+        return {
+          myanmarScreen: origin
+            ? [
+                ((origin.x + 1) * innerWidth) / 2,
+                ((1 - origin.y) * innerHeight) / 2,
+              ]
+            : null,
+          camera: camera.position.toArray(),
+          sky: sky?.matrixWorld.toArray(),
+          meadow: meadow?.matrixWorld.toArray(),
+          treeVisible: tree?.visible,
+          growth: materials.find((u) => u.uGrowth)?.uGrowth.value,
+          skyTime: (
+            sky?.children.find((o: any) => o.material?.uniforms?.uTime) as any
+          )?.material.uniforms.uTime.value,
+          seedScreen: [
+            ((projected.x + 1) * innerWidth) / 2,
+            ((1 - projected.y) * innerHeight) / 2,
+          ],
+        };
+      },
+    });
+    return () => {
+      delete (window as any).__worldDiagnostic;
+    };
+  }, [scene, camera]);
   useEffect(() => {
     const lost = (e: Event) => {
       e.preventDefault();

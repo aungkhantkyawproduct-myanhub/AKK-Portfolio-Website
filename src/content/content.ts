@@ -210,6 +210,8 @@ export const content = {
     nav: ["Journey", "Experience", "Skills", "Contact"],
     soundOn: "Sound on",
     soundOff: "Sound off",
+    heroHint: "Scroll or drag to explore...",
+    heroMobileHint: "Swipe to explore...",
     hint: "Scroll or drag to explore. Click markers to discover.",
     mobileHint: "Swipe to explore. Tap markers.",
     copyright: "© 2026 AUNG KHANT KYAW",

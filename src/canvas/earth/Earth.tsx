@@ -24,6 +24,14 @@ export default function Earth() {
   const globe = useRef<Group>(null);
   const world = useRef<Group>(null);
   const cloud = useRef<Group>(null);
+  const orbitLive = useRef(false);
+  useEffect(() => {
+    const reveal = () => {
+      orbitLive.current = true;
+    };
+    window.addEventListener("hero-reveal", reveal);
+    return () => window.removeEventListener("hero-reveal", reveal);
+  }, []);
   const progress = useJourney((s) => s.scrollProgress);
   const tier = useJourney((s) => s.qualityTier);
   const uniforms = useMemo(
@@ -84,12 +92,14 @@ export default function Earth() {
   useFrame((_, dt) => {
     const p = useJourney.getState().scrollProgress;
     if (world.current) world.current.visible = p < 0.125;
-    if (globe.current) globe.current.rotation.y += dt * 0.012;
-    if (cloud.current) cloud.current.rotation.y += dt * 0.018;
+    if (orbitLive.current && globe.current)
+      globe.current.rotation.y += dt * 0.002;
+    if (orbitLive.current && cloud.current)
+      cloud.current.rotation.y += dt * 0.0035;
   });
   return (
-    <group ref={world} position={[0, -10, 0]} rotation={[-0.55, 0, -0.4084]}>
-      <group ref={globe} rotation={[0, -4.4, 0]}>
+    <group ref={world} position={[0, -10, 0]} rotation={[-0.95, 0, -0.4084]}>
+      <group ref={globe} rotation={[0, -3.42, 0]}>
         <MyanmarBeacon />
         <mesh>
           <sphereGeometry args={[10, 96, 64]} />
@@ -126,7 +136,7 @@ export default function Earth() {
             </Html>
           ))}
       </group>
-      <group ref={cloud} rotation={[0, -4.4, 0]}>
+      <group ref={cloud} rotation={[0, -3.42, 0]}>
         <mesh>
           <sphereGeometry args={[10.04, 72, 48]} />
           <shaderMaterial

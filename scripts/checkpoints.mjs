@@ -17,9 +17,13 @@ for (const [name, width, height] of [
     deviceScaleFactor: 1,
   });
   page.on("pageerror", (e) => errors.push(e.message));
-  await page.goto("http://127.0.0.1:5173");
+  await page.goto("http://127.0.0.1:5173", { waitUntil: "domcontentloaded" });
   await page.waitForFunction(() => !!window.__debugProgress);
-  await page.waitForFunction(() => !document.querySelector("[role=status]"), {timeout:20000});
+  await page.waitForFunction(
+    () => !document.querySelector("[role=status]"),
+    null,
+    { timeout: 60000 },
+  );
   await page.waitForTimeout(1000);
   for (const p of [0, 0.15, 0.3, 0.5, 0.65, 0.8, 0.95, 1]) {
     await page.evaluate((v) => window.__debugProgress(v), p);

@@ -1,9 +1,18 @@
-import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import {
+  lazy,
+  Suspense,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import gsap from "gsap";
 import { content as c } from "../content/content";
 import { useJourney } from "./store";
 import { useScrollJourney, navigate, navigateItem } from "../hooks/useJourney";
 import Profile from "../chapters/Profile";
+import BrandMark from "../ui/BrandMark";
+import SoundIcon from "../ui/SoundIcon";
 import MistLoader from "../ui/MistLoader";
 import { boundaries } from "../canvas/cameraPath";
 import s from "./App.module.css";
@@ -41,7 +50,7 @@ function Rail() {
       </aside>
       <div className={s.hint} style={{ opacity: p < 0.025 ? 1 : 0 }}>
         <span>↓</span>
-        {innerWidth < 600 ? c.ui.mobileHint : c.ui.hint}
+        {innerWidth < 600 ? c.ui.heroMobileHint : c.ui.heroHint}
       </div>
     </>
   );
@@ -54,15 +63,14 @@ export default function App() {
   const reduced = useJourney((v) => v.reducedMotion);
   const [loaded, setLoaded] = useState(false);
   const [menu, setMenu] = useState(false);
-  const [progress, setProgress] = useState(0);
+  const [assetReady, setAssetReady] = useState(false);
+  const finishLoading = useCallback(() => setLoaded(true), []);
   const [failed, setFailed] = useState(() => !supportsWebGL());
   const linear = reduced || failed;
   const overlay = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    let reveal: ReturnType<typeof setTimeout>;
     const ready = () => {
-      setProgress(100);
-      reveal = setTimeout(() => setLoaded(true), 2400);
+      setAssetReady(true);
     };
     const fail = () => {
       setFailed(true);
@@ -78,7 +86,6 @@ export default function App() {
     media.addEventListener("change", change);
     return () => {
       clearTimeout(timer);
-      clearTimeout(reveal);
       window.removeEventListener("world-ready", ready);
       window.removeEventListener("webgl-failed", fail);
       media.removeEventListener("change", change);
@@ -104,120 +111,111 @@ export default function App() {
   }, [chapter, reduced]);
   return (
     <>
-      <DetailPanel />
-      <Menu open={menu} onClose={() => setMenu(false)} />
-      <Enhancements />
-      <a className={s.skip} href="#story">
-        {c.ui.skip}
-      </a>
-      <div className={s.canvas}>
-        {linear ? (
-          <Fallback />
-        ) : (
-          <CanvasBoundary onFailure={() => setFailed(true)}>
-            <Suspense fallback={null}>
-              <World />
-            </Suspense>
-          </CanvasBoundary>
-        )}
-      </div>
-      <header className={s.header} data-profile={profile}>
-        <button className={s.logo} onClick={() => navigate(0)}>
-          {c.ui.wordmark}
-          <span>✳</span>
-        </button>
-        <nav>
-          {c.ui.nav.map((n, i) => (
-            <button key={n} onClick={() => navigateItem(i)}>
-              {n}
-            </button>
-          ))}
-        </nav>
-        <div className={s.actions}>
-          <button
-            className={s.sound}
-            onClick={() => void toggleAmbient()}
-            aria-pressed={sound}
-          >
-            {sound ? c.ui.soundOn : c.ui.soundOff} <span>▥</span>
-          </button>
-          <button
-            className={s.menuButton}
-            onClick={() => setMenu(true)}
-            aria-expanded={menu}
-          >
-            {c.ui.menu} ☰
-          </button>
+      <div inert={!loaded ? "" : undefined}>
+        <DetailPanel />
+        <Menu open={menu} onClose={() => setMenu(false)} />
+        <Enhancements />
+        <a className={s.skip} href="#story">
+          {c.ui.skip}
+        </a>
+        <div className={s.canvas}>
+          {linear ? (
+            <Fallback />
+          ) : (
+            <CanvasBoundary onFailure={() => setFailed(true)}>
+              <Suspense fallback={null}>
+                <World />
+              </Suspense>
+            </CanvasBoundary>
+          )}
         </div>
-      </header>
-      <main
-        id="story"
-        className={`${s.scroll} ${linear ? s.linear : ""}`}
-        tabIndex={-1}
-      >
-        <div
-          ref={overlay}
-          className={s.overlay}
-          style={{ opacity: profile && !linear ? 0 : 1 }}
-          inert={profile && !linear ? "" : undefined}
-        >
-          {c.chapters.map((ch, i) => (
-            <section
-              key={ch.stage}
-              data-chapter={i}
-              data-lenis-prevent
-              className={`${s.chapter} ${i === 0 ? s.hero : ""} ${i % 2 === 1 ? s.right : ""}`}
-              aria-hidden={linear ? undefined : chapter !== i}
-              inert={!linear && chapter !== i ? "" : undefined}
-              style={{
-                visibility: linear || chapter === i ? "visible" : "hidden",
-              }}
+        <header className={s.header} data-profile={profile}>
+          <button
+            className={s.logo}
+            aria-label={c.ui.wordmark}
+            onClick={() => navigate(0)}
+          >
+            <BrandMark />
+          </button>
+          <nav>
+            {c.ui.nav.map((n, i) => (
+              <button key={n} onClick={() => navigateItem(i)}>
+                {n}
+              </button>
+            ))}
+          </nav>
+          <div className={s.actions}>
+            <button
+              className={s.sound}
+              onClick={() => void toggleAmbient()}
+              aria-label={sound ? c.ui.soundOn : c.ui.soundOff}
+              title={sound ? c.ui.soundOn : c.ui.soundOff}
+              aria-pressed={sound}
             >
-              {i !== 0 && <div className={s.eyebrow}>{ch.eyebrow}</div>}
-              {i === 0 ? (
-                <>
-                  <div className={s.identity}>{c.heroRole}</div>
-                  <h1 aria-label={c.name}>
-                    {c.name.split(" ").map((n, j) => (
-                      <span key={n} aria-hidden="true">
-                        {n.split("").map((char, k) => (
-                          <span
-                            className={s.char}
-                            key={k}
-                            style={{
-                              animationDelay: `${0.3 + j * 0.15 + k * 0.035}s`,
-                            }}
-                          >
-                            {char}
-                          </span>
-                        ))}
+              <SoundIcon on={sound} />
+            </button>
+            <button
+              className={s.menuButton}
+              onClick={() => setMenu(true)}
+              aria-expanded={menu}
+            >
+              {c.ui.menu} ☰
+            </button>
+          </div>
+        </header>
+        <main
+          id="story"
+          className={`${s.scroll} ${linear ? s.linear : ""}`}
+          tabIndex={-1}
+        >
+          <div
+            ref={overlay}
+            className={s.overlay}
+            style={{ opacity: profile && !linear ? 0 : 1 }}
+            inert={profile && !linear ? "" : undefined}
+          >
+            {c.chapters.map((ch, i) => (
+              <section
+                key={ch.stage}
+                data-chapter={i}
+                data-lenis-prevent
+                className={`${s.chapter} ${i === 0 ? s.hero : ""} ${i % 2 === 1 ? s.right : ""}`}
+                aria-hidden={linear ? undefined : chapter !== i}
+                inert={!linear && chapter !== i ? "" : undefined}
+                style={{
+                  visibility: linear || chapter === i ? "visible" : "hidden",
+                }}
+              >
+                {i !== 0 && <div className={s.eyebrow}>{ch.eyebrow}</div>}
+                {i === 0 ? (
+                  <>
+                    <h1>{c.name}</h1>
+                    <div className={s.identity}>{c.heroRole}</div>
+                    <p className={s.tagline}>{c.tagline}</p>
+                    <div className={s.heroBottom}>
+                      <span>01 — 08</span>
+                      <span>
+                        {c.location}
+                        <br />
+                        <i /> {c.status}
                       </span>
-                    ))}
-                  </h1>
-                  <p className={s.tagline}>{c.tagline}</p>
-                  <div className={s.heroBottom}>
-                    <span>01 — 08</span>
-                    <span>
-                      {c.location}
-                      <br />
-                      <i /> {c.status}
-                    </span>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <h2>{ch.title}</h2>
-                  <p>{ch.line}</p>
-                  <ChapterBody chapter={i} />
-                </>
-              )}
-            </section>
-          ))}
-        </div>
-      </main>
-      <Profile />
-      {!linear && <Rail />}
-      {!loaded && <MistLoader progress={progress} />}
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <h2>{ch.title}</h2>
+                    <p>{ch.line}</p>
+                    <ChapterBody chapter={i} />
+                  </>
+                )}
+              </section>
+            ))}
+          </div>
+        </main>
+        <Profile />
+        {!linear && <Rail />}
+      </div>
+      {!loaded && <MistLoader ready={assetReady} onComplete={finishLoading} />}
     </>
   );
 }
