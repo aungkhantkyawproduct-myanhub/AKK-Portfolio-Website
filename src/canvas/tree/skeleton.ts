@@ -1,4 +1,4 @@
-import { Vector3 } from "three";
+import { CubicBezierCurve3, Vector3 } from "three";
 export interface Segment {
   start: Vector3;
   end: Vector3;
@@ -14,7 +14,7 @@ export interface Leaf {
   angle: number;
   size: number;
 }
-/** One deterministic branching organism. Births are shared by bark and foliage. */
+/** One seeded, broad-crowned organism. Every stage reveals the same skeleton. */
 export function createSkeleton() {
   let seed = 49;
   const random = () => {
@@ -24,126 +24,183 @@ export function createSkeleton() {
   const segments: Segment[] = [],
     leaves: Leaf[] = [];
   const trunk = (y: number) =>
-    new Vector3(Math.sin(y * 0.3) * 0.32, y, Math.sin(y * 0.4) * 0.22);
-  function bough(
+    new Vector3(Math.sin(y * 0.35) * 0.4, y, Math.sin(y * 0.27) * 0.3);
+  function foliage(
+    center: Vector3,
+    birth: number,
+    spread: number,
+    count: number,
+  ) {
+    for (let i = 0; i < count; i++) {
+      const a = random() * Math.PI * 2,
+        r = Math.sqrt(random()) * spread;
+      leaves.push({
+        position: center
+          .clone()
+          .add(
+            new Vector3(
+              Math.cos(a) * r,
+              (random() - 0.45) * spread * 0.8,
+              Math.sin(a) * r,
+            ),
+          ),
+        birth: Math.min(0.94, birth + random() * 0.025),
+        angle: random() * Math.PI * 2,
+        size: 0.085 + random() * 0.1,
+      });
+    }
+  }
+  function limb(
     start: Vector3,
-    direction: Vector3,
-    length: number,
+    end: Vector3,
     radius: number,
     depth: number,
     birth: number,
     parent: number,
   ) {
-    let from = start.clone();
-    const dir = direction.clone().normalize();
-    const bend = new Vector3(
-      (random() - 0.5) * 0.045,
-      0.025,
-      (random() - 0.5) * 0.045,
+    const delta = end.clone().sub(start),
+      horizontal = new Vector3(delta.x, 0, delta.z);
+    const curve = new CubicBezierCurve3(
+      start,
+      start
+        .clone()
+        .addScaledVector(delta, 0.3)
+        .add(new Vector3(-horizontal.z * 0.12, 0.9, horizontal.x * 0.12)),
+      start
+        .clone()
+        .addScaledVector(delta, 0.78)
+        .add(new Vector3(horizontal.z * 0.08, -0.4, -horizontal.x * 0.08)),
+      end,
     );
-    for (let j = 0; j < 12; j++) {
-      dir.add(bend).normalize();
-      const end = from.clone().addScaledVector(dir, length / 12),
+    const count = depth === 1 ? 18 : 10,
+      duration = depth === 1 ? 0.19 : 0.13;
+    let from = start;
+    for (let j = 0; j < count; j++) {
+      const t = (j + 1) / count,
+        point = curve.getPoint(t),
         index = segments.length;
       segments.push({
         start: from,
-        end,
-        radius: radius * Math.pow(1 - j / 13, 1.3),
-        endRadius: radius * Math.pow(1 - (j + 1) / 13, 1.3),
-        birth: birth + j * 0.006,
+        end: point,
+        radius: radius * Math.pow(1 - j / (count + 1), 1.2),
+        endRadius: radius * Math.pow(1 - (j + 1) / (count + 1), 1.2),
+        birth: birth + (j / count) * duration,
         depth,
         parent,
       });
       parent = index;
-      if (depth < 3 && (j === 4 || j === 7 || j === 10)) {
-        const angle = random() * Math.PI * 2;
-        const next = new Vector3(
-          Math.cos(angle) * 0.75,
-          0.38 + random() * 0.5,
-          Math.sin(angle) * 0.75,
-        )
-          .addScaledVector(dir, 0.8)
-          .normalize();
-        bough(
-          end,
+      if (
+        depth < 3 &&
+        [
+          Math.floor(count * 0.45),
+          Math.floor(count * 0.68),
+          count - 2,
+        ].includes(j)
+      ) {
+        const angle = Math.atan2(delta.z, delta.x) + (random() - 0.5) * 2.5;
+        const length =
+          delta.length() *
+          (depth === 1 ? 0.48 : 0.55) *
+          (0.8 + random() * 0.35);
+        const next = point
+          .clone()
+          .add(
+            new Vector3(
+              Math.cos(angle) * length * 0.82,
+              length * (0.32 + random() * 0.22),
+              Math.sin(angle) * length * 0.82,
+            ),
+          );
+        limb(
+          point,
           next,
-          length * (0.48 + random() * 0.13),
-          radius * 0.36,
+          radius * 0.32,
           depth + 1,
-          birth + j * 0.006 + 0.11,
+          birth + (j / count) * duration + 0.012,
           parent,
         );
       }
-      if ((depth >= 2 && j > 3) || (depth === 1 && j > 9)) {
-        for (let k = 0; k < (depth === 3 ? 58 : 18); k++) {
-          const a = random() * Math.PI * 2,
-            r = Math.sqrt(random()) * (depth === 3 ? 0.85 : 0.55);
-          leaves.push({
-            position: end
-              .clone()
-              .add(
-                new Vector3(
-                  Math.cos(a) * r,
-                  (random() - 0.35) * 0.65,
-                  Math.sin(a) * r,
-                ),
-              ),
-            birth: birth + j * 0.006 + 0.02,
-            angle: random() * Math.PI * 2,
-            size: 0.065 + random() * 0.07,
-          });
-        }
-      }
-      from = end;
+      if (depth === 3 && j > 3)
+        foliage(point, birth + (j / count) * duration + 0.012, 0.7, 42);
+      if (depth === 2 && j > 7)
+        foliage(point, birth + (j / count) * duration + 0.018, 0.9, 55);
+      from = point;
     }
+    if (depth >= 2)
+      foliage(end, birth + duration + 0.015, depth === 2 ? 1.25 : 0.95, 150);
   }
-  // Continuous serpentine trunk, tapering into the upper crown.
-  for (let j = 0; j < 40; j++) {
-    const y = (j / 40) * 13;
+  for (let j = 0; j < 48; j++) {
+    const y = (j / 48) * 13;
     segments.push({
       start: trunk(y),
-      end: trunk(y + 13 / 40),
-      radius: 1.15 * Math.pow(1 - j / 43, 1.1),
-      endRadius: 1.15 * Math.pow(1 - (j + 1) / 43, 1.1),
-      birth: j * 0.005,
+      end: trunk(y + 13 / 48),
+      radius: 2.8 * Math.pow(1 - j / 55, 1.1),
+      endRadius: 2.8 * Math.pow(1 - (j + 1) / 55, 1.1),
+      birth: 0.008 + j * 0.005,
       depth: 0,
       parent: j - 1,
     });
   }
-  // Unequal heights and golden-angle branching avoid radial symmetry.
-  for (let k = 0; k < 17; k++) {
-    const a = k * 2.399963 + 0.35,
-      y = 4.2 + k * 0.47;
-    const length = 11.5 + Math.sin(k * 0.7) * 1.3 - k * 0.17;
-    bough(
+  // Rising limbs carry a dome of foliage, rather than horizontal spokes.
+  for (let k = 0; k < 12; k++) {
+    const a = k * 2.399963 + 0.18,
+      y = 7.8 + (k % 4) * 0.85,
+      extent = 7.5 + random() * 2.8;
+    const top = 15.5 + (1 - Math.abs(k - 5.5) / 7) * 3 + random() * 1.5;
+    limb(
       trunk(y),
-      new Vector3(Math.cos(a), 0.1 + k * 0.018, Math.sin(a)),
-      length,
-      0.62 - k * 0.021,
+      new Vector3(Math.cos(a) * extent, top, Math.sin(a) * extent),
+      1.02 - (k % 4) * 0.08,
       1,
-      0.19 + k * 0.012,
-      Math.floor((y / 13) * 40),
+      Math.max(0.15 + k * 0.009, (y / 13) * 48 * 0.005 + 0.02),
+      Math.floor((y / 13) * 48),
     );
   }
-  bough(trunk(12.8), new Vector3(0.12, 1, -0.05), 4.5, 0.15, 1, 0.39, 39);
-  // Thick, tapered buttresses meet the grass; root tips disappear below the soil.
-  for (let k = 0; k < 11; k++) {
-    const a = k * 2.399963;
-    let from = trunk(3.5);
-    for (let j = 0; j < 24; j++) {
-      const t = (j + 1) / 24,
-        r = 0.7 + Math.pow(t, 1.4) * (3.3 + random() * 0.2),
-        angle = a + Math.sin(t * 2) * 0.26;
+  limb(trunk(12.7), new Vector3(0.5, 20, -0.4), 0.24, 1, 0.29, 47);
+  // Fill the crown with attached twig clusters following an irregular domed envelope.
+  // The seeded crown is generated once, never swapped for a mature-stage model.
+  const tips = segments
+    .map((segment, index) => ({ segment, index }))
+    .filter((t) => t.segment.depth === 3);
+  for (let i = 0; i < 96; i++) {
+    const a = i * 2.399963,
+      radial = Math.sqrt(random()),
+      r = radial * (11.5 + 0.65 * Math.sin(a * 5));
+    const center = new Vector3(
+      Math.cos(a) * r,
+      17.3 + 4.8 * Math.sqrt(1 - radial * radial) + (random() - 0.5) * 2.1,
+      Math.sin(a) * r * 0.82,
+    );
+    const nearest = tips.reduce((best, t) =>
+      t.segment.end.distanceToSquared(center) <
+      best.segment.end.distanceToSquared(center)
+        ? t
+        : best,
+    );
+    const born = Math.min(0.78, Math.max(0.52, nearest.segment.birth + 0.035));
+    limb(nearest.segment.end, center, 0.035, 4, born, nearest.index);
+    foliage(center, born + 0.13, 1.35 + random() * 0.35, 340);
+  }
+  // Interlaced buttresses settle into the meadow.
+  for (let k = 0; k < 13; k++) {
+    const a = k * 2.399963,
+      reach = 4.6 + random() * 1.7;
+    let from = trunk(5.3);
+    for (let j = 0; j < 32; j++) {
+      const t = (j + 1) / 32,
+        angle = a + Math.sin(t * 3) * 0.22,
+        r = 0.5 + Math.pow(t, 1.65) * reach;
       const end = new Vector3(
         Math.cos(angle) * r,
-        3.5 * Math.pow(1 - t, 3) - 0.045,
+        5.3 * Math.pow(1 - t, 3.5) - 0.035,
         Math.sin(angle) * r,
       );
       segments.push({
         start: from,
         end,
-        radius: 0.34 * Math.pow(1 - j / 25, 1.1),
-        birth: 0.16 + j * 0.004,
+        radius: 0.62 * Math.pow(1 - j / 33, 1.25),
+        endRadius: 0.62 * Math.pow(1 - (j + 1) / 33, 1.25),
+        birth: 0.12 + j * 0.003,
         depth: 1,
         parent: -1,
       });

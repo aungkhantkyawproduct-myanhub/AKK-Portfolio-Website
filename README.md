@@ -1,8 +1,8 @@
 # Aung Khant Kyaw — From seed to scale
 
-A static React 18 / TypeScript portfolio with one persistent Three.js canvas, an independently rotating NASA-textured Earth, polar aurora, a cloud descent to a seed on grass, and a procedural growing world tree.
+A static React 18 / strict TypeScript portfolio with a persistent Three.js canvas: rotating Earth, cloud descent, seed, continuous procedural tree growth, and separate CV history.
 
-## Run and build
+## Run and upload
 
 Requires Node.js 22 and npm.
 
@@ -13,97 +13,52 @@ npm run build
 npm run preview
 ```
 
-Vite serves the local development preview at http://127.0.0.1:5173. `npm run build` checks strict TypeScript and creates `dist/`. Upload **the contents of dist/** to the existing static host for aungkhantkyaw.com. No backend, environment variables or API keys are required. Domain/DNS and production hosting were not changed by this implementation. The canonical URL, sitemap, contact details and structured data retain the existing identity.
+The preview uses http://127.0.0.1:5173. Build creates `dist/`. Upload its contents to a static host at the domain root. For GitHub, extract `release/akk-portfolio-source.zip` and upload its contents to the repository root; see `GITHUB-UPLOAD.md`. No backend, API keys or environment variables are required. Domain/DNS and hosting have not been changed.
+
+## Current design
+
+The header uses a full-width masked gradient and 18px backdrop blur. Its lower edge fades into the scene. Open text layouts use softly masked darkness/blur instead of rounded cards. All text shares an SF Pro system stack: Apple system font, locally available SF Pro, then Segoe UI Variable/Segoe UI, Helvetica or Arial. Font binaries from Apple/Google are not downloaded or served; exact appearance depends on the device. See Apple's font guidance: https://developer.apple.com/documentation/technologyoverviews/fonts . The unused, previously bundled Inter font/license remains available but is no longer requested.
+
+The short mist intro counts smoothly for one second and clears for 0.9 seconds. Its percentage describes the intro, not network byte progress. Only the live Earth is displayed: there is no screenshot-to-globe swap. The initial camera position and look-at target are applied before its first visible frame. The canvas fades in after initial frames and texture readiness; network/bootstrap and GPU startup still vary. Tree/meadow construction is deferred until the visitor begins scrolling. Once started, one canvas and one tree remain throughout the journey.
+
+The world tree has a thick tapering trunk, curved ascending limbs, attached twig clusters, a broad irregular crown and spreading buttress roots. A seeded skeleton generates 3,218 branch segments and about 104,000 leaves at full quality; low tier reduces foliage. Custom shaders reveal growth continuously, add wind, bark grain, cyan veins and leaf shading. The fixed sky dome has layered nebula light, moving clouds and three overlapping aurora curtains. Terrain is a single rolling meadow with time-driven grass and a subtle pool of cyan light near the roots. The reference illustration guides composition and lighting; the result is procedural 3D art, not an exact photorealistic reconstruction.
+
+Beyond the Journey blends into a distinct animated aurora backdrop. The circular About label introduces the exact CV summary. Experience runs newest first: Digit7s, AIA Myanmar, Citizens Pay, Yoon Han Thar. Education, recognition, certifications and tools remain separate from lifecycle stages. The supplied AKK mark uses actual SVG alpha.
 
 ## How to tweak
 
-- **Copy:** `src/content/content.ts`. Career bullets and AI project descriptions were transcribed from the supplied DOCX. Narrative framing is separate from factual CV claims. Career history, education, recognition and results live in the separate `Profile.tsx` section below the journey. The Experience navigation item scrolls directly there.
-- **Camera and chapter timing:** `src/canvas/cameraPath.ts`. `cameraPoints` and `targetPoints` correspond to `boundaries`. `CameraRig.tsx` constructs two Catmull–Rom curves. The hero has a −15° roll; the globe axis is tilted 23.4°. Local ground and the tree share the globe's north surface position `(0,0,0)`; Earth remains centered at `(0,-10,0)`. This is a poetic local patch rather than a geospatial terrain simulation.
-- **Pacing:** `pacing.scrub` controls ScrollTrigger smoothing. The 1000vh rail is in `App.module.css`; boundaries map to a single GSAP timeline. In development, `window.__debugProgress(0.8)` jumps to a checkpoint.
-- **Palette:** `src/styles/palette.ts`, applied to CSS variables at startup; tree shaders consume its colors. Earth and aurora spectral colors live in their shaders.
-- **Tree:** `src/canvas/tree/skeleton.ts` contains the deterministic seed, recursive branching and buttress roots. Geometry is generated once, then merged. The branch/leaf vertex shaders in `Tree.tsx` use `uGrowth`, birth attributes and time-based wind; the tree scales continuously during growth.
-- **Earth and polar effects:** `src/canvas/earth/`. `PolarEffects.tsx` uses the analytic dipole `r=L·sin²θ`, animated pulses, and noise-driven aurora ribbons. Hero effects fade through descent and return at the reveal.
-- **Cloud descent and grass:** `src/canvas/seed/Descent.tsx` provides cloud planes; `Meadow.tsx` provides the fixed ground and instanced wind-driven blades. `Seed.tsx` contains the lathe and crack shader.
-- **Audio:** `src/audio/ambient.ts`. It synthesizes a quiet evolving pad and filtered wind after explicit opt-in. See `public/audio/README.md` for optional recordings.
-- **Textures:** NASA day (2K progressive preview, 8K desktop upgrade) and night WebP maps are bundled. See `public/textures/README.md`. Missing maps are tolerated; procedural continents remain available. Source JPGs are retained outside the build in `assets/source/`.
+- Copy and factual CV material: `src/content/content.ts`. Never invent metrics, dates or employers.
+- Camera path, chapter boundaries and pacing: `src/canvas/cameraPath.ts`. Development-only `window.__debugProgress(.8)` jumps to a stage.
+- Palette: `src/styles/palette.ts`. Scene-specific spectral colors are in the shaders.
+- Tree shape: `src/canvas/tree/skeleton.ts`. Materials and growth: `Tree.tsx`. Lights, fruit and realm markers: `Realms.tsx`.
+- Sky: `src/shaders/sky.ts` and `src/canvas/Environment.tsx`. Biography aurora: `src/ui/ProfileAtmosphere.tsx` and its CSS module.
+- Earth and Myanmar lights: `src/canvas/earth/`. Earth position is fixed at `(0,-10,0)`; rotation is time-based. Magnetic field lines are not rendered.
+- Grass and cloud descent: `src/canvas/seed/Meadow.tsx` and `Descent.tsx`.
+- Typography: `--font-family` in `src/styles/global.css`. Header blending: `src/app/App.module.css`.
+- Audio: `src/audio/ambient.ts`. Synthesized ambient sound starts only after opt-in. Optional recordings: `public/audio/README.md`.
+- Textures: NASA 2K/8K day and 2K night WebP maps are bundled; missing maps fall back gracefully. See `public/textures/README.md`.
 
 ## Verification
 
+Keep the development server running, then use:
+
 ```sh
-# Keep npm run dev running in another terminal.
 npm run checkpoints -- final
+node scripts/stable-hero-check.mjs
+node scripts/hero-reveal-check.mjs
+node scripts/open-story-check.mjs
+node scripts/continuous-check.mjs
 node scripts/interactions.mjs
 ```
 
-The checkpoint script uses installed Microsoft Edge via Playwright. Change `channel` to `chrome`, or remove it and install Playwright Chromium on other systems. It captures 0, .15, .3, .5, .65, .8, .95 and 1 at 1440×900 and 390×844 into `artifacts/`. `PHASES.md` records phase checkpoints and intentional simplifications.
+Scripts use installed Microsoft Edge via Playwright. Change `channel` to your installed browser, or install Playwright Chromium. Checkpoints capture progress 0, .15, .3, .5, .65, .8, .95 and 1 at desktop 1440×900 and mobile 390×844. Reports/screenshots are in ignored `artifacts/`. `PHASES.md` records historical revisions and verification limits.
 
-`?fallback` forces the illustrated 2D version. OS reduced-motion preferences produce a normal document with every chapter visible, no camera journey and no Lenis smoothing. Context loss also switches to the fallback. Keyboard arrows, PageUp/PageDown and Space navigate chapters; native dialogs trap focus and close with Escape. The menu, contact links, realm list and all detail buttons remain keyboard accessible.
+Stable-hero checks compare camera position and orientation after the first visible live frame, ensuring no startup zoom. Open-story checks cover masked header blur, typography, experience order, card-free surfaces and axe WCAG A/AA scans. Continuity checks cover fixed-world transforms and reversible growth. Interaction checks cover audio, keyboard/modal behavior, clipboard, contact, reduced motion and WebGL fallback.
+
+`?fallback` forces the 2D alternative. Reduced motion presents every chapter as a readable document, disables the camera journey and freezes decorative motion. Context loss also switches to fallback. Markers and controls are keyboard accessible; Escape closes dialogs.
 
 ## Performance and limits
 
-The scene is lazy-loaded. Quality starts from screen size/hardware concurrency and can drop after a six-second frame-time probe. Low tier uses DPR 1, fewer leaves/stars and no postprocessing; other tiers cap DPR at 2 desktop and 1.5 mobile. The probe is available as `window.__sceneStats` for diagnostics; headless timing is not a real-device benchmark.
+The canvas bundle is lazy-loaded. DPR is capped at 2 desktop / 1.5 mobile. Quality may drop after a frame-time probe; low tier reduces foliage/stars and disables postprocessing. Local headless rendering is not a real-device performance benchmark. GPU frame rate and Lighthouse targets remain unverified on production hardware.
 
-The tree and grass remain procedural 3D art rather than scanned photogrammetry. The live scene uses a procedural animated sky and meadow. The generated image is used only in the loader. Clouds use layered noise rather than volumetric raymarching; foliage uses merged quads; bark uses shader veins; normal mapping, recorded environmental foley, DOF and chromatic aberration are intentionally omitted. Ocean highlights are inferred from the day map, not a separate scientific ocean mask. Fonts request Google Fonts and have local serif/sans/mono fallbacks. GPU performance and Lighthouse targets must be assessed on the intended host and real devices; do not treat development screenshots as a 60fps guarantee.
-
-## Historical reference revision (superseded below)
-
-The mist loader is `src/ui/MistLoader.tsx`: layered animated SVG turbulence over a meadow, a recursively generated tree silhouette and an asset-ready indicator. The landscape is `public/environments/meadow.webp`, created with the imagegen generate mode. Prompt: �Photorealistic cinematic wide-angle empty meadow at blue hour, fine dew-covered grass, distant low hills, natural teal aurora and stars, low cyan mist, empty center for a live 3D tree, no people, no text.� The source PNG is retained alongside it. The supplied stock Earth image was used for composition only, not embedded.
-
-`Environment.tsx` crops the backdrop to cover portrait and landscape views. `Descent.tsx` supplies nine moving cloud layers and curved grass blades. The horizon is a visual local/global transition concealed by cloud opacity, not a physical atmospheric simulation. `Sun.tsx` adds the restrained sunrise glow. The tree has smaller dense leaves, a broader canopy and intertwined buttress roots.
-
-Additional verification: `node scripts/profile-check.mjs` checks profile navigation, separation of CV history from lifecycle chapters, and profile accessibility. `node scripts/audit.mjs` runs Lighthouse against a production preview on port 4173. Local captures and reports are in ignored `artifacts/verification` and `artifacts/final`.
-
-## Current scene architecture (supersedes image-backed revision)
-
-The latest recording review replaced the camera-attached meadow image and final-tree crossfade with one world-anchored environment. `Environment.tsx` contains a procedural sky dome with time-driven cloud noise, aurora rays and distant hills. `seed/Meadow.tsx` renders a single ground plane and instanced wind-driven blades. There is no photograph behind the local meadow and no second grass surface. The supplied images remain reference assets and loader artwork only.
-
-The same procedural tree now grows from sprout through the final chapters. No tree artwork swap occurs. `cameraPath.ts` uses a steady local pullback; pointer parallax is limited to the orbital hero. All desktop story cards occupy the right reading column; mobile reserves the upper region for text and lower region for the subject. Longer mobile cards remain internally scrollable with hidden chrome. The profile handoff hides the fixed contact overlay as soon as the profile enters.
-
-Run `node scripts/continuous-check.mjs` to verify fixed sky/meadow transforms, reversible growth, idle animation and desktop seed/card separation. A procedural game-like scene is delivered; it is not a photorealistic reconstruction of the supplied tree illustration. Real-device GPU performance remains unverified.
-
-## GitHub-ready package
-
-Extract `akk-portfolio-source.zip`, then upload the extracted files and folders into your repository root (where `package.json` lives). Do not upload only the ZIP as your site's source. The archive contains all build inputs, optimized runtime assets, lockfile and instructions; it excludes node_modules, .git, test captures, private screen recordings and large raw NASA masters. Run `npm ci` then `npm run build`. The separate `akk-portfolio-dist.zip` contains the production files for a root-domain static host. See `GITHUB-UPLOAD.md` for deployment-path limitations.
-
-## October 21 visual refinement
-
-The hero omits the portfolio-year eyebrow and uses “Product Owner · Product Manager”. The CV identity and SEO role remain authoritative. `earth/MyanmarBeacon.tsx` anchors an additive light beacon at 21.9° N, 95.9° E inside the rotating Earth group; it therefore follows the geography rather than the screen. The sun uses a smooth disc and corona without graphic starburst spokes.
-
-The tree has one seeded, curved branching skeleton with 17 staggered primary boughs, tapered buttress roots, leaf clusters and juvenile leaves. Sequential segment births prevent detached growth. The camera keeps the mature crown visible and the roots near the lower edge, with a separate portrait framing adjustment. Custom tree, sky and grass shaders include the Three.js output color conversion so quality changes preserve the lighting.
-
-The local sky uses a lighter atmospheric density, stars, a faint nebula, slow cloud noise and animated aurora curtains. The biography has a transparent section background, so the same live canvas continues behind its chronological career trail and readable glass panels. There is no background image swap or hard section backdrop.
-
-To regenerate the two handoff archives after building, run `python scripts/package_release.py`. The packager uses an explicit source allowlist and checks ZIP integrity; SHA-256 hashes are written to `release/checksums.json`.
-
-## Reference hero and mist reveal
-
-The loader is now an explicit loading → revealing sequence. Scene readiness gates 100%; the displayed percentage is a staged readiness indicator, not a measurement of network bytes. After 100%, the lettering fades and three fog layers peel away over 4.2 seconds. Reduced-motion visitors receive a short fade. Background controls are inert during the loader, and body scrolling is restored when it finishes. The orbit ring uses an SVG circumference for an accurate fill.
-
-The supplied AKK logo is displayed directly from `public/brand/reference.png` using the cropped SVG viewport in `src/ui/BrandMark.tsx`; it is not redrawn. The reference image is used only for the mark. The orbital hero uses bold sans-serif typography and a lower horizon; the chapter progress rail keeps its original layout. The sound control is an SVG speaker/mute toggle with an accessible name and pressed state.
-
-`src/canvas/earth/myanmarBoundary.json` comes from Natural Earth's public-domain 1:110m country boundaries: https://github.com/nvkelso/natural-earth-vector/blob/master/geojson/ne_110m_admin_0_countries.geojson . The outline and up to 16 light columns are attached to the rotating globe. Rotation starts as the fog begins opening, preventing GPU preload time from advancing the initial geography out of frame. The angular velocity is then constant and independent of scrolling.
-
-Run `node scripts/hero-reveal-check.mjs` for desktop/mobile loading, 100% reveal, hero, rail and sound-toggle checks. The original video and review frames are excluded from release archives.
-
-## Current open storytelling presentation
-
-The latest reference recording was reviewed at multiple points (including its full-frame type, slow scene changes, and closing editorial layout). The portfolio keeps its own Earth/seed/tree theme and assets. The live reference page's interactive browser load timed out; the supplied recording was the visual source.
-
-Chapter content now sits on the world with a full-viewport, softly masked darkness/blur treatment in `App.module.css`. There are no rounded card shells. Project links, skill lists, tool labels and detail dialogs use the same open treatment. The career/education content is still separate from the product lifecycle.
-
-`Profile.tsx` is a spacious editorial sequence with newest-first experience: introduction, exact CV summary and metrics, four career chapters, education/recognition, certifications/tools and contact. GSAP gently moves each passage into place without dimming its text, with a static readable document for reduced motion. `ProfileAtmosphere.tsx` blends into a distinct teal/violet aurora field over one viewport as the biography arrives; its soft aurora curtains ripple over time. The tree camera rises during the handoff. The persistent Canvas remains mounted; scene geometry stops drawing once fully behind the biography.
-
-`BrandMark.tsx` now converts the supplied mark's luminance to actual SVG alpha. Black background pixels become transparent; the glyphs retain their supplied shapes. Screen blending is no longer used. The original screenshot is retained only as the logo's source.
-
-`node scripts/open-story-check.mjs` captures the logo against a colored swatch and verifies borderless chapter/biography surfaces, a partial background blend during the handoff, and desktop/mobile profile readability. Recording files remain excluded from packages.
-
-## Latest readability and startup update
-
-Inter is the only text family across the interface. Its 48 KB Latin variable WOFF2 is hosted locally at `public/fonts/inter-latin.woff2`, with the OFL license alongside it; there are no runtime Google Fonts requests. The navigation gains a smoothly faded dark backdrop and 18px blur after scrolling. About is a larger, double-ring typographic circle. Experience is presented newest first: Digit7s, AIA Myanmar, Citizens Pay, then Yoon Han Thar.
-
-The biography's line artwork has been replaced by low-opacity animated aurora curtains. Time-based path motion and a dark central reading veil preserve contrast; reduced motion freezes the curtains. The open editorial layout and actual logo alpha remain in place.
-
-The intro is now 1.9 seconds by design: a one-second smooth count and a 0.9-second mist clearing. The percentage represents the intro, not network byte completion. The hero appears immediately afterward with a temporary masked Earth poster while its one persistent WebGL canvas starts; the poster dissolves once the first frames and low-resolution Earth texture are ready. Tree/meadow geometry is deferred until after the hero is visible or the visitor starts the journey. Background rendering and texture downloads never hold the intro open. External network/bootstrap time and real-device GPU speed are still environment-dependent.
-
-`hero-reveal-check.mjs` records Performance API marks and asserts that the intro stays below three seconds on desktop and mobile. The current local headless measurements are about 1.91 and 1.92 seconds. `open-story-check.mjs` also checks the newest-first order, Inter typography, blurred navigation, card-free surfaces, progressive backdrop and mobile readability.
-
+The local meadow/tree/sky are live procedural geometry and shaders. Clouds use layered noise rather than physical raymarching. Foliage uses merged quads. Photogrammetry, full volumetric scattering, DOF and recorded environmental foley are not included. The loader uses its own existing meadow artwork; that image is not behind the live growing tree. No user recordings or private reference captures are included in release archives.

@@ -18,12 +18,25 @@ import { createSkeleton } from "./skeleton";
 import { palette } from "../../styles/palette";
 const vertex = `attribute vec3 aStart;attribute float aBirth;uniform float uGrowth;uniform float uTime;varying vec2 vBarkUv;varying vec3 vN;varying vec3 vP;varying float vG;
 void main(){vBarkUv=uv;float g=smoothstep(aBirth,aBirth+.005,uGrowth);vec3 p=mix(aStart,position,g);p.x+=sin(uTime*.45+p.y*.65)*.012*max(p.y,0.)*g;vN=normalize(normalMatrix*normal);vP=p;vG=g;gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`;
-const fragment = `uniform float uOpacity;uniform float uLocal;uniform vec3 uBark;uniform vec3 uGold;varying vec2 vBarkUv;varying vec3 vN;varying vec3 vP;varying float vG;void main(){if(vG<.005||(uLocal>.5&&vP.y<0.))discard;float grain=sin(vBarkUv.x*85.+sin(vP.y*3.)*.9)*.5+.5;float grooves=mix(grain,sin(vP.y*35.+vBarkUv.x*13.)*.5+.5,.14);float vein=pow(.5+.5*sin(atan(vP.z,vP.x)*9.+vP.y*.65+sin(vP.y*.9)),48.);float l=.3+max(dot(normalize(vN),normalize(vec3(-1,1,1))),0.)*.8;vec3 c=(uBark+vec3(.025,.012,.008))*(.7+grooves*.3)*l+vec3(.06,.75,.69)*vein*.12;gl_FragColor=vec4(c,uOpacity);
+const fragment = `uniform float uOpacity;uniform float uLocal;uniform vec3 uBark;uniform vec3 uGold;varying vec2 vBarkUv;varying vec3 vN;varying vec3 vP;varying float vG;
+float hash(vec3 p){return fract(sin(dot(p,vec3(12.9898,78.233,41.31)))*43758.5453);}
+void main(){if(vG<.005||(uLocal>.5&&vP.y<0.))discard;
+float angle=atan(vP.z,vP.x);float ridge=.5+.5*sin(vBarkUv.x*94.+sin(vP.y*2.8)*1.7);float pores=hash(floor(vP*55.));float fissure=pow(1.-ridge,5.);
+vec3 n=normalize(vN);float key=max(dot(n,normalize(vec3(-.55,.85,.65))),0.);float rim=pow(1.-abs(n.z),2.);
+float vein=pow(.5+.5*sin(angle*11.+vP.y*.8+sin(vP.y*.6)*2.),60.);float pulse=.75+.25*sin(vP.y*.7);
+vec3 wood=vec3(.12,.106,.087)*(.78+ridge*.22+pores*.08);wood*=.48+key*.85;wood*=1.-fissure*.35;
+vec3 c=wood+vec3(.06,.22,.23)*rim*.5+vec3(.08,1.05,.95)*vein*pulse*.65;gl_FragColor=vec4(c,uOpacity);
 #include <tonemapping_fragment>
 #include <colorspace_fragment>
 }`;
-const leafVertex = `attribute vec3 aCenter;attribute float aBirth;uniform float uGrowth;uniform float uTime;varying vec2 vUv;varying float vG;void main(){vUv=uv;float g=smoothstep(aBirth,aBirth+.1,uGrowth);vec3 p=aCenter+(position-aCenter)*g;p.x+=sin(uTime*.8+p.y+p.z)*.018*max(p.y,0.);vG=g;gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`;
-const leafFragment = `uniform float uOpacity;uniform float uSeason;uniform vec3 uGreen;uniform vec3 uGold;varying vec2 vUv;varying float vG;void main(){vec2 q=vUv*2.-1.;if(abs(q.x)+q.y*q.y>1.||vG<.01)discard;vec3 c=mix(uGreen,uGold,uSeason);float vein=1.-smoothstep(.015,.055,abs(q.x));c*=.19+q.y*.08+fract(sin(vUv.x*78.+vUv.y*17.)*43.)*.16;c+=vec3(.03,.06,.03)*vein;gl_FragColor=vec4(c,uOpacity);
+const leafVertex = `attribute vec3 aCenter;attribute float aBirth;uniform float uGrowth;uniform float uTime;varying vec2 vUv;varying float vG;varying float vTone;varying vec3 vLeaf;
+void main(){vUv=uv;float g=smoothstep(aBirth,aBirth+.07,uGrowth);vec3 p=aCenter+(position-aCenter)*g;p.x+=sin(uTime*.65+p.y*.7+p.z)*.009*max(p.y,0.);vTone=fract(sin(dot(aCenter,vec3(12.98,78.23,43.1)))*43758.);vLeaf=p;vG=g;gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`;
+const leafFragment = `uniform float uOpacity;uniform float uSeason;uniform vec3 uGreen;uniform vec3 uGold;varying vec2 vUv;varying float vG;varying float vTone;varying vec3 vLeaf;
+void main(){vec2 q=vUv*2.-1.;if(abs(q.x)+q.y*q.y>1.||vG<.01)discard;
+vec3 n=normalize(cross(dFdx(vLeaf),dFdy(vLeaf)));float light=abs(dot(n,normalize(vec3(-.4,1.,.6))));
+vec3 c=mix(vec3(.022,.08,.057),vec3(.075,.205,.135),vTone);c=mix(c,uGold*.38,uSeason);c*=.65+light*.6;
+float vein=1.-smoothstep(.015,.055,abs(q.x));c+=vec3(.025,.052,.026)*vein;c+=vec3(.04,.12,.12)*pow(light,4.)*.3;
+gl_FragColor=vec4(c,uOpacity);
 #include <tonemapping_fragment>
 #include <colorspace_fragment>
 }`;
@@ -31,7 +44,6 @@ export default function Tree() {
   const group = useRef<Group>(null);
   const bark = useRef<ShaderMaterial>(null);
   const leaf = useRef<ShaderMaterial>(null);
-  const tier = useJourney((s) => s.qualityTier);
   const data = useMemo(() => {
     const { segments, leaves } = createSkeleton();
     const parts = segments.map((s) => {
@@ -40,8 +52,9 @@ export default function Tree() {
         s.endRadius ?? s.radius * 0.92,
         s.radius,
         dir.length(),
-        12,
+        16,
         3,
+        true,
       );
       geo.applyMatrix4(
         new Matrix4().compose(
@@ -71,7 +84,8 @@ export default function Tree() {
     });
     const branches = mergeGeometries(parts);
     parts.forEach((g) => g.dispose());
-    const chosen = leaves.filter((_, i) => tier !== "low" || i % 3 === 0);
+    const lowLeaves = leaves.filter((_, i) => i % 3 === 0);
+    const chosen = lowLeaves.concat(leaves.filter((_, i) => i % 3 !== 0));
     const pos: number[] = [],
       centers: number[] = [],
       uv: number[] = [],
@@ -110,8 +124,8 @@ export default function Tree() {
       new BufferAttribute(new Float32Array(birth), 1),
     );
     foliage.setAttribute("uv", new BufferAttribute(new Float32Array(uv), 2));
-    return { branches, foliage };
-  }, [tier]);
+    return { branches, foliage, lowLeafVertices: lowLeaves.length * 6 };
+  }, []);
   const uniforms = useMemo(
     () => ({
       uOpacity: { value: 1 },
@@ -127,6 +141,12 @@ export default function Tree() {
   );
   useFrame(({ clock }) => {
     const p = useJourney.getState().scrollProgress;
+    data.foliage.setDrawRange(
+      0,
+      useJourney.getState().qualityTier === "low"
+        ? data.lowLeafVertices
+        : Infinity,
+    );
     uniforms.uLocal.value = 1;
     uniforms.uOpacity.value = 1;
     uniforms.uGrowth.value = Math.max(0, Math.min(1, (p - 0.24) / 0.59));

@@ -1,10 +1,3 @@
-@font-face {
-  font-family: Inter;
-  src: url("/fonts/inter-latin.woff2") format("woff2");
-  font-style: normal;
-  font-weight: 100 900;
-  font-display: swap;
-}
 .earth-marker {
   display: flex;
   align-items: center;
@@ -154,7 +147,9 @@ body::-webkit-scrollbar {
 }
 
 :root {
-  --font-family: Inter, Arial, sans-serif;
+  --font-family:
+    -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+    "Segoe UI Variable", "Segoe UI", Helvetica, Arial, sans-serif;
 }
 body,
 body * {

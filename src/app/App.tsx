@@ -138,7 +138,7 @@ export default function App() {
         <a className={s.skip} href="#story">
           {c.ui.skip}
         </a>
-        <div className={s.canvas}>
+        <div className={s.canvas} data-painted={worldPainted && assetReady}>
           {linear ? (
             <Fallback />
           ) : worldStarted ? (
@@ -148,13 +148,6 @@ export default function App() {
               </Suspense>
             </CanvasBoundary>
           ) : null}
-          {!linear && (
-            <div
-              className={s.heroPoster}
-              data-hidden={worldPainted && assetReady}
-              aria-hidden="true"
-            />
-          )}
           <ProfileAtmosphere />
         </div>
         <header

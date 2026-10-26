@@ -36,21 +36,9 @@ export default function World() {
   useEffect(() => {
     if (requested) setLocalReady(true);
   }, [requested]);
-  useEffect(() => {
-    let timer: ReturnType<typeof setTimeout>;
-    const prepare = () => {
-      timer = setTimeout(() => setLocalReady(true), 1200);
-    };
-    window.addEventListener("journey-ready", prepare);
-    if (document.documentElement.dataset.journeyReady === "true") prepare();
-    return () => {
-      clearTimeout(timer);
-      window.removeEventListener("journey-ready", prepare);
-    };
-  }, []);
   return (
     <Canvas
-      camera={{ position: [0, 3, 12.7], fov: 45, near: 0.05, far: 250 }}
+      camera={{ position: [0, 4, 12], fov: 45, near: 0.05, far: 250 }}
       dpr={
         tier === "low"
           ? 1

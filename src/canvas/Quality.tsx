@@ -32,6 +32,7 @@ export default function Quality() {
               ]
             : null,
           camera: camera.position.toArray(),
+          cameraQuaternion: camera.quaternion.toArray(),
           sky: sky?.matrixWorld.toArray(),
           meadow: meadow?.matrixWorld.toArray(),
           treeVisible: tree?.visible,

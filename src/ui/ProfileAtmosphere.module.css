@@ -20,9 +20,9 @@
   inset: -12%;
   width: 124%;
   height: 124%;
-  opacity: 0.42;
+  opacity: 0.68;
   filter: hue-rotate(calc(var(--travel) * 15deg));
-  animation: aurora-drift 30s ease-in-out infinite alternate;
+  animation: aurora-drift 18s ease-in-out infinite alternate;
   will-change: transform;
 }
 .stars {
@@ -55,7 +55,7 @@
 }
 @media (max-width: 600px) {
   .aurora {
-    opacity: 0.34;
+    opacity: 0.52;
   }
   .depth {
     background: linear-gradient(#030c1677, #030c16a8 40%, #030c16b8);

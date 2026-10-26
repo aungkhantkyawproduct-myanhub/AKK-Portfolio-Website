@@ -17,7 +17,7 @@ export default function Effects() {
         luminanceSmoothing={0.5}
         mipmapBlur
       />
-      <Noise opacity={0.018} />
+      <Noise opacity={0.008} />
       <Vignette eskil={false} offset={0.25} darkness={0.45} />
     </EffectComposer>
   );

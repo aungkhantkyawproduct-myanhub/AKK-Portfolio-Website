@@ -10,7 +10,9 @@ import {
 } from "three";
 import { useJourney } from "../../app/store";
 const elevation = (x: number, z: number) =>
-  Math.sin(x * 0.065) * Math.sin(z * 0.055) * 1.3;
+  Math.sin(x * 0.065) * Math.sin(z * 0.055) * 1.3 +
+  Math.min(1, Math.max(0, (Math.hypot(x, z) - 28) / 45)) *
+    (2.8 + Math.sin(x * 0.055 + z * 0.025) * 2.2 + Math.sin(z * 0.08) * 1.4);
 export default function Meadow() {
   const group = useRef<Group>(null);
   const tier = useJourney((s) => s.qualityTier);
@@ -86,14 +88,14 @@ export default function Meadow() {
   return (
     <group ref={group} name="meadow">
       <mesh geometry={ground} rotation={[-Math.PI / 2, 0, 0]}>
-        <meshStandardMaterial color="#172e23" roughness={1} />
+        <meshStandardMaterial color="#20372d" roughness={1} />
       </mesh>
       <mesh geometry={geometry} frustumCulled={false}>
         <shaderMaterial
           side={DoubleSide}
           uniforms={uniforms}
-          vertexShader={`attribute vec3 aOrigin;attribute vec4 aTraits;uniform float uTime;varying float vHeight,vTone,vFog;void main(){float t=position.y;float gust=sin(aOrigin.x*.5+aOrigin.z*.35-uTime*1.1)+.3*sin(aOrigin.z*2.+uTime*1.6);float angle=aTraits.y;vec3 p=aOrigin+vec3(cos(angle)*position.x*aTraits.z, .006+t*aTraits.x,sin(angle)*position.x*aTraits.z);p.x+=(.10+gust*.055)*t*t;p.z+=sin(angle)*.06*t*t;vHeight=t;vTone=aTraits.w;vFog=1.-exp(-length(cameraPosition-p)*.006);if(length(aOrigin.xz)<.29)p.y=0.;gl_Position=projectionMatrix*viewMatrix*vec4(p,1.);}`}
-          fragmentShader={`varying float vHeight,vTone,vFog;void main(){vec3 c=mix(vec3(.025,.067,.042),vec3(.22,.34,.17),vHeight)*(.25+vTone*.25);gl_FragColor=vec4(mix(c,vec3(.008,.022,.03),vFog),1.);
+          vertexShader={`attribute vec3 aOrigin;attribute vec4 aTraits;uniform float uTime;varying float vHeight,vTone,vFog,vGlow;void main(){float t=position.y;float gust=sin(aOrigin.x*.5+aOrigin.z*.35-uTime*1.1)+.3*sin(aOrigin.z*2.+uTime*1.6);float angle=aTraits.y;vec3 p=aOrigin+vec3(cos(angle)*position.x*aTraits.z, .006+t*aTraits.x,sin(angle)*position.x*aTraits.z);p.x+=(.10+gust*.055)*t*t;p.z+=sin(angle)*.06*t*t;vHeight=t;vTone=aTraits.w;vGlow=exp(-length(aOrigin.xz)/10.);vFog=1.-exp(-length(cameraPosition-p)*.006);if(length(aOrigin.xz)<.29)p.y=0.;gl_Position=projectionMatrix*viewMatrix*vec4(p,1.);}`}
+          fragmentShader={`varying float vHeight,vTone,vFog,vGlow;void main(){vec3 c=mix(vec3(.025,.067,.042),vec3(.22,.34,.17),vHeight)*(.25+vTone*.25);c+=vec3(.012,.065,.058)*vGlow;gl_FragColor=vec4(mix(c,vec3(.008,.022,.03),vFog),1.);
 #include <tonemapping_fragment>
 #include <colorspace_fragment>
 }`}

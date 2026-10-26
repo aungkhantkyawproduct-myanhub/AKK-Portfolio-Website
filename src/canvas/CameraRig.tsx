@@ -24,6 +24,7 @@ export default function CameraRig() {
   const { gl } = useThree();
   const offset = useRef({ x: 0, y: 0, drag: false, nudge: 0 });
   const target = useRef(new Vector3());
+  const initialized = useRef(false);
   useEffect(() => {
     const el = gl.domElement;
     const move = (e: PointerEvent) => {
@@ -76,8 +77,14 @@ export default function CameraRig() {
       pos.z -= offset.current.nudge;
       offset.current.nudge *= Math.exp(-dt * 3);
     }
-    camera.position.lerp(pos, 1 - Math.exp(-dt * 6));
-    target.current.lerp(look, 1 - Math.exp(-dt * 6));
+    if (!initialized.current) {
+      camera.position.copy(pos);
+      target.current.copy(look);
+      initialized.current = true;
+    } else {
+      camera.position.lerp(pos, 1 - Math.exp(-dt * 6));
+      target.current.lerp(look, 1 - Math.exp(-dt * 6));
+    }
     camera.lookAt(target.current);
     camera.rotateZ(-0.025 * (1 - Math.min(1, p / 0.13)));
   });

@@ -12,12 +12,12 @@ export default function Realms() {
   const p = useJourney((s) => s.scrollProgress);
   const points = useMemo(
     () =>
-      Array.from({ length: 28 }, (_, i) => {
+      Array.from({ length: 64 }, (_, i) => {
         const a = i * 2.399;
         return [
-          Math.cos(a) * (3 + (i % 4)),
-          8 + (i % 5),
-          Math.sin(a) * (3 + (i % 3)),
+          Math.cos(a) * (4 + (i % 8)),
+          13 + (i % 9),
+          Math.sin(a) * (3 + (i % 7)),
         ] as [number, number, number];
       }),
     [],
@@ -30,7 +30,7 @@ export default function Realms() {
       const o = new Object3D();
       points.forEach((pos, i) => {
         o.position.set(...pos);
-        o.scale.setScalar(0.055 + Math.sin(clock.elapsedTime + i) * 0.012);
+        o.scale.setScalar(0.085 + Math.sin(clock.elapsedTime + i) * 0.012);
         o.updateMatrix();
         fruit.current!.setMatrixAt(i, o.matrix);
       });
@@ -47,20 +47,20 @@ export default function Realms() {
           emissiveIntensity={3}
         />
       </instancedMesh>
-      <group ref={ring} position={[0, 9, 0]} rotation={[0.1, 0, 0.13]}>
+      <group ref={ring} position={[0, 13, 0]} rotation={[0.1, 0, 0.13]}>
         <mesh rotation={[Math.PI / 2, 0, 0]}>
-          <torusGeometry args={[8, 0.018, 6, 128]} />
-          <meshBasicMaterial color="#8adbd9" transparent opacity={0.35} />
+          <torusGeometry args={[11, 0.012, 6, 128]} />
+          <meshBasicMaterial color="#8adbd9" transparent opacity={0.12} />
         </mesh>
-        <mesh position={[8, 0, 0]}>
+        <mesh position={[11, 0, 0]}>
           <sphereGeometry args={[0.1, 12, 12]} />
           <meshBasicMaterial color="#c8f9ef" />
         </mesh>
       </group>
       <Sparkles
-        count={90}
-        scale={[20, 15, 14]}
-        position={[0, 9, 0]}
+        count={140}
+        scale={[29, 23, 22]}
+        position={[0, 13, 0]}
         color="#c2cc9f"
         size={1.8}
         speed={0.15}
@@ -74,7 +74,7 @@ export default function Realms() {
               key={name}
               position={[
                 Math.cos(a) * 7,
-                10 + Math.sin(a) * 3,
+                17 + Math.sin(a) * 4,
                 Math.sin(a) * 3,
               ]}
               center

@@ -17,10 +17,22 @@ for (const [name, width, height] of [
     deviceScaleFactor: 1,
   });
   page.on("pageerror", (e) => errors.push(e.message));
-  await page.goto("http://127.0.0.1:5173", { waitUntil: "domcontentloaded" });
+  page.on("console", (m) => {
+    if (m.type() === "error" && /shader|WebGLProgram/.test(m.text()))
+      errors.push(m.text());
+  });
+  await page.goto("http://127.0.0.1:5173", {
+    waitUntil: "domcontentloaded",
+    timeout: 60000,
+  });
   await page.waitForFunction(() => !!window.__debugProgress);
   await page.waitForFunction(
     () => !document.querySelector("[role=status]"),
+    null,
+    { timeout: 60000 },
+  );
+  await page.waitForFunction(
+    () => document.querySelector('[data-painted="true"]'),
     null,
     { timeout: 60000 },
   );

@@ -108,10 +108,10 @@ for (const [name, width, height] of [
   const family = await page
     .locator("#about-title")
     .evaluate((el) => getComputedStyle(el).fontFamily);
-  expect(family).toContain("Inter");
+  expect(family).toContain("SF Pro");
   const navBlur = await page
     .locator("header")
-    .evaluate((el) => getComputedStyle(el).backdropFilter);
+    .evaluate((el) => getComputedStyle(el, "::before").backdropFilter);
   expect(navBlur).toContain("blur(18px)");
   const boxes = await page.locator("#profile article").evaluateAll((els) =>
     els.map((el) => {

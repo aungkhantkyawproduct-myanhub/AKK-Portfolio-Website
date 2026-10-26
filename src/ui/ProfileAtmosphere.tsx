@@ -32,7 +32,7 @@ export default function ProfileAtmosphere() {
             <stop offset="1" stopColor="#8675cc" stopOpacity="0" />
           </linearGradient>
           <filter id="aurora-soft">
-            <feGaussianBlur stdDeviation="18" />
+            <feGaussianBlur stdDeviation="11" />
           </filter>
         </defs>
         {[0, 1, 2].map((i) => (
@@ -48,7 +48,7 @@ export default function ProfileAtmosphere() {
               <animate
                 attributeName="d"
                 values={shapes.join(";")}
-                dur={`${24 + i * 9}s`}
+                dur={`${15 + i * 6}s`}
                 repeatCount="indefinite"
               />
             )}
