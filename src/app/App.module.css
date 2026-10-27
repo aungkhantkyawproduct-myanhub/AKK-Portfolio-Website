@@ -1135,3 +1135,11 @@
     transition: none;
   }
 }
+
+/* Leave the living subject sharp; focus lighting starts only at the reading column. */
+.overlay::before { mask-image: linear-gradient(90deg, transparent 46%, #000 68%); }
+@media (max-width: 600px) {
+  .overlay::before { mask-image: linear-gradient(#000 0%, #000 43%, transparent 59%); }
+  .chapter:not(.hero), .chapter.right:not(.hero) { top: 12%; max-height: 43svh; }
+  .linear .chapter:not(.hero) { max-height: none; }
+}

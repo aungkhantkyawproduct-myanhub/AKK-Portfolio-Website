@@ -210,10 +210,10 @@ export function createSkeleton() {
   for (let i = 0; i < 5; i++)
     for (const side of [-1, 1])
       leaves.push({
-        position: new Vector3(side * (0.24 + i * 0.04), 0.65 + i * 0.33, 0),
-        birth: 0.025 + i * 0.018,
+        position: new Vector3(side * (0.4 + i * 0.02), 2 + i * 0.9, 0),
+        birth: 0.052 + i * 0.019,
         angle: side * 0.4,
-        size: 0.27 + i * 0.025,
+        size: 0.55 + i * 0.04,
       });
   return { segments, leaves };
 }

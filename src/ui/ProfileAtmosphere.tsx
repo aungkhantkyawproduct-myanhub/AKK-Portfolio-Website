@@ -1,4 +1,5 @@
-import { CSSProperties } from "react";
+import { CSSProperties, useEffect, useRef } from "react";
+import { useAuroraPointer } from "../hooks/useAuroraPointer";
 import { useJourney } from "../app/store";
 import s from "./ProfileAtmosphere.module.css";
 const shapes = [
@@ -8,11 +9,32 @@ const shapes = [
 ];
 /** Slow aurora motion is time-based; the center stays dark enough to read. */
 export default function ProfileAtmosphere() {
+  const root = useRef<HTMLDivElement>(null);
+  const pointer = useAuroraPointer();
   const blend = useJourney((v) => v.profileBlend),
     progress = useJourney((v) => v.profileProgress),
     reduced = useJourney((v) => v.reducedMotion);
+  useEffect(() => {
+    if (reduced || blend <= 0) return;
+    let frame = 0,
+      x = 0,
+      y = 0,
+      previous = performance.now();
+    const tick = (now: number) => {
+      const damping = 1 - Math.exp(-Math.min(now - previous, 100) / 350);
+      previous = now;
+      x += (pointer.current.x - x) * damping;
+      y += (pointer.current.y - y) * damping;
+      root.current?.style.setProperty("--aurora-x", `${x * 4}%`);
+      root.current?.style.setProperty("--aurora-y", `${y * 3}%`);
+      frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [reduced, blend > 0, pointer]);
   return (
     <div
+      ref={root}
       className={s.atmosphere}
       data-profile-atmosphere
       aria-hidden="true"

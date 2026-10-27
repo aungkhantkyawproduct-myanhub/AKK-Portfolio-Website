@@ -12,22 +12,40 @@ function Profile() {
   useEffect(() => {
     if (reduced || !root.current) return;
     const context = gsap.context(() => {
-      root.current!.querySelectorAll("[data-reveal]").forEach((el) => {
-        gsap.fromTo(
-          el,
-          { y: 38 },
-          {
-            y: 0,
-            ease: "none",
+      root
+        .current!.querySelectorAll<HTMLElement>("[data-reveal]")
+        .forEach((el) => {
+          const children = Array.from(el.children);
+          const timeline = gsap.timeline({
             scrollTrigger: {
               trigger: el,
-              start: "top 94%",
-              end: "top 65%",
-              scrub: 0.7,
+              start: "top 96%",
+              end: "top 48%",
+              scrub: 0.85,
             },
-          },
-        );
-      });
+          });
+          // Keep text opaque throughout: movement reveals the hierarchy without
+          // compromising contrast or hiding content from keyboard navigation.
+          timeline.fromTo(
+            children.length ? children : el,
+            { y: 66 },
+            { y: 0, stagger: 0.12, duration: 1, ease: "power2.out" },
+          );
+          if (el.hasAttribute("data-profile-step")) {
+            timeline.fromTo(
+              el.querySelectorAll("li"),
+              { x: 24, y: 18 },
+              { x: 0, y: 0, stagger: 0.09, duration: 0.8, ease: "power2.out" },
+              0.25,
+            );
+          }
+          timeline.fromTo(
+            el,
+            { "--reveal": 0 },
+            { "--reveal": 1, duration: 1 },
+            0,
+          );
+        });
     }, root);
     ScrollTrigger.refresh();
     return () => context.revert();

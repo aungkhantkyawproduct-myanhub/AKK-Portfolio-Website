@@ -497,3 +497,43 @@
 .about {
   scroll-margin-top: 125px;
 }
+
+/* Each passage draws its own quiet horizon as its contents enter. */
+.job,
+.education,
+.knowledge,
+.results {
+  position: relative;
+}
+.job::after,
+.education::after,
+.knowledge::after,
+.results::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #8bd6c777,
+    #d9bc8066,
+    transparent
+  );
+  transform: scaleX(var(--reveal, 1));
+  transform-origin: left;
+  pointer-events: none;
+}
+.about h3::before {
+  transform: rotate(calc(var(--reveal, 1) * 100deg));
+}
+@media (prefers-reduced-motion: reduce) {
+  .job::after,
+  .education::after,
+  .knowledge::after,
+  .results::after {
+    transform: none;
+  }
+}

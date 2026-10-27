@@ -6,6 +6,7 @@ import {
   targetPoints,
   pathTime,
   profileCamera,
+  mobileFraming,
 } from "./cameraPath";
 const cameraCurve = new CatmullRomCurve3(
   cameraPoints.map((p) => new Vector3(...p)),
@@ -61,9 +62,12 @@ export default function CameraRig() {
     const pos = cameraCurve.getPoint(t);
     const look = targetCurve.getPoint(t);
     if (innerWidth < 600 && p > 0.1) {
-      pos.z *= 1.9;
+      pos.z *= mobileFraming.distance;
       look.x = 0;
-      look.y += 0.65 + 11.35 * Math.min(1, Math.max(0, (p - 0.25) / 0.45));
+      look.y +=
+        mobileFraming.seedLift +
+        (mobileFraming.crownLift - mobileFraming.seedLift) *
+          Math.min(1, Math.max(0, (p - 0.25) / 0.45));
     }
     const blend = useJourney.getState().profileBlend;
     if (blend > 0 && !reducedMotion) {

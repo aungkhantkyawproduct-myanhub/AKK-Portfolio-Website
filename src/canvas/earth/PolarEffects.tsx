@@ -9,18 +9,25 @@ import {
   Group,
   ShaderMaterial,
   Vector3,
+  Vector2,
 } from "three";
 import { useJourney } from "../../app/store";
+import { useAuroraPointer } from "../../hooks/useAuroraPointer";
 const fieldVertex = `attribute float aFlow;varying float vFlow;varying float vFade;void main(){vFlow=aFlow;vFade=abs(normalize(position).y);gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`;
 const fieldFragment = `uniform float uTime;uniform float uOpacity;varying float vFlow;varying float vFade;void main(){float pulse=pow(max(0.,sin(vFlow*18.-uTime*.7)),18.);vec3 c=mix(vec3(.16,.6,.75),vec3(.5,.32,.8),vFlow);gl_FragColor=vec4(c,(.055+pulse*.45)*uOpacity*(.2+vFade*.8));}`;
-const auroraVertex = `uniform float uTime;varying vec2 vUv;varying vec3 vP;void main(){vUv=uv;vP=position;vec3 p=position;p.xz*=1.+sin(uv.x*32.+uTime*.23+uv.y*3.)*.018; p.y+=sin(uv.x*24.-uTime*.3)*uv.y*.25;gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`;
+const auroraVertex = `uniform float uTime;uniform vec2 uPointer;varying vec2 vUv;varying vec3 vP;void main(){vUv=uv;vP=position;vec3 p=position;p.xz*=1.+sin(uv.x*32.+uTime*.23+uv.y*3.+uPointer.x*1.5)*.018; p.y+=sin(uv.x*24.-uTime*.3+uPointer.y)*uv.y*.25;gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`;
 const auroraFragment = `uniform float uTime;uniform float uOpacity;varying vec2 vUv;varying vec3 vP;float h(float x){return fract(sin(x*127.1)*43758.5453);}float noise(float x){float i=floor(x),f=fract(x);return mix(h(i),h(i+1.),f*f*(3.-2.*f));}void main(){float x=vUv.x;float y=vUv.y;float rays=pow(noise(x*290.+uTime*.12)*noise(x*73.-uTime*.17),.65);float wave=.65+.35*sin(x*43.+uTime*.4);float edge=smoothstep(0.,.12,y)*(1.-smoothstep(.35,1.,y));vec3 c=mix(vec3(.1,1.,.46),vec3(.1,.65,.8),smoothstep(.05,.5,y));c=mix(c,vec3(.55,.16,.88),smoothstep(.45,1.,y));gl_FragColor=vec4(c,rays*edge*wave*uOpacity*.8);}`;
 export default function PolarEffects() {
+  const pointer = useAuroraPointer();
   const group = useRef<Group>(null);
   const field = useRef<ShaderMaterial>(null);
   const aurora = useRef<ShaderMaterial>(null);
   const uniforms = useMemo(
-    () => ({ uTime: { value: 0 }, uOpacity: { value: 1 } }),
+    () => ({
+      uTime: { value: 0 },
+      uOpacity: { value: 1 },
+      uPointer: { value: new Vector2() },
+    }),
     [],
   );
   const geo = useMemo(() => {
@@ -87,12 +94,16 @@ export default function PolarEffects() {
     ribbon.setAttribute("uv", new BufferAttribute(new Float32Array(uv), 2));
     return { fieldGeo, ribbon };
   }, []);
-  useFrame(({ clock, camera }) => {
+  useFrame(({ clock, camera }, dt) => {
+    const damping = 1 - Math.exp(-dt * 3);
+    uniforms.uPointer.value.x +=
+      (pointer.current.x - uniforms.uPointer.value.x) * damping;
+    uniforms.uPointer.value.y +=
+      (pointer.current.y - uniforms.uPointer.value.y) * damping;
     const p = useJourney.getState().scrollProgress;
     const hero = 1 - Math.min(1, Math.max(0, (p - 0.035) / 0.09));
     const end = Math.min(1, Math.max(0, (p - 0.7) / 0.12));
-    uniforms.uOpacity.value =
-      hero * Math.min(1, 45 / camera.position.length());
+    uniforms.uOpacity.value = hero * Math.min(1, 45 / camera.position.length());
     uniforms.uTime.value = useJourney.getState().reducedMotion
       ? 0
       : clock.elapsedTime;

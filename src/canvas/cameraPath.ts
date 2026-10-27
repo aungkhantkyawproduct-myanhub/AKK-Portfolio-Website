@@ -10,28 +10,30 @@ export const chapterAt = (p: number) =>
   );
 export const pacing = { scrub: 1.2, height: 1000 };
 export const earthCenter = [0, -10, 0] as const;
+// Desktop reserves the right reading column; mobile reserves the upper half.
+export const mobileFraming = { distance: 1.9, seedLift: 0.65, crownLift: 18 };
 // Points correspond to boundaries above. Earth surface / tree origin is (0,0,0).
 export const cameraPoints = [
   [0, 4, 12],
   [0, 1.3, 5],
   [0, 1.3, 5],
   [0, 3.5, 13],
-  [0, 8, 33],
-  [0, 13, 49],
-  [0, 14, 54],
-  [0, 14, 54],
-  [0, 14, 54],
+  [0, 8, 39],
+  [0, 13, 58],
+  [0, 14, 64],
+  [0, 14, 64],
+  [0, 14, 64],
 ];
 export const targetPoints = [
   [0, 0.5, 0],
   [1, 0.45, 0],
   [1, 0.45, 0],
   [2.5, 3, 0],
-  [5.5, 7, 0],
-  [8, 13, 0],
-  [9, 14, 0],
-  [9, 14, 0],
-  [9, 14, 0],
+  [8, 7, 0],
+  [12, 13, 0],
+  [13, 14, 0],
+  [13, 14, 0],
+  [13, 14, 0],
 ];
 export function pathTime(p: number) {
   const i = Math.min(

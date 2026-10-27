@@ -1,5 +1,5 @@
 /** Fixed celestial dome. All movement is time-driven, independent of scroll. */
-export const skyFragment = `varying vec3 vDirection;uniform float uTime;
+export const skyFragment = `varying vec3 vDirection;uniform float uTime;uniform vec2 uPointer;
 float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
 float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(hash(i),hash(i+vec2(1,0)),f.x),mix(hash(i+vec2(0,1)),hash(i+1.),f.x),f.y);}
 float fbm(vec2 p){float f=0.,a=.5;for(int i=0;i<5;i++){f+=noise(p)*a;p=p*2.03+4.7;a*=.5;}return f;}
@@ -8,8 +8,8 @@ vec3 color=mix(vec3(.012,.035,.065),vec3(.004,.013,.045),smoothstep(0.,.8,h));
 float nebula=fbm(uv*vec2(7.,9.));float milky=exp(-pow((uv.y-.65-.21*sin(uv.x*.9))/.24,2.));
 color+=mix(vec3(.025,.05,.11),vec3(.095,.06,.17),nebula)*milky*pow(nebula,1.5)*1.3;
 // Overlapping soft curtains; vertical rays bend along broad travelling folds.
-for(int i=0;i<3;i++) {float fi=float(i);float x=uv.x+fi*1.8;
-float wave=.47+fi*.16+.15*sin(x*2.+uTime*.075)+.055*sin(x*5.-uTime*.12);
+for(int i=0;i<3;i++) {float fi=float(i);float x=uv.x+fi*1.8+uPointer.x*.12;
+float wave=.47+fi*.16-uPointer.y*.045+.15*sin(x*2.+uTime*.075)+.055*sin(x*5.-uTime*.12);
 float ribbon=exp(-pow((uv.y-wave)/(.13+fi*.015),2.));
 float fold=.4+.6*noise(vec2(x*22.+sin(uv.y*7.+uTime*.11)*2.+uTime*.18,uv.y*1.2));
 float ray=pow(fold,2.)*(.7+.3*noise(vec2(x*95.+uTime*.23,uv.y*3.)));

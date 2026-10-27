@@ -71,3 +71,12 @@
 .atmosphere {
   z-index: 2;
 }
+
+.aurora {
+  translate: var(--aurora-x, 0%) var(--aurora-y, 0%);
+}
+@media (prefers-reduced-motion: reduce) {
+  .aurora {
+    translate: none;
+  }
+}

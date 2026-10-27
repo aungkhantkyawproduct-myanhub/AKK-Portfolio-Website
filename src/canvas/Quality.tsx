@@ -36,6 +36,14 @@ export default function Quality() {
           sky: sky?.matrixWorld.toArray(),
           meadow: meadow?.matrixWorld.toArray(),
           treeVisible: tree?.visible,
+          auroraPointer: (
+            sky?.children.find(
+              (o: any) => o.material?.uniforms?.uPointer,
+            ) as any
+          )?.material.uniforms.uPointer.value.toArray(),
+          cloudOpacity: (
+            scene.getObjectByName("descent-clouds")?.children[0] as any
+          )?.material.uniforms.uOpacity.value,
           growth: materials.find((u) => u.uGrowth)?.uGrowth.value,
           skyTime: (
             sky?.children.find((o: any) => o.material?.uniforms?.uTime) as any

@@ -16,8 +16,11 @@ import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js
 import { useJourney } from "../../app/store";
 import { createSkeleton } from "./skeleton";
 import { palette } from "../../styles/palette";
-const vertex = `attribute vec3 aStart;attribute float aBirth;uniform float uGrowth;uniform float uTime;varying vec2 vBarkUv;varying vec3 vN;varying vec3 vP;varying float vG;
-void main(){vBarkUv=uv;float g=smoothstep(aBirth,aBirth+.005,uGrowth);vec3 p=mix(aStart,position,g);p.x+=sin(uTime*.45+p.y*.65)*.012*max(p.y,0.)*g;vN=normalize(normalMatrix*normal);vP=p;vG=g;gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`;
+const vertex = `attribute vec3 aStart;attribute vec3 aDirection;attribute float aBirth;uniform float uGrowth;uniform float uTime;varying vec2 vBarkUv;varying vec3 vN;varying vec3 vP;varying float vG;
+void main(){vBarkUv=uv;float g=smoothstep(aBirth,aBirth+.005,uGrowth);
+vec3 delta=position-aStart;vec3 axial=aDirection*dot(delta,aDirection);vec3 radial=delta-axial;
+float thickness=mix(.025,1.,smoothstep(0.,.7,uGrowth));
+vec3 p=aStart+(axial+radial*thickness)*g;p.x+=sin(uTime*.45+p.y*.65)*.012*max(p.y,0.)*g;vN=normalize(normalMatrix*normal);vP=p;vG=g;gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`;
 const fragment = `uniform float uOpacity;uniform float uLocal;uniform vec3 uBark;uniform vec3 uGold;varying vec2 vBarkUv;varying vec3 vN;varying vec3 vP;varying float vG;
 float hash(vec3 p){return fract(sin(dot(p,vec3(12.9898,78.233,41.31)))*43758.5453);}
 void main(){if(vG<.005||(uLocal>.5&&vP.y<0.))discard;
@@ -30,7 +33,7 @@ vec3 c=wood+vec3(.06,.22,.23)*rim*.5+vec3(.08,1.05,.95)*vein*pulse*.65;gl_FragCo
 #include <colorspace_fragment>
 }`;
 const leafVertex = `attribute vec3 aCenter;attribute float aBirth;uniform float uGrowth;uniform float uTime;varying vec2 vUv;varying float vG;varying float vTone;varying vec3 vLeaf;
-void main(){vUv=uv;float g=smoothstep(aBirth,aBirth+.07,uGrowth);vec3 p=aCenter+(position-aCenter)*g;p.x+=sin(uTime*.65+p.y*.7+p.z)*.009*max(p.y,0.);vTone=fract(sin(dot(aCenter,vec3(12.98,78.23,43.1)))*43758.);vLeaf=p;vG=g;gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`;
+void main(){vUv=uv;float g=smoothstep(aBirth,aBirth+(aBirth<.15?.025:.07),uGrowth);vec3 p=aCenter+(position-aCenter)*g;p.x+=sin(uTime*.65+p.y*.7+p.z)*.009*max(p.y,0.);vTone=fract(sin(dot(aCenter,vec3(12.98,78.23,43.1)))*43758.);vLeaf=p;vG=g;gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`;
 const leafFragment = `uniform float uOpacity;uniform float uSeason;uniform vec3 uGreen;uniform vec3 uGold;varying vec2 vUv;varying float vG;varying float vTone;varying vec3 vLeaf;
 void main(){vec2 q=vUv*2.-1.;if(abs(q.x)+q.y*q.y>1.||vG<.01)discard;
 vec3 n=normalize(cross(dFdx(vLeaf),dFdy(vLeaf)));float light=abs(dot(n,normalize(vec3(-.4,1.,.6))));
@@ -77,6 +80,15 @@ export default function Tree() {
         ),
       );
       geo.setAttribute(
+        "aDirection",
+        new BufferAttribute(
+          new Float32Array(
+            Array.from({ length: n }, () => dir.toArray()).flat(),
+          ),
+          3,
+        ),
+      );
+      geo.setAttribute(
         "aBirth",
         new BufferAttribute(new Float32Array(n).fill(s.birth), 1),
       );
@@ -84,8 +96,13 @@ export default function Tree() {
     });
     const branches = mergeGeometries(parts);
     parts.forEach((g) => g.dispose());
-    const lowLeaves = leaves.filter((_, i) => i % 3 === 0);
-    const chosen = lowLeaves.concat(leaves.filter((_, i) => i % 3 !== 0));
+    // Retain the first leaves even when the device lowers canopy density.
+    const lowLeaves = leaves.filter(
+      (leaf, i) => leaf.birth < 0.15 || i % 3 === 0,
+    );
+    const chosen = lowLeaves.concat(
+      leaves.filter((leaf, i) => leaf.birth >= 0.15 && i % 3 !== 0),
+    );
     const pos: number[] = [],
       centers: number[] = [],
       uv: number[] = [],

@@ -29,9 +29,11 @@ Beyond the Journey blends into a distinct animated aurora backdrop. The circular
 
 - Copy and factual CV material: `src/content/content.ts`. Never invent metrics, dates or employers.
 - Camera path, chapter boundaries and pacing: `src/canvas/cameraPath.ts`. Development-only `window.__debugProgress(.8)` jumps to a stage.
+- Mobile subject placement: `mobileFraming` in the same file. Biography entrances: the GSAP timelines in `src/chapters/Profile.tsx`.
 - Palette: `src/styles/palette.ts`. Scene-specific spectral colors are in the shaders.
 - Tree shape: `src/canvas/tree/skeleton.ts`. Materials and growth: `Tree.tsx`. Lights, fruit and realm markers: `Realms.tsx`.
 - Sky: `src/shaders/sky.ts` and `src/canvas/Environment.tsx`. Biography aurora: `src/ui/ProfileAtmosphere.tsx` and its CSS module.
+- Cursor response: `src/hooks/useAuroraPointer.ts` supplies normalized fine-pointer input. Aurora shaders and biography CSS damp the light response; reduced motion disables it.
 - Earth and Myanmar lights: `src/canvas/earth/`. Earth position is fixed at `(0,-10,0)`; rotation is time-based. Magnetic field lines are not rendered.
 - Grass and cloud descent: `src/canvas/seed/Meadow.tsx` and `Descent.tsx`.
 - Typography: `--font-family` in `src/styles/global.css`. Header blending: `src/app/App.module.css`.
@@ -49,6 +51,7 @@ node scripts/hero-reveal-check.mjs
 node scripts/open-story-check.mjs
 node scripts/continuous-check.mjs
 node scripts/interactions.mjs
+node scripts/motion-check.mjs
 ```
 
 Scripts use installed Microsoft Edge via Playwright. Change `channel` to your installed browser, or install Playwright Chromium. Checkpoints capture progress 0, .15, .3, .5, .65, .8, .95 and 1 at desktop 1440×900 and mobile 390×844. Reports/screenshots are in ignored `artifacts/`. `PHASES.md` records historical revisions and verification limits.
