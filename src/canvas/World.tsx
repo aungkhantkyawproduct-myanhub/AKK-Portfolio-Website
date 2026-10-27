@@ -17,6 +17,7 @@ import Meadow from "./seed/Meadow";
 import Sun from "./earth/Sun";
 import { useJourney } from "../app/store";
 import { Preload } from "@react-three/drei";
+import { useDisplay } from "../hooks/useDisplay";
 function JourneyWorld({ children }: { children: ReactNode }) {
   const group = useRef<Group>(null);
   useFrame(() => {
@@ -30,6 +31,7 @@ function JourneyWorld({ children }: { children: ReactNode }) {
   );
 }
 export default function World() {
+  const display = useDisplay();
   const tier = useJourney((s) => s.qualityTier);
   const requested = useJourney((s) => s.scrollProgress > 0.015);
   const [localReady, setLocalReady] = useState(false);
@@ -42,9 +44,14 @@ export default function World() {
       dpr={
         tier === "low"
           ? 1
-          : Math.min(devicePixelRatio, innerWidth < 600 ? 1.5 : 2)
+          : Math.min(display.dpr, display.width < 600 ? 1.5 : 2)
       }
-      gl={{ antialias: tier !== "low", powerPreference: "high-performance" }}
+      gl={{
+        antialias: tier !== "low",
+        powerPreference: "high-performance",
+        alpha: true,
+        premultipliedAlpha: false,
+      }}
     >
       <color attach="background" args={["#05070d"]} />
       <JourneyWorld>
@@ -67,10 +74,10 @@ export default function World() {
         {localReady && <Descent />}
         {localReady && <Tree />}
         {localReady && <Realms />}
-        <Effects />
         <Quality />
         <Preload />
       </JourneyWorld>
+      <Effects />
     </Canvas>
   );
 }

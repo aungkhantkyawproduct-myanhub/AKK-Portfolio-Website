@@ -33,3 +33,9 @@ Checkpoints: 0, .15, .3, .5, .65, .8, .95, 1 at 1440×900 and 390×844. Build an
 - Simplify chapter 07 to a conversation invitation and direct contact actions; keep repeated footer utilities in the footer.
 - Keep one divider before the footer; expand the tree's primary limbs and supporting crown while sharing the foliage budget.
 - Rebuild, inspect desktop/mobile checkpoints, verify interaction/motion/accessibility, commit and refresh both archives.
+
+## October 27 — spring-driven GPU cursor aurora
+- Replace SVG point-chain geometry and turbulence filters with screen-space GLSL curtains in the existing canvas/composer.
+- Use fixed-step damped springs for the leading light and slower wake, with momentum and independent time-driven folds/rays.
+- Keep copy above the light and preserve biography compositing, coarse-pointer/reduced-motion behavior and idle shader early-outs.
+- Handle viewport/DPR changes, verify 30/60/120 Hz motion equivalence, stop/re-entry behavior, Retina resizing, shader errors and visual checkpoints.

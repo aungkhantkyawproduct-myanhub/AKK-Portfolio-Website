@@ -65,9 +65,9 @@ for (const [name, width, height] of [
     window.scrollTo(0, main.offsetHeight - innerHeight + innerHeight * 0.5);
   });
   await page.waitForTimeout(2200);
-  const blend = await page
-    .locator("[data-profile-atmosphere]")
-    .evaluate((el) => parseFloat(getComputedStyle(el).opacity));
+  const blend = await page.evaluate(
+    () => window.__auroraDiagnostic().profileBlend,
+  );
   expect(blend).toBeGreaterThan(0.1);
   expect(blend).toBeLessThan(0.95);
   await page.screenshot({ path: `artifacts/open-story/${name}-handoff.png` });

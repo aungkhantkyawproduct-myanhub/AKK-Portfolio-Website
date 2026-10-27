@@ -38,7 +38,7 @@ export default function ProfileAtmosphere() {
       className={s.atmosphere}
       data-profile-atmosphere
       aria-hidden="true"
-      style={{ opacity: blend, "--travel": progress } as CSSProperties}
+      style={{ opacity: blend > 0 ? 1 : 0, "--travel": progress } as CSSProperties}
     >
       <div className={s.light} />
       <svg

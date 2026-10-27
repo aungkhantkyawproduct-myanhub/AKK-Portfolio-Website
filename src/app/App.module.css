@@ -1146,3 +1146,6 @@
 
 /* Light is rendered between the world and readable story copy. */
 .scroll { z-index: 3; }
+
+/* The final GPU pass composes cursor light over the biography atmosphere. */
+.canvas canvas { position: relative; z-index: 3; }
