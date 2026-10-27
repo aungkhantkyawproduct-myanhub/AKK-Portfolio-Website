@@ -21,6 +21,7 @@ export default function AuroraEffect() {
       uVelocity: new Uniform(new Vector2()),
       uViewport: new Uniform(new Vector2(1, 1)),
       uTime: new Uniform(0),
+      uFlowAngle: new Uniform(0),
       uEnergy: new Uniform(0),
       uLayers: new Uniform(3),
       uProfile: new Uniform(0),
@@ -83,6 +84,7 @@ export default function AuroraEffect() {
     uniforms.uVelocity.value.set(motion.vx, -motion.vy);
     uniforms.uViewport.value.set(size.width, size.height);
     uniforms.uTime.value = motion.time;
+    uniforms.uFlowAngle.value = motion.flowAngle;
     uniforms.uEnergy.value = motion.enabled ? motion.opacity : 0;
     uniforms.uProfile.value = useJourney.getState().profileBlend;
     uniforms.uLayers.value = tier === "low" ? 2 : 3;

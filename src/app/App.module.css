@@ -1149,3 +1149,6 @@
 
 /* The final GPU pass composes cursor light over the biography atmosphere. */
 .canvas canvas { position: relative; z-index: 3; }
+
+/* The mist owns the reveal; a second canvas fade would expose an empty gap. */
+.canvas canvas { transition: none; }

@@ -39,3 +39,8 @@ Checkpoints: 0, .15, .3, .5, .65, .8, .95, 1 at 1440×900 and 390×844. Build an
 - Use fixed-step damped springs for the leading light and slower wake, with momentum and independent time-driven folds/rays.
 - Keep copy above the light and preserve biography compositing, coarse-pointer/reduced-motion behavior and idle shader early-outs.
 - Handle viewport/DPR changes, verify 30/60/120 Hz motion equivalence, stop/re-entry behavior, Retina resizing, shader errors and visual checkpoints.
+
+## October 27 — free-flowing waves and a ready Earth reveal
+- Turn aurora flow with a damped angular spring; use independently turning sheets, two-dimensional domain warps and opposing flow layers.
+- Mount the world while the initial mist is present. Confirm texture-ready rendered frames before 100% and the slower 1.8-second fog clearing.
+- Keep the cursor shader idle during initial loading; verify cold/delayed loading has no exposed empty canvas, plus direction changes and normal/reduced fallbacks.

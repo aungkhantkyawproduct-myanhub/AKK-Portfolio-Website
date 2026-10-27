@@ -1,7 +1,7 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useRef } from "react";
 import { useJourney } from "../app/store";
-export default function Quality() {
+export default function Quality({ assetReady }: { assetReady: boolean }) {
   const painted = useRef(0);
   const samples = useRef({ frames: 0, time: 0, done: false });
   const { gl, scene, camera } = useThree();
@@ -36,6 +36,8 @@ export default function Quality() {
           sky: sky?.matrixWorld.toArray(),
           meadow: meadow?.matrixWorld.toArray(),
           treeVisible: tree?.visible,
+          earthTextureReady:
+            materials.find((u) => u.uHasDay)?.uHasDay.value === 1,
           auroraPointer: (
             sky?.children.find(
               (o: any) => o.material?.uniforms?.uPointer,
@@ -68,9 +70,10 @@ export default function Quality() {
     return () => gl.domElement.removeEventListener("webglcontextlost", lost);
   }, [gl]);
   useFrame((_, dt) => {
-    if (painted.current < 3) {
+    // Confirm frames after texture readiness, including the final composer pass.
+    if (assetReady && painted.current < 2) {
       painted.current++;
-      if (painted.current === 3)
+      if (painted.current === 2)
         requestAnimationFrame(() =>
           window.dispatchEvent(new Event("world-painted")),
         );

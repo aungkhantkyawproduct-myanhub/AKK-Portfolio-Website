@@ -22,6 +22,11 @@ await page.waitForFunction(
   { timeout: 60000 },
 );
 await expect(page.locator("canvas")).toHaveCount(1);
+await page.waitForFunction(
+  () => !document.querySelector('[role="status"]'),
+  null,
+  { timeout: 60000 },
+);
 await page.evaluate(
   () => (window.savedCanvas = document.querySelector("canvas")),
 );
@@ -59,7 +64,29 @@ const physics = await page.evaluate(async () => {
   stopAurora(s);
   aimAurora(s, 90, 70, 10);
   const reentry = [s.x, s.y, s.vx, s.vy];
-  return { rates, first, before, after, resizeError, reentry };
+  const turns = [30, 60, 120].map((hz) => {
+    const state = make(),
+      angles = [];
+    let time = 0,
+      maxStep = 0;
+    for (const [x, y] of [
+      [800, 450],
+      [800, 100],
+      [200, 100],
+      [200, 700],
+    ]) {
+      aimAurora(state, x, y, time + 0.001);
+      for (let i = 0; i < hz * 0.6; i++) {
+        const old = state.flowAngle;
+        time += 1 / hz;
+        advanceAurora(state, 1 / hz, time);
+        maxStep = Math.max(maxStep, Math.abs(state.flowAngle - old));
+      }
+      angles.push(state.flowAngle);
+    }
+    return { hz, angles, maxStep };
+  });
+  return { rates, first, before, after, resizeError, reentry, turns };
 });
 for (const r of physics.rates)
   expect(Math.abs(r.x - physics.rates[0].x)).toBeLessThan(0.00001);
@@ -69,6 +96,14 @@ expect(physics.first.vx).toBeGreaterThan(0);
 expect(physics.after).toBeGreaterThan(physics.before);
 expect(physics.resizeError).toBeLessThan(1e-9);
 expect(physics.reentry).toEqual([90, 70, 0, 0]);
+for (const turn of physics.turns) {
+  expect(turn.maxStep).toBeLessThan(0.3);
+  for (let i = 1; i < turn.angles.length; i++)
+    expect(Math.abs(turn.angles[i] - turn.angles[i - 1])).toBeGreaterThan(0.6);
+  turn.angles.forEach((a, i) =>
+    expect(Math.abs(a - physics.turns[0].angles[i])).toBeLessThan(0.00001),
+  );
+}
 for (const mode of ["hero", "profile"]) {
   if (mode === "profile") {
     await page
@@ -76,12 +111,29 @@ for (const mode of ["hero", "profile"]) {
       .evaluate((e) => e.scrollIntoView({ block: "center" }));
     await page.waitForTimeout(2000);
   }
-  for (let i = 0; i < 24; i++) {
-    await page.mouse.move(210 + i * 18, 465 + Math.sin(i * 0.2) * 55);
-    await page.waitForTimeout(40);
-  }
+  const path = [
+    [220, 500],
+    [520, 500],
+    [520, 260],
+    [780, 260],
+    [780, 590],
+    [400, 590],
+  ];
+  for (let i = 1; i < path.length; i++)
+    for (let j = 1; j <= 8; j++) {
+      const a = path[i - 1],
+        b = path[i];
+      await page.mouse.move(
+        a[0] + ((b[0] - a[0]) * j) / 8,
+        a[1] + ((b[1] - a[1]) * j) / 8,
+      );
+      await page.waitForTimeout(35);
+      if (mode === "hero" && j === 8 && i <= 3)
+        await page.screenshot({ path: `${out}/hero-direction-${i}.png` });
+    }
   await page.screenshot({ path: `${out}/${mode}-moving.png` });
   const active = await page.evaluate(() => window.__auroraDiagnostic());
+  expect(Math.abs(active.flowAngle)).toBeGreaterThan(0.25);
   expect(active.renderedEnergy).toBeGreaterThan(0.01);
   await expect
     .poll(() => page.evaluate(() => window.__auroraDiagnostic().time), {

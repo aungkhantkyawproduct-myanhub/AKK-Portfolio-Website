@@ -64,10 +64,12 @@ export default function App() {
   const profileBlend = useJourney((v) => v.profileBlend);
   const reduced = useJourney((v) => v.reducedMotion);
   const [loaded, setLoaded] = useState(false);
-  const [worldStarted, setWorldStarted] = useState(false);
   const [worldPainted, setWorldPainted] = useState(false);
   useEffect(() => {
-    const painted = () => setWorldPainted(true);
+    const painted = () => {
+      performance.mark("portfolio-world-painted");
+      setWorldPainted(true);
+    };
     window.addEventListener("world-painted", painted);
     return () => window.removeEventListener("world-painted", painted);
   }, []);
@@ -81,7 +83,6 @@ export default function App() {
   const [assetReady, setAssetReady] = useState(false);
   const finishLoading = useCallback(() => {
     setLoaded(true);
-    setTimeout(() => setWorldStarted(true), 60);
     document.documentElement.dataset.journeyReady = "true";
     window.dispatchEvent(new Event("journey-ready"));
   }, []);
@@ -141,13 +142,13 @@ export default function App() {
         <div className={s.canvas} data-painted={worldPainted && assetReady}>
           {linear ? (
             <Fallback />
-          ) : worldStarted ? (
+          ) : (
             <CanvasBoundary onFailure={() => setFailed(true)}>
               <Suspense fallback={null}>
-                <World />
+                <World assetReady={assetReady} />
               </Suspense>
             </CanvasBoundary>
-          ) : null}
+          )}
           <ProfileAtmosphere />
         </div>
         <header
@@ -241,7 +242,12 @@ export default function App() {
         <Profile />
         {!linear && <Rail />}
       </div>
-      {!loaded && <MistLoader ready={assetReady} onComplete={finishLoading} />}
+      {!loaded && (
+        <MistLoader
+          ready={linear || (assetReady && worldPainted)}
+          onComplete={finishLoading}
+        />
+      )}
     </>
   );
 }

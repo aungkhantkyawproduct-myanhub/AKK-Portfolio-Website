@@ -23,6 +23,8 @@ export function createAuroraMotion() {
     wakeY: 0,
     wakeVx: 0,
     wakeVy: 0,
+    flowAngle: 0,
+    flowVelocity: 0,
     lastInput: -1e6,
     time: 0,
     opacity: 0,
@@ -63,6 +65,7 @@ export function aimAurora(
     state.x = state.wakeX = x;
     state.y = state.wakeY = y;
     state.vx = state.vy = state.wakeVx = state.wakeVy = 0;
+    state.flowAngle = state.flowVelocity = 0;
     state.opacity = 0;
     state.accumulator = 0;
     state.initialized = true;
@@ -98,6 +101,16 @@ export function advanceAurora(state: AuroraMotion, delta: number, now: number) {
       step;
     state.wakeX += state.wakeVx * step;
     state.wakeY += state.wakeVy * step;
+    // Follow heading along the shortest arc; retain angular momentum at rest.
+    if (state.vx * state.vx + state.vy * state.vy > 400) {
+      const heading = Math.atan2(-state.vy, state.vx);
+      const difference = Math.atan2(
+        Math.sin(heading - state.flowAngle),
+        Math.cos(heading - state.flowAngle),
+      );
+      state.flowVelocity += (difference * 22 - state.flowVelocity * 8) * step;
+    } else state.flowVelocity *= Math.exp(-step * 5);
+    state.flowAngle += state.flowVelocity * step;
     state.accumulator -= step;
   }
   const age = Math.max(0, now - state.lastInput);

@@ -13,7 +13,10 @@ export default function AuroraCursor() {
   useEffect(() => {
     const media = matchMedia("(hover: hover) and (pointer: fine)");
     const configure = () => {
-      auroraMotion.enabled = !reduced && media.matches;
+      auroraMotion.enabled =
+        !reduced &&
+        media.matches &&
+        document.documentElement.dataset.journeyReady === "true";
       resizeAurora(auroraMotion, innerWidth, innerHeight);
       if (!auroraMotion.enabled) stopAurora(auroraMotion);
     };
@@ -33,6 +36,7 @@ export default function AuroraCursor() {
     configure();
     media.addEventListener("change", configure);
     window.addEventListener("resize", configure, { passive: true });
+    window.addEventListener("journey-ready", configure);
     window.addEventListener("pointermove", move, { passive: true });
     window.addEventListener("blur", hide);
     document.documentElement.addEventListener("pointerleave", hide);
@@ -42,6 +46,7 @@ export default function AuroraCursor() {
       hide();
       media.removeEventListener("change", configure);
       window.removeEventListener("resize", configure);
+      window.removeEventListener("journey-ready", configure);
       window.removeEventListener("pointermove", move);
       window.removeEventListener("blur", hide);
       document.documentElement.removeEventListener("pointerleave", hide);

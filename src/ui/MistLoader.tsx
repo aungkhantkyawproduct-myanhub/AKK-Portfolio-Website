@@ -32,34 +32,44 @@ export default function MistLoader({
   const reduced = useJourney((s) => s.reducedMotion);
   const [progress, setProgress] = useState(0),
     [clearing, setClearing] = useState(false);
-  const start = useRef(performance.now());
+  const readyRef = useRef(ready);
+  readyRef.current = ready;
   useEffect(() => {
     performance.mark("portfolio-loader-start");
     let frame = 0;
-    const countDuration = reduced ? 200 : 1000,
-      totalDuration = reduced ? 400 : 1900;
+    const start = performance.now();
+    const countDuration = reduced ? 120 : 850;
+    const settleDuration = reduced ? 60 : 180;
+    const clearDuration = reduced ? 300 : 1800;
+    let settleStart = -1,
+      clearStart = -1;
     const tick = (now: number) => {
-      const t = Math.max(0, Math.min(1, (now - start.current) / countDuration));
-      setProgress(Math.round((1 - Math.pow(1 - t, 2)) * 100));
-      if (t < 1) frame = requestAnimationFrame(tick);
+      const t = Math.max(0, Math.min(1, (now - start) / countDuration));
+      if (settleStart < 0) {
+        setProgress(Math.round((1 - Math.pow(1 - t, 2)) * 92));
+        if (t >= 1 && readyRef.current) settleStart = now;
+      } else if (clearStart < 0) {
+        const settle = Math.min(1, (now - settleStart) / settleDuration);
+        setProgress(Math.round(92 + 8 * (1 - (1 - settle) ** 2)));
+        if (settle >= 1) {
+          clearStart = now;
+          setClearing(true);
+          performance.mark("portfolio-hero-reveal");
+          document.documentElement.dataset.heroRevealed = "true";
+          window.dispatchEvent(new Event("hero-reveal"));
+        }
+      } else if (now - clearStart >= clearDuration) {
+        performance.mark("portfolio-loader-finish");
+        onComplete();
+        return;
+      }
+      frame = requestAnimationFrame(tick);
     };
     frame = requestAnimationFrame(tick);
-    const clear = setTimeout(() => {
-      setProgress(100);
-      setClearing(true);
-      document.documentElement.dataset.heroRevealed = "true";
-      window.dispatchEvent(new Event("hero-reveal"));
-    }, countDuration);
-    const finish = setTimeout(() => {
-      performance.mark("portfolio-loader-finish");
-      onComplete();
-    }, totalDuration);
     const before = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
       cancelAnimationFrame(frame);
-      clearTimeout(clear);
-      clearTimeout(finish);
       document.body.style.overflow = before;
     };
   }, [reduced, onComplete]);

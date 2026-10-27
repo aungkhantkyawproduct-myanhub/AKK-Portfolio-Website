@@ -70,7 +70,7 @@ export default function Earth() {
         },
         undefined,
         () => {
-          window.dispatchEvent(new Event("world-ready"));
+          if (key === "uDay") window.dispatchEvent(new Event("world-ready"));
         },
       );
     load("/textures/earth-day-2k.webp", "uDay", "uHasDay");

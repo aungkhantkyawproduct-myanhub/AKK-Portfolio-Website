@@ -30,7 +30,7 @@ function JourneyWorld({ children }: { children: ReactNode }) {
     </group>
   );
 }
-export default function World() {
+export default function World({ assetReady }: { assetReady: boolean }) {
   const display = useDisplay();
   const tier = useJourney((s) => s.qualityTier);
   const requested = useJourney((s) => s.scrollProgress > 0.015);
@@ -74,7 +74,7 @@ export default function World() {
         {localReady && <Descent />}
         {localReady && <Tree />}
         {localReady && <Realms />}
-        <Quality />
+        <Quality assetReady={assetReady} />
         <Preload />
       </JourneyWorld>
       <Effects />
