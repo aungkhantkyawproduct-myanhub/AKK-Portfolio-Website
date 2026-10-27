@@ -44,3 +44,9 @@ Checkpoints: 0, .15, .3, .5, .65, .8, .95, 1 at 1440×900 and 390×844. Build an
 - Turn aurora flow with a damped angular spring; use independently turning sheets, two-dimensional domain warps and opposing flow layers.
 - Mount the world while the initial mist is present. Confirm texture-ready rendered frames before 100% and the slower 1.8-second fog clearing.
 - Keep the cursor shader idle during initial loading; verify cold/delayed loading has no exposed empty canvas, plus direction changes and normal/reduced fallbacks.
+
+## October 27 — Altitude fluid cursor
+- [x] Review the latest recording and reference; replace curtains with a persistent GPU ink simulation and scene refraction.
+- [x] Preserve spring input, one canvas, readable DOM, idle suspension and Retina resizing.
+- [x] Complete final regression checks, document verification limits, commit and refresh release archives.
+

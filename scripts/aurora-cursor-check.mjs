@@ -10,7 +10,11 @@ const page = await context.newPage(),
   errors = [];
 page.on("pageerror", (e) => errors.push(e.message));
 page.on("console", (m) => {
-  if (m.type() === "error" && /shader|WebGLProgram/.test(m.text()))
+  if (
+    /shader error|WebGLProgram|GL_INVALID|Feedback loop|INVALID_OPERATION/i.test(
+      m.text(),
+    )
+  )
     errors.push(m.text());
 });
 await page.goto("http://127.0.0.1:5173", { waitUntil: "domcontentloaded" });
@@ -104,6 +108,7 @@ for (const turn of physics.turns) {
     expect(Math.abs(a - physics.turns[0].angles[i])).toBeLessThan(0.00001),
   );
 }
+const fields = [];
 for (const mode of ["hero", "profile"]) {
   if (mode === "profile") {
     await page
@@ -135,6 +140,30 @@ for (const mode of ["hero", "profile"]) {
   const active = await page.evaluate(() => window.__auroraDiagnostic());
   expect(Math.abs(active.flowAngle)).toBeGreaterThan(0.25);
   expect(active.renderedEnergy).toBeGreaterThan(0.01);
+  expect(active.fluidActive).toBe(true);
+  expect(active.fluidSupported).toBe(true);
+  expect(active.simulationPasses).toBeLessThanOrEqual(25);
+  expect(active.fluidDimensions.velocity.every((v) => v <= 160)).toBe(true);
+  expect(active.fluidDimensions.dye.every((v) => v <= 768)).toBe(true);
+  const probe = await page.evaluate(() => {
+    const d = window.__auroraDiagnostic();
+    const point = [d.x / d.width, 1 - d.y / d.height];
+    return { point, ...window.__fluidProbe(...point) };
+  });
+  expect(probe.curlEnergy).toBeGreaterThan(1);
+  expect(probe.minX).toBeLessThan(-0.05);
+  expect(probe.maxX).toBeGreaterThan(0.05);
+  expect(probe.minY).toBeLessThan(-0.05);
+  expect(probe.maxY).toBeGreaterThan(0.05);
+  expect(Math.max(...probe.ink)).toBeGreaterThan(0.001);
+  await page.waitForTimeout(250);
+  const lingering = await page.evaluate(
+    (point) => window.__fluidProbe(...point),
+    probe.point,
+  );
+  expect(lingering.curlEnergy).toBeGreaterThan(0.01);
+  expect(Math.max(...lingering.ink)).toBeGreaterThan(0.0001);
+  fields.push({ mode, active, probe, lingering });
   await expect
     .poll(() => page.evaluate(() => window.__auroraDiagnostic().time), {
       timeout: 3000,
@@ -148,6 +177,9 @@ for (const mode of ["hero", "profile"]) {
     null,
     { timeout: 15000 },
   );
+  expect(
+    await page.evaluate(() => window.__auroraDiagnostic().simulationPasses),
+  ).toBe(0);
   await page.screenshot({ path: `${out}/${mode}-dissipated.png` });
 }
 expect(
@@ -244,6 +276,7 @@ await fs.writeFile(
     {
       errors,
       physics,
+      fields,
       retina,
       resized,
       singleCanvas: true,
@@ -254,5 +287,5 @@ await fs.writeFile(
   ),
 );
 console.log(
-  "Frame-rate-independent spring lag/inertia, idle curtains/fade, one canvas, Retina resize/DPR transfer, coarse/reduced motion passed.",
+  "Frame-rate-independent spring lag/inertia, swirling GPU fluid, lingering dye, idle pass suspension, one canvas, Retina resize/DPR transfer, coarse/reduced motion passed.",
 );

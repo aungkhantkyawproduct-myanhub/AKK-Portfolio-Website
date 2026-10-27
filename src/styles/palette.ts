@@ -8,8 +8,7 @@ export const palette = {
   bark: "#3d3c32",
 };
 // Linear-light shader colors, separate from the CSS color tokens above.
-export const cursorAuroraPalette = {
-  emerald: [0.025, 0.95, 0.38] as const,
-  cyan: [0.06, 0.78, 1] as const,
-  violet: [0.66, 0.12, 0.88] as const,
+export const cursorFluidPalette = {
+  warm: [1, 0.68, 0.2] as const,
+  cool: [0.08, 0.4, 1] as const,
 };

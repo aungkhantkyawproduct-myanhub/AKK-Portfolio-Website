@@ -9,3 +9,9 @@
 - Provide keyboard interaction, readable semantic DOM, reduced-motion and WebGL fallback. Audio starts only after explicit interaction.
 - Run npm run build and Playwright desktop/mobile checkpoints for each phase. Record limits honestly. Commit phases if Git is available.
 - Do not deploy or change domain records without configured hosting access.
+
+## October 27 — Altitude fluid reference
+- Replace the cursor's procedural curtains with persistent, softly luminous warm/cool ink clouds, following the latest Altitude recording.
+- Advect velocity and dye, preserve vortices and project pressure in small GPU fields inside the existing canvas/RAF. Add subtle scene-only refraction; leave DOM text sharp.
+- Weight cursor impulses by elapsed time and interpolation count. Keep spring smoothing, idle suspension, Retina resizing and touch/reduced-motion safeguards.
+- Verify actual GPU curl, multidirectional velocity and lingering dye, story checkpoints, Earth-ready reveal and readable biography compositing. Refresh GitHub/source and static archives.
