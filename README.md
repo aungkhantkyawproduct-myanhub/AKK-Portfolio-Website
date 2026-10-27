@@ -34,6 +34,7 @@ Beyond the Journey blends into a distinct animated aurora backdrop. The circular
 - Tree shape: `src/canvas/tree/skeleton.ts`. Materials and growth: `Tree.tsx`. Lights, fruit and realm markers: `Realms.tsx`.
 - Sky: `src/shaders/sky.ts` and `src/canvas/Environment.tsx`. Biography aurora: `src/ui/ProfileAtmosphere.tsx` and its CSS module.
 - Cursor response: `src/hooks/useAuroraPointer.ts` supplies normalized fine-pointer input. Aurora shaders and biography CSS damp the light response; reduced motion disables it.
+- Local aurora trails: `src/ui/AuroraCursor.tsx` and its CSS module. Curling, textured SVG light forms around the moving mouse and dissipates on idle. It sits beneath readable DOM copy, ignores pointer input, adds no WebGL canvas, and is disabled for touch/reduced motion.
 - Earth and Myanmar lights: `src/canvas/earth/`. Earth position is fixed at `(0,-10,0)`; rotation is time-based. Magnetic field lines are not rendered.
 - Grass and cloud descent: `src/canvas/seed/Meadow.tsx` and `Descent.tsx`.
 - Typography: `--font-family` in `src/styles/global.css`. Header blending: `src/app/App.module.css`.
@@ -52,6 +53,7 @@ node scripts/open-story-check.mjs
 node scripts/continuous-check.mjs
 node scripts/interactions.mjs
 node scripts/motion-check.mjs
+node scripts/aurora-cursor-check.mjs
 ```
 
 Scripts use installed Microsoft Edge via Playwright. Change `channel` to your installed browser, or install Playwright Chromium. Checkpoints capture progress 0, .15, .3, .5, .65, .8, .95 and 1 at desktop 1440×900 and mobile 390×844. Reports/screenshots are in ignored `artifacts/`. `PHASES.md` records historical revisions and verification limits.

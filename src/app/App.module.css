@@ -1143,3 +1143,6 @@
   .chapter:not(.hero), .chapter.right:not(.hero) { top: 12%; max-height: 43svh; }
   .linear .chapter:not(.hero) { max-height: none; }
 }
+
+/* Light is rendered between the world and readable story copy. */
+.scroll { z-index: 3; }

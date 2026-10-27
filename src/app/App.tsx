@@ -230,7 +230,7 @@ export default function App() {
                 ) : (
                   <>
                     <h2>{ch.title}</h2>
-                    {i !== 7 && <p>{ch.line}</p>}
+                    <p>{ch.line}</p>
                     <ChapterBody chapter={i} />
                   </>
                 )}

@@ -13,7 +13,11 @@ export const content = {
     education: "Education & recognition",
     results: "Selected outcomes",
     about: "About",
-    explore: "Explore my experience & education ↗",
+    explore: "Meet the person behind the product ↗",
+  },
+  contact: {
+    action: "Start a conversation",
+    connectLabel: "Connect",
   },
   storyNotes: [
     "",
@@ -81,9 +85,9 @@ export const content = {
     },
     {
       stage: "The canopy",
-      title: "Have a product to build? Let’s grow it together.",
+      title: "Let’s grow what’s next.",
       eyebrow: "07 / A new beginning",
-      line: "Back to the seed ↺",
+      line: "Have a product challenge in mind? Let’s talk about the next step.",
     },
   ],
   experience: [

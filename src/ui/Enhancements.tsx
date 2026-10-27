@@ -5,6 +5,7 @@ import { navigateItem } from "../hooks/useJourney";
 import { updateAmbient, suspendAmbient, resumeAmbient } from "../audio/ambient";
 import { useJourney } from "../app/store";
 import s from "./UI.module.css";
+import AuroraCursor from "./AuroraCursor";
 export function Menu({
   open,
   onClose,
@@ -92,6 +93,7 @@ export function Enhancements() {
   }, []);
   return (
     <>
+      <AuroraCursor />
       <div
         ref={cursor}
         className={s.cursor}

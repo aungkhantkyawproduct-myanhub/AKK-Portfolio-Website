@@ -28,15 +28,64 @@ function Profile() {
           // compromising contrast or hiding content from keyboard navigation.
           timeline.fromTo(
             children.length ? children : el,
-            { y: 66 },
-            { y: 0, stagger: 0.12, duration: 1, ease: "power2.out" },
+            { y: 96 },
+            { y: 0, stagger: 0.16, duration: 1.25, ease: "power3.out" },
           );
+          const headings = el.matches("h2,h3,h4")
+            ? [el]
+            : el.querySelectorAll("h2,h3:not(#about-title),h4");
+          if (headings.length)
+            timeline.fromTo(
+              headings,
+              {
+                clipPath: "inset(0% 0% 100% 0%)",
+                filter: "blur(5px)",
+                scale: 0.96,
+              },
+              {
+                clipPath: "inset(0% 0% 0% 0%)",
+                filter: "blur(0px)",
+                scale: 1,
+                duration: 0.95,
+                ease: "power2.out",
+              },
+              0,
+            );
+          const stats = el.querySelectorAll("strong");
+          if (stats.length)
+            timeline.fromTo(
+              stats,
+              { y: 26, scale: 0.88 },
+              {
+                y: 0,
+                scale: 1,
+                stagger: 0.1,
+                duration: 0.9,
+                ease: "power3.out",
+              },
+              0.15,
+            );
+          const circle = el.querySelectorAll("#about-title");
+          if (circle.length)
+            timeline.fromTo(
+              circle,
+              { scale: 0.84, rotate: -12 },
+              { scale: 1, rotate: 0, duration: 1.1, ease: "power3.out" },
+              0,
+            );
           if (el.hasAttribute("data-profile-step")) {
             timeline.fromTo(
               el.querySelectorAll("li"),
-              { x: 24, y: 18 },
-              { x: 0, y: 0, stagger: 0.09, duration: 0.8, ease: "power2.out" },
+              { x: 42, y: 28 },
+              { x: 0, y: 0, stagger: 0.09, duration: 1, ease: "power3.out" },
               0.25,
+            );
+          } else if (el.querySelectorAll("article, li").length) {
+            timeline.fromTo(
+              el.querySelectorAll("article, li"),
+              { y: 38 },
+              { y: 0, stagger: 0.08, duration: 1, ease: "power2.out" },
+              0.2,
             );
           }
           timeline.fromTo(

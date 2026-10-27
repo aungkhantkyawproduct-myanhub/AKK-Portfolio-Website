@@ -537,3 +537,7 @@
     transform: none;
   }
 }
+
+/* The knowledge passage owns the single divider leading into the footer. */
+.profile footer { border-top: 0; margin-top: 0; }
+.job, .results { border-bottom: 0; }

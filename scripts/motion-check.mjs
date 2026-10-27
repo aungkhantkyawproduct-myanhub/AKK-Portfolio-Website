@@ -35,7 +35,17 @@ for (const [name, width, height] of [
   expect(clouds.at(-1).opacity).toBe(0);
   await page.evaluate(() => window.__debugProgress(0.8));
   await page.waitForTimeout(2500);
-  const camera = await page.evaluate(() => window.__worldDiagnostic().camera);
+  // Wait for the preceding scroll flight to finish before testing pointer input.
+  // Software rendering can take longer than a fixed delay under parallel QA.
+  let camera = await page.evaluate(() => window.__worldDiagnostic().camera);
+  let stable = 0;
+  for (let attempt = 0; attempt < 20 && stable < 3; attempt++) {
+    await page.waitForTimeout(350);
+    const next = await page.evaluate(() => window.__worldDiagnostic().camera);
+    stable = next.every((v, i) => Math.abs(v - camera[i]) < 0.0001) ? stable + 1 : 0;
+    camera = next;
+  }
+  expect(stable).toBe(3);
   await page.mouse.move(width * 0.12, height * 0.2);
   await page.waitForTimeout(1400);
   const left = await page.evaluate(() => window.__worldDiagnostic());

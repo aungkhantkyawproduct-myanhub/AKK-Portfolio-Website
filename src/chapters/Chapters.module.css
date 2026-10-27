@@ -255,6 +255,152 @@
     display: block;
   }
 }
-.storyNote{font-size:14px;line-height:1.9;max-width:390px;color:var(--muted)}
+.storyNote {
+  font-size: 14px;
+  line-height: 1.9;
+  max-width: 390px;
+  color: var(--muted);
+}
 /* Open editorial links, without boxed tiles. */
-.projects{display:flex;flex-direction:column;gap:0;margin-top:30px}.projects button{border:0;border-bottom:1px solid #b9d2c42b;background:none;padding:18px 0;display:flex;align-items:center;gap:18px;font-size:13px}.projects i{display:inline-block;margin:0;font-size:20px}.tools span{border:0;padding:3px 0}.tools span:not(:last-child):after{content:' /';margin-left:7px;color:#7c9997}.skills button{background:none}.skills button:hover,.projects button:hover{color:var(--gold)}
+.projects {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 30px;
+}
+.projects button {
+  border: 0;
+  border-bottom: 1px solid #b9d2c42b;
+  background: none;
+  padding: 18px 0;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-size: 13px;
+}
+.projects i {
+  display: inline-block;
+  margin: 0;
+  font-size: 20px;
+}
+.tools span {
+  border: 0;
+  padding: 3px 0;
+}
+.tools span:not(:last-child):after {
+  content: " /";
+  margin-left: 7px;
+  color: #7c9997;
+}
+.skills button {
+  background: none;
+}
+.skills button:hover,
+.projects button:hover {
+  color: var(--gold);
+}
+
+/* A concise invitation: one primary action, then direct ways to connect. */
+.contact {
+  margin-top: 22px;
+}
+.contactMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  align-items: center;
+  color: #b2c8ca;
+  font-size: 11px;
+}
+.contactMeta .status {
+  margin: 0;
+  font-size: 11px !important;
+  line-height: 1.5 !important;
+}
+.contactMeta .status::before {
+  color: #83d9ad;
+  font-size: 8px;
+}
+.contact > .contactAction {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  border: 0;
+  border-bottom: 1px solid #b8d9d445;
+  padding: 22px 0 14px;
+  font-size: clamp(22px, 2.1vw, 30px);
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  color: #edf4ea;
+}
+.contactAction span {
+  font-size: 30px;
+  color: #d9c28f;
+  transition: transform 0.3s;
+}
+.contactAction:hover span {
+  transform: translate(4px, -4px);
+}
+.emailRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 18px;
+  margin: 16px 0 22px;
+}
+.emailRow a {
+  font-size: clamp(11px, 1vw, 14px);
+  color: #c1d1d0;
+  overflow-wrap: anywhere;
+}
+.contact .emailRow button {
+  margin: 0;
+  font-size: 10px;
+  padding: 5px 0;
+}
+.contact .contactLinks {
+  gap: 24px;
+  margin: 20px 0;
+  font-size: 12px;
+}
+.contact .exploreProfile {
+  margin: 0;
+  padding: 10px 0;
+  font-size: 11px;
+  color: #b4d5ce;
+}
+@media (max-width: 600px) {
+  .contact {
+    margin-top: 16px;
+  }
+  .contactMeta {
+    font-size: 9px;
+    gap: 5px 12px;
+  }
+  .contactMeta .status {
+    font-size: 9px !important;
+  }
+  .contact > .contactAction {
+    font-size: 22px;
+    padding: 14px 0 10px;
+  }
+  .emailRow {
+    margin: 10px 0 12px;
+    gap: 3px 12px;
+  }
+  .contact .emailRow button {
+    display: inline;
+    margin: 0;
+    font-size: 9px;
+  }
+  .contact .contactLinks {
+    margin: 10px 0;
+    font-size: 11px;
+  }
+  .contact .exploreProfile {
+    margin: 0;
+    font-size: 10px;
+    padding: 7px 0;
+  }
+}

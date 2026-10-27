@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { content as c } from "../content/content";
 import { useJourney } from "../app/store";
-import { navigate, navigateItem } from "../hooks/useJourney";
+import { navigateItem } from "../hooks/useJourney";
 import s from "./Chapters.module.css";
 export const openDetail = (title: string, text: string, url?: string) =>
   window.dispatchEvent(
@@ -38,10 +38,28 @@ function Result({ index }: { index: number }) {
   );
 }
 export default function ChapterBody({ chapter }: { chapter: number }) {
-  if (chapter >= 1 && chapter <= 5) return <div className={s.body}>
-    <p className={s.storyNote}>{c.storyNotes[chapter]}</p>
-    {chapter === 5 && <div className={s.projects}>{c.projects.map((project,i)=><button key={project.name} onClick={()=>openDetail(project.name,project.description,project.url)}><i>{i===0?'✧':'◈'}</i>{project.name} ↗</button>)}</div>}
-  </div>;  if (chapter === 6)
+  if (chapter >= 1 && chapter <= 5)
+    return (
+      <div className={s.body}>
+        <p className={s.storyNote}>{c.storyNotes[chapter]}</p>
+        {chapter === 5 && (
+          <div className={s.projects}>
+            {c.projects.map((project, i) => (
+              <button
+                key={project.name}
+                onClick={() =>
+                  openDetail(project.name, project.description, project.url)
+                }
+              >
+                <i>{i === 0 ? "✧" : "◈"}</i>
+                {project.name} ↗
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  if (chapter === 6)
     return (
       <>
         <div className={s.skills}>
@@ -72,35 +90,40 @@ export default function ChapterBody({ chapter }: { chapter: number }) {
   if (chapter === 7)
     return (
       <div className={s.contact}>
-        <p className={s.status}>{c.status}</p>
-        <a href={`mailto:${c.email}`}>{c.email}</a>
-        <button
-          onClick={async () => {
-            let text: string = c.ui.copied;
-            try {
-              await navigator.clipboard.writeText(c.email);
-            } catch {
-              text = c.ui.copyFailed;
-            }
-            window.dispatchEvent(new CustomEvent("toast", { detail: text }));
-          }}
-        >
-          {c.ui.copy} ⧉
-        </button>
-        <div className={s.contactLinks}>
+        <div className={s.contactMeta}>
+          <p className={s.status}>{c.status}</p>
+          <span>{c.location}</span>
+        </div>
+        <a className={s.contactAction} href={`mailto:${c.email}`}>
+          {c.contact.action}
+          <span aria-hidden="true">↗</span>
+        </a>
+        <div className={s.emailRow}>
+          <a href={`mailto:${c.email}`}>{c.email}</a>
+          <button
+            onClick={async () => {
+              let text: string = c.ui.copied;
+              try {
+                await navigator.clipboard.writeText(c.email);
+              } catch {
+                text = c.ui.copyFailed;
+              }
+              window.dispatchEvent(new CustomEvent("toast", { detail: text }));
+            }}
+          >
+            {c.ui.copy} ⧉
+          </button>
+        </div>
+        <div className={s.contactLinks} aria-label={c.contact.connectLabel}>
           <a href={c.linkedin} target="_blank" rel="noreferrer">
             LinkedIn ↗
           </a>
           <a href={`tel:${c.phone.replaceAll(" ", "")}`}>{c.phone}</a>
         </div>
-        <p>{c.location}</p>
-        <button onClick={() => navigateItem(1)}>{c.profile.explore}</button>
-        <div className={s.footer}>
-          <span>{c.ui.copyright}</span>
-          <button onClick={() => navigate(0)}>{c.ui.back}</button>
-        </div>
+        <button className={s.exploreProfile} onClick={() => navigateItem(1)}>
+          {c.profile.explore}
+        </button>
       </div>
     );
   return null;
 }
-

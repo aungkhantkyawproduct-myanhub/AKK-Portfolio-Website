@@ -25,3 +25,11 @@ Checkpoints: 0, .15, .3, .5, .65, .8, .95, 1 at 1440×900 and 390×844. Build an
 - Thicken the atmosphere crossing with twelve soft-edged cloud banks. Clear the mist as the ground/seed is revealed.
 - Reserve the desktop reading column and lower mobile subject area through camera framing; sharpen the subject side of the reading mask.
 - Verify motion, cloud clearing, camera stability, desktop/mobile checkpoints and accessibility; refresh source/static archives after passing checks.
+
+## October 27 — local aurora trails and a fuller crown
+- Review the Altitude reference and supplied recording; implement local curling light around the cursor with dissipating trails.
+- Enlarge the solar disc and soften its warm corona/scatter.
+- Strengthen About-to-footer entrances with masked headings, staggered copy and gradual section light.
+- Simplify chapter 07 to a conversation invitation and direct contact actions; keep repeated footer utilities in the footer.
+- Keep one divider before the footer; expand the tree's primary limbs and supporting crown while sharing the foliage budget.
+- Rebuild, inspect desktop/mobile checkpoints, verify interaction/motion/accessibility, commit and refresh both archives.

@@ -31,7 +31,8 @@ export function createSkeleton() {
     spread: number,
     count: number,
   ) {
-    for (let i = 0; i < count; i++) {
+    // More supporting branches share the foliage budget instead of multiplying it.
+    for (let i = 0; i < Math.ceil(count * 0.72); i++) {
       const a = random() * Math.PI * 2,
         r = Math.sqrt(random()) * spread;
       leaves.push({
@@ -142,15 +143,15 @@ export function createSkeleton() {
     });
   }
   // Rising limbs carry a dome of foliage, rather than horizontal spokes.
-  for (let k = 0; k < 12; k++) {
+  for (let k = 0; k < 18; k++) {
     const a = k * 2.399963 + 0.18,
-      y = 7.8 + (k % 4) * 0.85,
-      extent = 7.5 + random() * 2.8;
-    const top = 15.5 + (1 - Math.abs(k - 5.5) / 7) * 3 + random() * 1.5;
+      y = 6.8 + (k % 6) * 1.1,
+      extent = 8.2 + random() * 3.2;
+    const top = 18 + (1 - Math.abs(k - 8.5) / 10) * 3.4 + random() * 1.3;
     limb(
       trunk(y),
       new Vector3(Math.cos(a) * extent, top, Math.sin(a) * extent),
-      1.02 - (k % 4) * 0.08,
+      1.02 - (k % 6) * 0.065,
       1,
       Math.max(0.15 + k * 0.009, (y / 13) * 48 * 0.005 + 0.02),
       Math.floor((y / 13) * 48),
@@ -162,13 +163,13 @@ export function createSkeleton() {
   const tips = segments
     .map((segment, index) => ({ segment, index }))
     .filter((t) => t.segment.depth === 3);
-  for (let i = 0; i < 96; i++) {
+  for (let i = 0; i < 128; i++) {
     const a = i * 2.399963,
       radial = Math.sqrt(random()),
       r = radial * (11.5 + 0.65 * Math.sin(a * 5));
     const center = new Vector3(
       Math.cos(a) * r,
-      17.3 + 4.8 * Math.sqrt(1 - radial * radial) + (random() - 0.5) * 2.1,
+      19.3 + 5.8 * Math.sqrt(1 - radial * radial) + (random() - 0.5) * 2.1,
       Math.sin(a) * r * 0.82,
     );
     const nearest = tips.reduce((best, t) =>
