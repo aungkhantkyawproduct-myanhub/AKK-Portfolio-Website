@@ -5,6 +5,8 @@ export interface Segment {
   radius: number;
   endRadius?: number;
   birth: number;
+  finish: number;
+  root?: boolean;
   depth: number;
   parent: number;
 }
@@ -13,6 +15,7 @@ export interface Leaf {
   birth: number;
   angle: number;
   size: number;
+  juvenile?: boolean;
 }
 /** One seeded, broad-crowned organism. Every stage reveals the same skeleton. */
 export function createSkeleton() {
@@ -66,15 +69,28 @@ export function createSkeleton() {
       start
         .clone()
         .addScaledVector(delta, 0.3)
-        .add(new Vector3(-horizontal.z * 0.12, 0.9, horizontal.x * 0.12)),
+        .add(
+          new Vector3(
+            -horizontal.z * 0.12,
+            depth === 5 ? 0.035 : 0.9,
+            horizontal.x * 0.12,
+          ),
+        ),
       start
         .clone()
         .addScaledVector(delta, 0.78)
-        .add(new Vector3(horizontal.z * 0.08, -0.4, -horizontal.x * 0.08)),
+        .add(
+          new Vector3(
+            horizontal.z * 0.08,
+            depth === 5 ? -0.015 : -0.4,
+            -horizontal.x * 0.08,
+          ),
+        ),
       end,
     );
-    const count = depth === 1 ? 18 : 10,
-      duration = depth === 1 ? 0.19 : 0.13;
+    birth = Math.max(birth, segments[parent]?.finish ?? 0);
+    const count = depth === 5 ? 5 : depth === 1 ? 18 : 10,
+      duration = depth === 5 ? 0.006 : depth === 1 ? 0.19 : 0.13;
     let from = start;
     for (let j = 0; j < count; j++) {
       const t = (j + 1) / count,
@@ -86,6 +102,7 @@ export function createSkeleton() {
         radius: radius * Math.pow(1 - j / (count + 1), 1.2),
         endRadius: radius * Math.pow(1 - (j + 1) / (count + 1), 1.2),
         birth: birth + (j / count) * duration,
+        finish: birth + ((j + 1) / count) * duration,
         depth,
         parent,
       });
@@ -123,11 +140,20 @@ export function createSkeleton() {
       }
       if (depth === 3 && j > 3)
         foliage(point, birth + (j / count) * duration + 0.012, 0.7, 42);
+      // Young branches carry true leaves as they lengthen, before crown clusters.
+      if (depth === 1 && j > 2 && j % 3 === 1)
+        leaves.push({
+          position: point.clone(),
+          birth: birth + ((j + 1) / count) * duration + 0.003,
+          angle: Math.atan2(delta.z, delta.x) + (j % 2 === 0 ? -0.9 : 0.9),
+          size: 0.9,
+          juvenile: true,
+        });
       if (depth === 2 && j > 7)
         foliage(point, birth + (j / count) * duration + 0.018, 0.9, 55);
       from = point;
     }
-    if (depth >= 2)
+    if (depth >= 2 && depth < 5)
       foliage(end, birth + duration + 0.015, depth === 2 ? 1.25 : 0.95, 150);
   }
   for (let j = 0; j < 48; j++) {
@@ -138,6 +164,7 @@ export function createSkeleton() {
       radius: 2.8 * Math.pow(1 - j / 55, 1.1),
       endRadius: 2.8 * Math.pow(1 - (j + 1) / 55, 1.1),
       birth: 0.008 + j * 0.005,
+      finish: 0.008 + (j + 1) * 0.005,
       depth: 0,
       parent: j - 1,
     });
@@ -201,20 +228,36 @@ export function createSkeleton() {
         end,
         radius: 0.62 * Math.pow(1 - j / 33, 1.25),
         endRadius: 0.62 * Math.pow(1 - (j + 1) / 33, 1.25),
-        birth: 0.12 + j * 0.003,
+        // Buttresses develop after a living stem and first branches exist.
+        birth: 0.34 + j * 0.003,
+        finish: 0.34 + (j + 1) * 0.003,
+        root: true,
         depth: 1,
         parent: -1,
       });
       from = end;
     }
   }
-  for (let i = 0; i < 5; i++)
-    for (const side of [-1, 1])
+  // Cotyledons and true leaves belong to actual stem nodes, with petioles.
+  for (let i = 0; i < 9; i++) {
+    const y = 1.1 + i * 1.25;
+    const parent = Math.floor(y / (13 / 48));
+    for (const side of [-1, 1]) {
+      const angle = (side < 0 ? Math.PI : 0) + i * 0.5;
+      const node = trunk(y);
+      const petiole = node
+        .clone()
+        .add(new Vector3(Math.cos(angle) * 0.32, 0.13, Math.sin(angle) * 0.32));
+      const birth = segments[parent].finish + 0.003;
+      limb(node, petiole, 0.045, 5, birth, parent);
       leaves.push({
-        position: new Vector3(side * (0.4 + i * 0.02), 2 + i * 0.9, 0),
-        birth: 0.052 + i * 0.019,
-        angle: side * 0.4,
-        size: 0.55 + i * 0.04,
+        position: petiole,
+        birth: birth + 0.007,
+        angle,
+        size: i === 0 ? 0.8 : 1.05 + i * 0.045,
+        juvenile: true,
       });
+    }
+  }
   return { segments, leaves };
 }

@@ -56,3 +56,9 @@ Checkpoints: 0, .15, .3, .5, .65, .8, .95, 1 at 1440×900 and 390×844. Build an
 - [x] Improve map sampling, limb geometry and hero DPR; preserve the ready-Earth fog reveal.
 - [x] Add a lightweight procedural satellite in a real inclined orbit with Earth occlusion and a smooth departure during descent.
 - [x] Verify texture dimensions, mobile rendering, orbital motion, fallback, startup and desktop/mobile checkpoints; refresh release archives and commit.
+
+## October 28 — continuous fog and botanical growth
+- [x] Reproduce the reported fog artifacts and early growth on desktop/mobile.
+- [x] Replace bounded cloud shapes with continuous, softly varying transition mist.
+- [x] Grow connected tapered stems, attached unfolding leaves and later woody roots through one consistent tree skeleton.
+- [x] Check intermediate and reverse transitions, build, capture story checkpoints and refresh release archives.

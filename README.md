@@ -21,7 +21,9 @@ The header uses a full-width masked gradient and 18px backdrop blur. Its lower e
 
 The world starts behind the initial mist. Progress eases toward 92%, then reaches 100% only after textures/fallback and rendered planet frames are ready. The mist clears over 1.8 seconds onto the already-visible Earth; there is no empty post-loader interval, second canvas fade or screenshot-to-globe swap. Startup duration still depends on assets and GPU preparation. Reduced motion uses a short static/fade alternative. The initial camera pose is applied before the first visible frame, and tree/meadow construction remains deferred until scrolling. One canvas and one tree remain throughout the journey.
 
-The world tree has a thick tapering trunk, curved ascending limbs, attached twig clusters, a broad irregular crown and spreading buttress roots. A seeded skeleton generates 4,366 branch segments and 106,184 leaves at full quality; low tier reduces foliage. Custom shaders reveal growth continuously, add wind, bark grain, cyan veins and leaf shading. The fixed sky dome has layered nebula light, moving clouds and three overlapping aurora curtains. Terrain is a single rolling meadow with time-driven grass and a subtle pool of cyan light near the roots. The reference illustration guides composition and lighting; the result is procedural 3D art, not an exact photorealistic reconstruction.
+The world tree has a thick tapering trunk, curved ascending limbs, attached twig clusters, a broad irregular crown and spreading buttress roots. A seeded skeleton generates 4,456 branch segments and 106,287 leaves at full quality; low tier reduces canopy foliage while retaining all 113 juvenile leaves. The seed shell parts around the emerging stem. Slender green stems extend with tapered tips, curved leaves unfurl from petioles, young branches gain leaves, and bark and buttress roots mature later. Branches start only after their supporting segment has finished extending. One continuous growth uniform drives forward and reverse motion; no stage swaps to another tree. The fixed sky dome has layered nebula light, moving clouds and three overlapping aurora curtains. Terrain is a single rolling meadow with time-driven grass and a subtle pool of cyan light near the roots. The reference illustration guides composition and lighting; the result is procedural 3D art, not an exact photorealistic reconstruction.
+
+The descent uses one viewport-covering noise field with layered optical density, soft blue/white billows and time-driven drift. It has no bounded cloud cards, oval geometry or plane edges for the camera to cross. Chapter copy fades out through the thickest passage and returns as the meadow clears. The intro mist uses self-contained noise imagery instead of a cross-element SVG filter applied to radial shapes, preserving its gradual reveal over a painted Earth.
 
 Beyond the Journey blends into a distinct animated aurora backdrop. The circular About label introduces the exact CV summary. Experience runs newest first: Digit7s, AIA Myanmar, Citizens Pay, Yoon Han Thar. Education, recognition, certifications and tools remain separate from lifecycle stages. The supplied AKK mark uses actual SVG alpha.
 
@@ -48,6 +50,7 @@ Keep the development server running, then use:
 ```sh
 npm run checkpoints -- final
 node scripts/earth-detail-check.mjs
+node scripts/fog-growth-check.mjs
 node scripts/stable-hero-check.mjs
 node scripts/hero-reveal-check.mjs
 node scripts/open-story-check.mjs

@@ -95,25 +95,6 @@ export default function MistLoader({
           />
         ))}
       </svg>
-      <svg className={s.filters} aria-hidden="true">
-        <filter id="mist-volume" x="-20%" y="-20%" width="140%" height="140%">
-          <feTurbulence
-            type="fractalNoise"
-            baseFrequency=".008 .017"
-            numOctaves="3"
-            seed="11"
-            result="noise"
-          />
-          <feColorMatrix
-            in="noise"
-            type="matrix"
-            values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  1.5 0 0 0 -.28"
-            result="density"
-          />
-          <feComposite in="SourceGraphic" in2="density" operator="in" />
-          <feGaussianBlur stdDeviation="3" />
-        </filter>
-      </svg>
       <div className={`${s.mist} ${s.far}`} />
       <div className={`${s.mist} ${s.middle}`} />
       <div className={`${s.mist} ${s.near}`} />

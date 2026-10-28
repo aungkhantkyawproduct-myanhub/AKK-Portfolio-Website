@@ -62,6 +62,15 @@ export default function App() {
   const sound = useJourney((v) => v.soundOn);
   const profile = useJourney((v) => v.profileActive);
   const profileBlend = useJourney((v) => v.profileBlend);
+  const passageOpacity = useJourney((v) => {
+    const smooth = (a: number, b: number) => {
+      const t = Math.max(0, Math.min(1, (v.scrollProgress - a) / (b - a)));
+      return t * t * (3 - 2 * t);
+    };
+    return v.scrollProgress < 0.1
+      ? 1 - smooth(0.025, 0.06)
+      : smooth(0.14, 0.17);
+  });
   const reduced = useJourney((v) => v.reducedMotion);
   const [loaded, setLoaded] = useState(false);
   const [worldPainted, setWorldPainted] = useState(false);
@@ -198,7 +207,11 @@ export default function App() {
             ref={overlay}
             className={s.overlay}
             data-focus={chapter > 0}
-            style={{ opacity: !linear ? 1 - Math.min(1, profileBlend * 2) : 1 }}
+            style={{
+              opacity: !linear
+                ? (1 - Math.min(1, profileBlend * 2)) * passageOpacity
+                : 1,
+            }}
             inert={profile && !linear ? "" : undefined}
           >
             {c.chapters.map((ch, i) => (
