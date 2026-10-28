@@ -62,3 +62,8 @@ Checkpoints: 0, .15, .3, .5, .65, .8, .95, 1 at 1440×900 and 390×844. Build an
 - [x] Replace bounded cloud shapes with continuous, softly varying transition mist.
 - [x] Grow connected tapered stems, attached unfolding leaves and later woody roots through one consistent tree skeleton.
 - [x] Check intermediate and reverse transitions, build, capture story checkpoints and refresh release archives.
+
+## October 28 — explicitly blurred mist
+- [x] Replace direct fog shading with a continuous noise texture and a dedicated separable Gaussian blur.
+- [x] Verify actual fog-buffer gradients, animated drift, viewport/DPR resizing and desktop/mobile transitions.
+- [x] Build, capture final checkpoints, refresh archives and push the verified correction.
