@@ -4,6 +4,7 @@ import { useFrame } from "@react-three/fiber";
 import { Canvas } from "@react-three/fiber";
 import { Stars } from "@react-three/drei";
 import Earth from "./earth/Earth";
+import Satellite from "./earth/Satellite";
 import CameraRig from "./CameraRig";
 import Seed from "./seed/Seed";
 import Tree from "./tree/Tree";
@@ -33,6 +34,7 @@ function JourneyWorld({ children }: { children: ReactNode }) {
 export default function World({ assetReady }: { assetReady: boolean }) {
   const display = useDisplay();
   const tier = useJourney((s) => s.qualityTier);
+  const hero = useJourney((s) => s.scrollProgress < 0.125);
   const requested = useJourney((s) => s.scrollProgress > 0.015);
   const [localReady, setLocalReady] = useState(false);
   useEffect(() => {
@@ -42,7 +44,7 @@ export default function World({ assetReady }: { assetReady: boolean }) {
     <Canvas
       camera={{ position: [0, 4, 12], fov: 45, near: 0.05, far: 250 }}
       dpr={
-        tier === "low"
+        tier === "low" && !hero
           ? 1
           : Math.min(display.dpr, display.width < 600 ? 1.5 : 2)
       }
@@ -65,6 +67,7 @@ export default function World({ assetReady }: { assetReady: boolean }) {
           fade
         />
         <Earth />
+        <Satellite />
         <Sun />
         {localReady && <Environment />}
         <PolarEffects />

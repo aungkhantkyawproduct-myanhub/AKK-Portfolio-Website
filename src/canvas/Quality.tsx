@@ -16,6 +16,12 @@ export default function Quality({ assetReady }: { assetReady: boolean }) {
         scene.traverse((o: any) => {
           if (o.material?.uniforms) materials.push(o.material.uniforms);
         });
+        const earth = materials.find((u) => u.uHasDay);
+        const satellite = scene.getObjectByName("hero-satellite");
+        const satellitePosition = satellite?.getWorldPosition(
+          camera.position.clone(),
+        );
+        const satelliteScreen = satellitePosition?.clone().project(camera);
         const projected = camera.position
           .clone()
           .set(0, 0.15, 0)
@@ -36,8 +42,24 @@ export default function Quality({ assetReady }: { assetReady: boolean }) {
           sky: sky?.matrixWorld.toArray(),
           meadow: meadow?.matrixWorld.toArray(),
           treeVisible: tree?.visible,
-          earthTextureReady:
-            materials.find((u) => u.uHasDay)?.uHasDay.value === 1,
+          earthTextureReady: earth?.uHasDay.value === 1,
+          earthTexture: {
+            width: earth?.uDay.value.image?.width ?? 0,
+            height: earth?.uDay.value.image?.height ?? 0,
+            source: earth?.uDay.value.image?.src ?? null,
+            anisotropy: earth?.uDay.value.anisotropy,
+            maxTextureSize: gl.capabilities.maxTextureSize,
+            dpr: gl.getPixelRatio(),
+          },
+          satellite: satellite && {
+            visible: satellite.visible,
+            phase: satellite.userData.phase,
+            position: satellitePosition?.toArray(),
+            screen: satelliteScreen && [
+              ((satelliteScreen.x + 1) * innerWidth) / 2,
+              ((1 - satelliteScreen.y) * innerHeight) / 2,
+            ],
+          },
           auroraPointer: (
             sky?.children.find(
               (o: any) => o.material?.uniforms?.uPointer,

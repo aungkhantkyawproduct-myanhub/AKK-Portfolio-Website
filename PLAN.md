@@ -50,3 +50,9 @@ Checkpoints: 0, .15, .3, .5, .65, .8, .95, 1 at 1440×900 and 390×844. Build an
 - [x] Preserve spring input, one canvas, readable DOM, idle suspension and Retina resizing.
 - [x] Complete final regression checks, document verification limits, commit and refresh release archives.
 
+
+## October 28 — sharp Earth and an orbiting satellite
+- [x] Make the 8192×4096 NASA day map available to desktop and mobile independently of the animation quality tier, with GPU-size and missing-file fallback.
+- [x] Improve map sampling, limb geometry and hero DPR; preserve the ready-Earth fog reveal.
+- [x] Add a lightweight procedural satellite in a real inclined orbit with Earth occlusion and a smooth departure during descent.
+- [x] Verify texture dimensions, mobile rendering, orbital motion, fallback, startup and desktop/mobile checkpoints; refresh release archives and commit.

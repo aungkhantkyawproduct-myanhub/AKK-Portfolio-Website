@@ -35,11 +35,11 @@ Beyond the Journey blends into a distinct animated aurora backdrop. The circular
 - Sky: `src/shaders/sky.ts` and `src/canvas/Environment.tsx`. Biography aurora: `src/ui/ProfileAtmosphere.tsx` and its CSS module.
 - Cursor response: `src/hooks/useAuroraPointer.ts` supplies normalized fine-pointer input. Aurora shaders and biography CSS damp the light response; reduced motion disables it.
 - Cursor-local fluid light: passive input is in `src/ui/AuroraCursor.tsx`; spring response, inertia and fade timing are in `src/canvas/aurora/motion.ts`. `FluidField.ts` advances persistent velocity, pressure, curl and dye fields inside the existing canvas/RAF. Tune injection radius/force, pressure iterations and dye dissipation there. GPU solver passes live in `src/shaders/cursorFluid.ts`; scene refraction and light strength are in `src/shaders/cursorAurora.ts`. Warm/cool ink colors are in `cursorFluidPalette` in `src/styles/palette.ts`. Trails curl and remain at earlier positions, then dissipate; copy remains crisp above them. Touch/reduced-motion input is disabled.
-- Earth and Myanmar lights: `src/canvas/earth/`. Earth position is fixed at `(0,-10,0)`; rotation is time-based. Magnetic field lines are not rendered.
+- Earth and Myanmar lights: `src/canvas/earth/`. Earth position is fixed at `(0,-10,0)`; rotation is time-based. Magnetic field lines are not rendered. Texture selection and sampling: `useEarthTextures.ts`. The procedural satellite is `Satellite.tsx`; orbit radius, inclination, speed, starting phase and descent fade are `satelliteOrbit` in `src/canvas/cameraPath.ts`.
 - Grass and cloud descent: `src/canvas/seed/Meadow.tsx` and `Descent.tsx`.
 - Typography: `--font-family` in `src/styles/global.css`. Header blending: `src/app/App.module.css`.
 - Audio: `src/audio/ambient.ts`. Synthesized ambient sound starts only after opt-in. Optional recordings: `public/audio/README.md`.
-- Textures: NASA 2K/8K day and 2K night WebP maps are bundled; missing maps fall back gracefully. See `public/textures/README.md`.
+- Textures: NASA 2K/4K/8K day and 2K night WebP maps are bundled. All tiers, including mobile, progressively upgrade to 8K when the GPU supports it; unsupported/missing maps fall back gracefully. See `public/textures/README.md`.
 
 ## Verification
 
@@ -47,6 +47,7 @@ Keep the development server running, then use:
 
 ```sh
 npm run checkpoints -- final
+node scripts/earth-detail-check.mjs
 node scripts/stable-hero-check.mjs
 node scripts/hero-reveal-check.mjs
 node scripts/open-story-check.mjs
@@ -64,7 +65,9 @@ Stable-hero checks compare camera position and orientation after the first visib
 
 ## Performance and limits
 
-The canvas bundle is lazy-loaded. DPR is capped at 2 desktop / 1.5 mobile. Quality may drop after a frame-time probe; low tier reduces foliage/stars and disables bloom, grain and vignette. A final pass retains cursor light and biography compositing. The Altitude-inspired ink simulation uses bounded half-float targets (velocity long edge 160, dye 768), 8/12 pressure iterations and at most 25 simulation draws while active. It allocates targets on first input, performs no simulation draws at idle, and clears on exit or resize. Unsupported float-render targets disable only the decorative ink. Refraction affects the 3D background; semantic DOM text remains undistorted. The spring uses fixed substeps without frame allocations. Resize and display-density changes update both the canvas and composer buffers within the DPR caps. Local headless rendering is not a real-device performance benchmark. GPU frame rate and Lighthouse targets remain unverified on production hardware.
+The hero uses a 256×128-segment sphere, 8K NASA color map, maximum supported anisotropic sampling (up to 16×) and a lightweight edge-antialias pass. A silver/gold satellite with blue solar-cell wings follows a real inclined orbit, is occluded by the globe and fades during descent. Its six small meshes need no downloaded models.
+
+The canvas bundle is lazy-loaded. DPR is capped at 2 desktop / 1.5 mobile. The hero retains those caps even on low animation tiers; after descent low tier returns to DPR 1. Texture resolution is independent of animation quality. A 2K preview preserves the Earth-ready reveal while 8K loads; full detail depends on network/GPU preparation. GPUs limited below 8192 pixels use 4K/2K. An 8K RGBA texture plus mipmaps requires about 171 MiB; 16K is intentionally avoided for mobile memory. Real-device performance remains unverified. Quality may drop after a frame-time probe; low tier reduces foliage/stars and disables bloom, grain and vignette. A final pass retains cursor light and biography compositing. The Altitude-inspired ink simulation uses bounded half-float targets (velocity long edge 160, dye 768), 8/12 pressure iterations and at most 25 simulation draws while active. It allocates targets on first input, performs no simulation draws at idle, and clears on exit or resize. Unsupported float-render targets disable only the decorative ink. Refraction affects the 3D background; semantic DOM text remains undistorted. The spring uses fixed substeps without frame allocations. Resize and display-density changes update both the canvas and composer buffers within the DPR caps. Local headless rendering is not a real-device performance benchmark. GPU frame rate and Lighthouse targets remain unverified on production hardware.
 
 The local meadow/tree/sky are live procedural geometry and shaders. Clouds use layered noise rather than physical raymarching. Foliage uses merged quads. Photogrammetry, full volumetric scattering, DOF and recorded environmental foley are not included. The loader uses its own existing meadow artwork; that image is not behind the live growing tree. No user recordings or private reference captures are included in release archives.
 

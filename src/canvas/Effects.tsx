@@ -1,5 +1,6 @@
 import {
   Bloom,
+  FXAA,
   EffectComposer,
   Noise,
   Vignette,
@@ -10,6 +11,7 @@ import AuroraEffect from "./aurora/AuroraEffect";
 import { ToneMappingMode } from "postprocessing";
 export default function Effects() {
   const tier = useJourney((s) => s.qualityTier);
+  const hero = useJourney((s) => s.scrollProgress < 0.125);
   return (
     <EffectComposer multisampling={0}>
       {[
@@ -33,6 +35,7 @@ export default function Effects() {
           : // Offscreen scene rendering skips the direct renderer's ACES curve.
             // Restore it before adding cursor light, so low tier keeps its look.
             [<ToneMapping key="tone" mode={ToneMappingMode.ACES_FILMIC} />]),
+        ...(hero ? [<FXAA key="hero-antialias" />] : []),
         <AuroraEffect key="aurora" />,
       ]}
     </EffectComposer>

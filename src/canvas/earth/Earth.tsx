@@ -7,12 +7,12 @@ import {
   Group,
   ShaderMaterial,
   Texture,
-  TextureLoader,
   Vector3,
 } from "three";
 import { useJourney } from "../../app/store";
 import { content } from "../../content/content";
 import MyanmarBeacon from "./MyanmarBeacon";
+import useEarthTextures from "./useEarthTextures";
 import {
   earthVertex,
   earthFragment,
@@ -24,7 +24,9 @@ export default function Earth() {
   const globe = useRef<Group>(null);
   const world = useRef<Group>(null);
   const cloud = useRef<Group>(null);
-  const orbitLive = useRef(document.documentElement.dataset.heroRevealed === "true");
+  const orbitLive = useRef(
+    document.documentElement.dataset.heroRevealed === "true",
+  );
   useEffect(() => {
     const reveal = () => {
       orbitLive.current = true;
@@ -33,7 +35,6 @@ export default function Earth() {
     return () => window.removeEventListener("hero-reveal", reveal);
   }, []);
   const progress = useJourney((s) => s.scrollProgress);
-  const tier = useJourney((s) => s.qualityTier);
   const uniforms = useMemo(
     () => ({
       uDay: { value: new Texture() },
@@ -46,63 +47,23 @@ export default function Earth() {
   );
   const clouds = useMemo(() => ({ uTime: { value: 0 } }), []);
   const mat = useRef<ShaderMaterial>(null);
-  useEffect(() => {
-    let live = true;
-    const textures: Texture[] = [];
-    const loader = new TextureLoader();
-    const load = (
-      url: string,
-      key: "uDay" | "uNight",
-      flag: "uHasDay" | "uHasNight",
-    ) =>
-      loader.load(
-        url,
-        (t) => {
-          if (!live) {
-            t.dispose();
-            return;
-          }
-          textures.push(t);
-          t.anisotropy = 4;
-          uniforms[key].value = t;
-          uniforms[flag].value = 1;
-          if (key === "uDay") window.dispatchEvent(new Event("world-ready"));
-        },
-        undefined,
-        () => {
-          if (key === "uDay") window.dispatchEvent(new Event("world-ready"));
-        },
-      );
-    load("/textures/earth-day-2k.webp", "uDay", "uHasDay");
-    if (tier === "high")
-      setTimeout(() => {
-        if (live) load("/textures/earth-day-8k.webp", "uDay", "uHasDay");
-      }, 1800);
-    fetch("/textures/earth-night-2k.webp", { method: "HEAD" })
-      .then((r) => {
-        if (live && r.ok && r.headers.get("content-type")?.startsWith("image"))
-          load("/textures/earth-night-2k.webp", "uNight", "uHasNight");
-      })
-      .catch(() => {});
-    return () => {
-      live = false;
-      textures.forEach((t) => t.dispose());
-    };
-  }, [uniforms]);
+  useEarthTextures(uniforms);
   useFrame((_, dt) => {
     const p = useJourney.getState().scrollProgress;
     if (world.current) world.current.visible = p < 0.125;
     if (orbitLive.current && globe.current)
       globe.current.rotation.y += dt * 0.002;
-    if (orbitLive.current && cloud.current)
+    if (orbitLive.current && cloud.current) {
       cloud.current.rotation.y += dt * 0.0035;
+      clouds.uTime.value += dt;
+    }
   });
   return (
     <group ref={world} position={[0, -10, 0]} rotation={[-0.95, 0, -0.4084]}>
       <group ref={globe} rotation={[0, -3.42, 0]}>
         <MyanmarBeacon />
-        <mesh>
-          <sphereGeometry args={[10, 96, 64]} />
+        <mesh name="earth-surface">
+          <sphereGeometry args={[10, 256, 128]} />
           <shaderMaterial
             ref={mat}
             vertexShader={earthVertex}
@@ -138,7 +99,7 @@ export default function Earth() {
       </group>
       <group ref={cloud} rotation={[0, -3.42, 0]}>
         <mesh>
-          <sphereGeometry args={[10.04, 72, 48]} />
+          <sphereGeometry args={[10.04, 160, 96]} />
           <shaderMaterial
             vertexShader={earthVertex}
             fragmentShader={cloudFragment}
@@ -149,7 +110,7 @@ export default function Earth() {
         </mesh>
       </group>
       <mesh>
-        <sphereGeometry args={[10.16, 72, 48]} />
+        <sphereGeometry args={[10.16, 160, 96]} />
         <shaderMaterial
           vertexShader={earthVertex}
           fragmentShader={atmosphereFragment}

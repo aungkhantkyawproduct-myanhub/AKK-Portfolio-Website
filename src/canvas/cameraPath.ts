@@ -10,6 +10,15 @@ export const chapterAt = (p: number) =>
   );
 export const pacing = { scrub: 1.2, height: 1000 };
 export const earthCenter = [0, -10, 0] as const;
+// Independent of daily Earth rotation; distance is measured from its center.
+export const satelliteOrbit = {
+  radius: 11.2,
+  inclination: (75 * Math.PI) / 180,
+  initialPhase: 1.45,
+  angularSpeed: 0.048,
+  fadeStart: 0.075,
+  fadeEnd: 0.12,
+};
 // Desktop reserves the right reading column; mobile reserves the upper half.
 export const mobileFraming = { distance: 1.9, seedLift: 0.65, crownLift: 18 };
 // Points correspond to boundaries above. Earth surface / tree origin is (0,0,0).
