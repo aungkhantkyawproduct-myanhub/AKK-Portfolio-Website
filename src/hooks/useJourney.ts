@@ -6,6 +6,15 @@ import { useJourney } from "../app/store";
 import { boundaries, pacing } from "../canvas/cameraPath";
 gsap.registerPlugin(ScrollTrigger);
 let lenis: Lenis | undefined;
+export function continueProfile() {
+  const section = document.getElementById("profile-about");
+  if (!section) return;
+  if (lenis) lenis.scrollTo(section, { offset: -110, duration: 1.4 });
+  else
+    section.scrollIntoView({
+      behavior: useJourney.getState().reducedMotion ? "instant" : "smooth",
+    });
+}
 const distance = () =>
   Math.max(
     1,

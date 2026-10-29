@@ -14,7 +14,7 @@ import {
 } from "three";
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import { useJourney } from "../../app/store";
-import { createSkeleton } from "./skeleton";
+import { getSkeleton } from "./skeleton";
 import { palette } from "../../styles/palette";
 const vertex = `attribute vec3 aStart;attribute vec3 aDirection;attribute float aBirth,aFinish,aAlong,aRoot;uniform float uGrowth;uniform float uTime;varying vec2 vBarkUv;varying vec3 vN;varying vec3 vP;varying float vG;
 void main(){vBarkUv=uv;float g=smoothstep(aBirth,aFinish,uGrowth);
@@ -61,7 +61,7 @@ export default function Tree() {
   const bark = useRef<ShaderMaterial>(null);
   const leaf = useRef<ShaderMaterial>(null);
   const data = useMemo(() => {
-    const { segments, leaves } = createSkeleton();
+    const { segments, leaves } = getSkeleton();
     const parts = segments.map((s) => {
       const dir = s.end.clone().sub(s.start);
       const length = dir.length();

@@ -77,3 +77,8 @@ Checkpoints: 0, .15, .3, .5, .65, .8, .95, 1 at 1440×900 and 390×844. Build an
 - [x] Inspect attached recording; measure stationary hero and growth frames at fixed resolution.
 - [x] Preserve 8K Earth and drawing-buffer resolution, bake cloud detail, and improve tree depth/leaf clarity. Thick trunk subdivision increases from 12 to 16; leaf count remains unchanged.
 - [x] Verify visual checkpoints, 8K/fallback tests and frame costs; build and refresh release archives. Physical device FPS is unverified; desktop host limits are recorded in PHASES.md.
+
+## October 29 — scroll cue, grounded roots and hanging stars
+- [x] Match the recorded circular scroll cue and implement accessible About navigation.
+- [x] Generate irregular terrain-following roots with tapered buried tips; anchor stars and cords to actual branches.
+- [x] Check forward/reverse growth, desktop/mobile composition, interactions and build; refresh source/static archives and GitHub.

@@ -97,6 +97,18 @@ html {
 .realm-marker:hover {
   transform: scale(1.2);
 }
+.hanging-marker {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: 50%;
+  background: transparent;
+}
+.hanging-marker span { opacity: 0; }
+.hanging-marker:hover, .hanging-marker:focus-visible {
+  background: #dec39412;
+  outline: 1px solid #dec394aa;
+}
 .fallback-world {
   position: absolute;
   inset: 0;

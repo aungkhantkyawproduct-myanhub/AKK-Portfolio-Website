@@ -13,6 +13,7 @@ export const content = {
     education: "Education & recognition",
     results: "Selected outcomes",
     about: "About",
+    continue: "Scroll to continue",
     explore: "Meet the person behind the product ↗",
   },
   contact: {

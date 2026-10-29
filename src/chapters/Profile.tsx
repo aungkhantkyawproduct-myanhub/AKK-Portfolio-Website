@@ -3,7 +3,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { content as c } from "../content/content";
 import { useJourney } from "../app/store";
-import { navigate } from "../hooks/useJourney";
+import { navigate, continueProfile } from "../hooks/useJourney";
 import s from "./Profile.module.css";
 gsap.registerPlugin(ScrollTrigger);
 function Profile() {
@@ -110,11 +110,25 @@ function Profile() {
         <span className={s.label}>{c.profile.eyebrow}</span>
         <h2 id="profile-title">{c.profile.title}</h2>
         <p>{c.profile.introduction}</p>
-        <span className={s.continue} aria-hidden="true">
-          ↓
-        </span>
+        <button
+          className={s.continue}
+          onClick={continueProfile}
+          aria-label={c.profile.continue}
+        >
+          <span className={s.continueCircle} aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none">
+              <path d="M16 5v22M8 19l8 8 8-8" />
+            </svg>
+          </span>
+          <span className={s.continueLabel}>{c.profile.continue}</span>
+        </button>
       </div>
-      <section className={s.about} data-reveal aria-labelledby="about-title">
+      <section
+        id="profile-about"
+        className={s.about}
+        data-reveal
+        aria-labelledby="about-title"
+      >
         <h3 id="about-title" className={s.label}>
           {c.profile.about}
         </h3>

@@ -1,4 +1,5 @@
 import { CubicBezierCurve3, Vector3 } from "three";
+import { elevation } from "../seed/terrain";
 export interface Segment {
   start: Vector3;
   end: Vector3;
@@ -209,33 +210,79 @@ export function createSkeleton() {
     limb(nearest.segment.end, center, 0.035, 4, born, nearest.index);
     foliage(center, born + 0.13, 1.35 + random() * 0.35, 340);
   }
-  // Interlaced buttresses settle into the meadow.
-  for (let k = 0; k < 13; k++) {
-    const a = k * 2.399963,
-      reach = 4.6 + random() * 1.7;
-    let from = trunk(5.3);
-    for (let j = 0; j < 32; j++) {
-      const t = (j + 1) / 32,
-        angle = a + Math.sin(t * 3) * 0.22,
-        r = 0.5 + Math.pow(t, 1.65) * reach;
-      const end = new Vector3(
-        Math.cos(angle) * r,
-        5.3 * Math.pow(1 - t, 3.5) - 0.035,
-        Math.sin(angle) * r,
-      );
+  // Unequal buttresses merge into the trunk, then meander along the ground.
+  // Fine lateral roots split from supporting segments and bury their tapered tips.
+  for (let k = 0; k < 8; k++) {
+    const a = k * 2.399963 + random() * 0.38,
+      reach = 6 + random() * 3;
+    const lateral = (angle: number, r: number, y: number) => {
+      const x = Math.cos(angle) * r,
+        z = Math.sin(angle) * r;
+      return new Vector3(x, elevation(x, z) + y, z);
+    };
+    const curve = new CubicBezierCurve3(
+      trunk(2.1 + random() * 0.7),
+      lateral(a - 0.12, 2.1, 0.95),
+      lateral(a + 0.14, reach * 0.68, 0.08),
+      lateral(a + 0.08, reach, -0.18),
+    );
+    let from = curve.getPoint(0),
+      parent = 8;
+    const starts = segments.length,
+      radius = 0.72 + random() * 0.35;
+    for (let j = 0; j < 26; j++) {
+      const t = (j + 1) / 26,
+        end = curve.getPoint(t);
       segments.push({
         start: from,
         end,
-        radius: 0.62 * Math.pow(1 - j / 33, 1.25),
-        endRadius: 0.62 * Math.pow(1 - (j + 1) / 33, 1.25),
-        // Buttresses develop after a living stem and first branches exist.
-        birth: 0.34 + j * 0.003,
-        finish: 0.34 + (j + 1) * 0.003,
+        radius: radius * Math.pow(1 - j / 26, 1.5),
+        endRadius: Math.max(0.003, radius * Math.pow(1 - t, 1.5)),
+        birth: 0.34 + (j / 26) * 0.22,
+        finish: 0.34 + t * 0.22,
         root: true,
         depth: 1,
-        parent: -1,
+        parent,
       });
       from = end;
+      parent = segments.length - 1;
+    }
+    for (const split of [15, 20]) {
+      let support = starts + split;
+      const source = segments[support],
+        angle = a + (split === 15 ? -0.55 : 0.48);
+      const target = lateral(angle, reach * (split === 15 ? 0.84 : 1.06), -0.2);
+      const branch = new CubicBezierCurve3(
+        source.end,
+        source.end.clone().lerp(target, 0.3),
+        source.end
+          .clone()
+          .lerp(target, 0.7)
+          .add(new Vector3(0, 0.09, 0)),
+        target,
+      );
+      let start = source.end;
+      for (let j = 0; j < 12; j++) {
+        const t = (j + 1) / 12,
+          end = branch.getPoint(t),
+          born = source.finish + 0.005;
+        segments.push({
+          start,
+          end,
+          radius: source.endRadius! * 0.6 * Math.pow(1 - j / 12, 1.3),
+          endRadius: Math.max(
+            0.002,
+            source.endRadius! * 0.6 * Math.pow(1 - t, 1.3),
+          ),
+          birth: born + (j / 12) * 0.1,
+          finish: born + t * 0.1,
+          root: true,
+          depth: 2,
+          parent: support,
+        });
+        support = segments.length - 1;
+        start = end;
+      }
     }
   }
   // Cotyledons and true leaves belong to actual stem nodes, with petioles.
@@ -261,3 +308,5 @@ export function createSkeleton() {
   }
   return { segments, leaves };
 }
+let cached: ReturnType<typeof createSkeleton> | undefined;
+export const getSkeleton = () => (cached ??= createSkeleton());
