@@ -1,65 +1,84 @@
 import { useJourney } from "../app/store";
+import { content } from "../content/content";
+
 let context: AudioContext | undefined;
 let gain: GainNode | undefined;
-let filter: BiquadFilterNode | undefined;
-let oscillators: OscillatorNode[] = [];
-let noise: AudioBufferSourceNode | undefined;
+let audio: HTMLAudioElement | undefined;
+let wanted = false;
+let revision = 0;
+let pauseTimer: ReturnType<typeof setTimeout> | undefined;
+const level = 0.28;
+
+function fade(value: number, seconds: number) {
+  if (!context || !gain) return;
+  const now = context.currentTime;
+  gain.gain.cancelScheduledValues(now);
+  gain.gain.setValueAtTime(gain.gain.value, now);
+  gain.gain.linearRampToValueAtTime(value, now + seconds);
+}
+function silence() {
+  clearTimeout(pauseTimer);
+  fade(0, 0.6);
+  pauseTimer = setTimeout(() => audio?.pause(), 650);
+}
 export async function toggleAmbient() {
-  if (!context) {
-    context = new AudioContext();
-    gain = context.createGain();
-    gain.gain.value = 0;
-    gain.connect(context.destination);
-    filter = context.createBiquadFilter();
-    filter.type = "lowpass";
-    filter.frequency.value = 450;
-    filter.connect(gain);
-    [55, 82.41, 110, 164.81].forEach((frequency, i) => {
-      const osc = context!.createOscillator();
-      osc.type = "sine";
-      osc.frequency.value = frequency;
-      osc.detune.value = i * 2;
-      const voice = context!.createGain();
-      voice.gain.value = 0.06;
-      osc.connect(voice);
-      voice.connect(filter!);
-      osc.start();
-      oscillators.push(osc);
-    });
-    const buffer = context.createBuffer(
-      1,
-      context.sampleRate * 4,
-      context.sampleRate,
-    );
-    const data = buffer.getChannelData(0);
-    let last = 0;
-    for (let i = 0; i < data.length; i++) {
-      last = (last + (Math.random() * 2 - 1) * 0.02) / 1.02;
-      data[i] = last * 0.18;
-    }
-    noise = context.createBufferSource();
-    noise.buffer = buffer;
-    noise.loop = true;
-    noise.connect(filter);
-    noise.start();
+  const token = ++revision;
+  wanted = !wanted;
+  clearTimeout(pauseTimer);
+  if (!wanted) {
+    useJourney.setState({ soundOn: false });
+    silence();
+    return;
   }
   try {
-    await context.resume();
-    const next = !useJourney.getState().soundOn;
-    gain!.gain.setTargetAtTime(next ? 0.45 : 0, context.currentTime, 0.8);
-    useJourney.getState().toggleSound();
+    // Everything is created only inside the visitor's explicit sound gesture.
+    if (!audio) {
+      context = new AudioContext();
+      gain = context.createGain();
+      gain.gain.value = 0;
+      gain.connect(context.destination);
+      audio = new Audio("/audio/seed-to-scale.mp3");
+      audio.preload = "none";
+      audio.loop = true;
+      context.createMediaElementSource(audio).connect(gain);
+    }
+    // Invoke both before awaiting, retaining mobile user activation.
+    await Promise.all([context!.resume(), audio.play()]);
+    if (token !== revision) return;
+    if (!wanted) {
+      silence();
+      return;
+    }
+    useJourney.setState({ soundOn: true });
+    if (document.hidden) {
+      silence();
+      return;
+    }
+    fade(level, 1.4);
   } catch {
-    /* Keep sound state off when browser declines playback. */
+    if (token !== revision) return;
+    wanted = false;
+    useJourney.setState({ soundOn: false });
+    audio?.pause();
+    window.dispatchEvent(
+      new CustomEvent("toast", { detail: content.ui.audioUnavailable }),
+    );
   }
 }
-export function updateAmbient(p: number) {
-  if (context && filter)
-    filter.frequency.setTargetAtTime(180 + p * 1800, context.currentTime, 2);
-}
 export function suspendAmbient() {
-  if (context && gain) gain.gain.setTargetAtTime(0, context.currentTime, 0.2);
+  silence();
 }
-export function resumeAmbient() {
-  if (context && gain && useJourney.getState().soundOn)
-    gain.gain.setTargetAtTime(0.45, context.currentTime, 0.8);
+export async function resumeAmbient() {
+  if (!audio || !context || !wanted || !useJourney.getState().soundOn) return;
+  const token = revision;
+  clearTimeout(pauseTimer);
+  try {
+    await Promise.all([context.resume(), audio.play()]);
+    if (token === revision && wanted && !document.hidden) fade(level, 1.2);
+  } catch {
+    if (token !== revision) return;
+    wanted = false;
+    useJourney.setState({ soundOn: false });
+    audio.pause();
+  }
 }

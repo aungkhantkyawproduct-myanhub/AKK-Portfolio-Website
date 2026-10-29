@@ -14,6 +14,6 @@ Use build command `npm run build` and output directory `dist`. The included prod
 
 ## Contents and assets
 
-All runtime textures are included. Large original NASA JPEG masters are omitted; source URLs are recorded in public/textures/README.md. The supplied tree reference is retained as a reference only; the live journey uses the same procedural tree throughout. The loader uses the bundled generated meadow image. Audio is synthesized after user opt-in.
+All runtime textures are included. Large original NASA JPEG masters are omitted; source URLs are recorded in public/textures/README.md. The supplied tree reference is retained as a reference only; the live journey uses the same procedural tree throughout. The loader uses the bundled generated meadow image. The bundled ElevenLabs soundtrack plays only after user opt-in.
 
 No account credentials, browser recordings, node_modules, Git history or test screenshots are included. The package does not assign an open-source license to your personal content or supplied reference artwork.

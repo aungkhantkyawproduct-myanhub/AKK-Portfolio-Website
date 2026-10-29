@@ -87,3 +87,8 @@ Checkpoints: 0, .15, .3, .5, .65, .8, .95, 1 at 1440×900 and 390×844. Build an
 - [x] Spread nine branch-anchored pendants, add visible luminous icons and readable interaction labels.
 - [x] Reduce inner cue circle and preserve a minimum ring gap through its ripple cycle.
 - [x] Verify all nine actual click targets on desktop/mobile, build and checkpoints; refresh archives and GitHub.
+
+## October 30 — ElevenLabs portfolio soundtrack
+- [x] Retrieve the completed three-minute soundtrack and bundle a local MP3.
+- [x] Connect explicit sound-icon playback with fades, looping and hidden-tab pause/resume.
+- [x] Verify playback on desktop/mobile, no autoplay/audio preload, failure handling, build and checkpoints; refresh releases and GitHub.

@@ -216,6 +216,7 @@ export const content = {
     nav: ["Journey", "Experience", "Skills", "Contact"],
     soundOn: "Sound on",
     soundOff: "Sound off",
+    audioUnavailable: "Sound could not start. Please try the sound icon again.",
     heroHint: "Scroll or drag to explore...",
     heroMobileHint: "Swipe to explore...",
     hint: "Scroll or drag to explore. Click markers to discover.",

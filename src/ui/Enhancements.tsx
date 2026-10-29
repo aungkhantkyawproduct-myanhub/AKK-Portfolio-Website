@@ -2,8 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { content as c } from "../content/content";
 import { navigateItem } from "../hooks/useJourney";
-import { updateAmbient, suspendAmbient, resumeAmbient } from "../audio/ambient";
-import { useJourney } from "../app/store";
+import { suspendAmbient, resumeAmbient } from "../audio/ambient";
 import s from "./UI.module.css";
 import AuroraCursor from "./AuroraCursor";
 export function Menu({
@@ -80,15 +79,11 @@ export function Enhancements() {
     window.addEventListener("pointermove", move);
     window.addEventListener("toast", show);
     document.addEventListener("visibilitychange", visibility);
-    const unsubscribe = useJourney.subscribe((s) =>
-      updateAmbient(s.scrollProgress),
-    );
     return () => {
       clearTimeout(timer);
       window.removeEventListener("pointermove", move);
       window.removeEventListener("toast", show);
       document.removeEventListener("visibilitychange", visibility);
-      unsubscribe();
     };
   }, []);
   return (

@@ -46,7 +46,7 @@ Hero optimization preserves the 8192×4096 day map, visible sphere geometry and 
 - Earth and Myanmar lights: `src/canvas/earth/`. Earth position is fixed at `(0,-10,0)`; rotation is time-based. Magnetic field lines are not rendered. Texture selection and sampling: `useEarthTextures.ts`. The procedural satellite is `Satellite.tsx`; orbit radius, inclination, speed, starting phase and descent fade are `satelliteOrbit` in `src/canvas/cameraPath.ts`.
 - Grass and cloud descent: `src/canvas/seed/Meadow.tsx` and `Descent.tsx`. Mist motion, palette, buffer size and Gaussian softness: `MistField.ts`. `softness` is measured in CSS pixels.
 - Typography: `--font-family` in `src/styles/global.css`. Header blending: `src/app/App.module.css`.
-- Audio: `src/audio/ambient.ts`. Synthesized ambient sound starts only after opt-in. Optional recordings: `public/audio/README.md`.
+- Audio: `src/audio/ambient.ts`. The local three-minute ElevenLabs soundtrack starts only after clicking the sound icon, with fades, looping and hidden-tab pause/resume. Audio is not preloaded. Provenance and controls: `public/audio/README.md`.
 - Textures: NASA 2K/4K/8K day and 2K night WebP maps are bundled. All tiers, including mobile, progressively upgrade to 8K when the GPU supports it; unsupported/missing maps fall back gracefully. See `public/textures/README.md`.
 
 ## Verification
