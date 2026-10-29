@@ -58,9 +58,44 @@ try {
     }
     expect(Math.abs(growth[0] - growth[2])).toBeLessThan(0.01);
     await expect(page.locator(".hanging-marker")).toHaveCount(9);
+    const targets = await page
+      .locator(".hanging-marker")
+      .evaluateAll((buttons) =>
+        buttons.map((b) => {
+          const r = b.getBoundingClientRect(),
+            x = r.x + r.width / 2,
+            y = r.y + r.height / 2;
+          return {
+            name: b.getAttribute("aria-label"),
+            width: r.width,
+            height: r.height,
+            inView: x > 0 && x < innerWidth && y > 0 && y < innerHeight,
+            hit: document.elementFromPoint(x, y)?.closest("button") === b,
+            visible: getComputedStyle(b.querySelector("span")).opacity === "1",
+          };
+        }),
+      );
+    for (const target of targets) {
+      expect(target.inView).toBe(true);
+      expect(target.hit).toBe(true);
+      expect(target.visible).toBe(true);
+      expect(target.width).toBeGreaterThanOrEqual(44);
+    }
     await page.screenshot({
       path: `artifacts/roots-cue/${name}-roots-stars.png`,
     });
+    for (let i = 0; i < 9; i++) {
+      const star = await page.locator(".hanging-marker").nth(i).boundingBox();
+      // Move onto the swaying pendant first, as a visitor does. Hover pauses its
+      // sway; a direct coordinate click exercises browser hit testing without force.
+      await page.mouse.move(star.x + star.width / 2, star.y + star.height / 2);
+      await page.waitForTimeout(120);
+      await page.mouse.click(star.x + star.width / 2, star.y + star.height / 2);
+      await expect(page.getByRole("dialog")).toBeVisible();
+      await expect(page.getByRole("dialog")).toContainText(targets[i].name);
+      await page.keyboard.press("Escape");
+      await expect(page.getByRole("dialog")).toBeHidden();
+    }
     await page.locator(".hanging-marker").first().focus();
     await page.keyboard.press("Enter");
     await expect(page.getByRole("dialog")).toBeVisible();
@@ -76,6 +111,19 @@ try {
       exact: true,
     });
     await cue.scrollIntoViewIfNeeded();
+    const rings = await cue
+      .locator("span")
+      .first()
+      .evaluate((el) => {
+        const inner = getComputedStyle(el),
+          outer = getComputedStyle(el, "::after");
+        return {
+          width: parseFloat(inner.width),
+          gap: -parseFloat(outer.left) - 1,
+        };
+      });
+    expect(rings.width).toBe(80);
+    expect(rings.gap).toBeGreaterThanOrEqual(10);
     await page.screenshot({ path: `artifacts/roots-cue/${name}-cue.png` });
     await cue.click();
     await page.waitForTimeout(2300);
@@ -89,7 +137,7 @@ try {
         .first()
         .evaluate((el) => getComputedStyle(el, "::after").animationName),
     ).toBe("none");
-    results.push({ name, geometry, growth, aboutTop: about.y });
+    results.push({ name, geometry, growth, targets, rings, aboutTop: about.y });
     await page.close();
   }
   expect(errors).toEqual([]);

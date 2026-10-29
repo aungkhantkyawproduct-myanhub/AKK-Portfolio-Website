@@ -82,3 +82,8 @@ Checkpoints: 0, .15, .3, .5, .65, .8, .95, 1 at 1440×900 and 390×844. Build an
 - [x] Match the recorded circular scroll cue and implement accessible About navigation.
 - [x] Generate irregular terrain-following roots with tapered buried tips; anchor stars and cords to actual branches.
 - [x] Check forward/reverse growth, desktop/mobile composition, interactions and build; refresh source/static archives and GitHub.
+
+## October 29 — discoverable stars and ring spacing
+- [x] Spread nine branch-anchored pendants, add visible luminous icons and readable interaction labels.
+- [x] Reduce inner cue circle and preserve a minimum ring gap through its ripple cycle.
+- [x] Verify all nine actual click targets on desktop/mobile, build and checkpoints; refresh archives and GitHub.

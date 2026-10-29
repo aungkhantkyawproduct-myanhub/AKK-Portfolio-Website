@@ -58,15 +58,15 @@
   position: relative;
   display: grid;
   place-items: center;
-  width: 96px;
-  height: 96px;
+  width: 80px;
+  height: 80px;
   border: 1px solid var(--gold);
   border-radius: 50%;
 }
 .continueCircle::after {
   content: "";
   position: absolute;
-  inset: -1px;
+  inset: -11px;
   border: 1px solid var(--gold);
   border-radius: inherit;
   animation: continueRipple 2.8s ease-out infinite;

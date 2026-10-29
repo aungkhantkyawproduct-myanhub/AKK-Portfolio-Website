@@ -18,20 +18,25 @@ import { getSkeleton } from "./skeleton";
 export function realmAttachments() {
   const candidates = getSkeleton().segments.filter(
     (s) =>
-      !s.root && s.depth > 0 && s.depth < 3 && s.end.y > 13 && s.end.y < 21,
+      !s.root &&
+      s.depth > 0 &&
+      s.depth < 3 &&
+      s.end.y > 15 &&
+      s.end.y < 23 &&
+      s.end.z > 1,
   );
   const used = new Set<number>();
   return content.skills.map((_, i) => {
-    const a = (i / 9) * Math.PI * 2;
-    const target = new Vector3(
-      Math.cos(a) * 8,
-      17 + Math.sin(a) * 2,
-      3 + Math.sin(a) * 4,
-    );
+    const row = Math.floor(i / 3),
+      column = i % 3;
+    const height = 19 - row * 3.4;
+    const target = new Vector3((column - 1) * 9, height + 2, 8);
     let best = 0,
       distance = Infinity;
     candidates.forEach((s, j) => {
-      const d = s.end.distanceToSquared(target);
+      const d =
+        s.end.distanceToSquared(target) +
+        Math.max(0, height + 1 - s.end.y) * 100;
       if (!used.has(j) && d < distance) {
         best = j;
         distance = d;
@@ -41,7 +46,7 @@ export function realmAttachments() {
     return {
       anchor: candidates[best].end,
       birth: candidates[best].finish,
-      length: 0.9 + (i % 3) * 0.35,
+      length: Math.max(1.1, candidates[best].end.y - height),
     };
   });
 }
@@ -49,6 +54,7 @@ export default function Realms() {
   const group = useRef<Group>(null),
     fruit = useRef<InstancedMesh>(null);
   const pendulums = useRef<(Group | null)[]>([]);
+  const interacting = useRef(new Set<number>());
   const showMarkers = useJourney(
     (s) => s.scrollProgress >= 0.9 && s.scrollProgress < 0.96,
   );
@@ -93,7 +99,7 @@ export default function Realms() {
     );
     const growth = Math.max(0, Math.min(1, (p - 0.24) / 0.59));
     pendulums.current.forEach((g, i) => {
-      if (g)
+      if (g && !interacting.current.has(i))
         g.rotation.z = reducedMotion
           ? 0
           : Math.sin(clock.elapsedTime * 0.65 + i * 1.9) * 0.045;
@@ -160,11 +166,20 @@ export default function Realms() {
                   className="realm-marker hanging-marker"
                   aria-label={content.skills[i][0]}
                   title={content.skills[i][0]}
+                  onPointerEnter={() => interacting.current.add(i)}
+                  onPointerLeave={() => interacting.current.delete(i)}
+                  onFocus={() => interacting.current.add(i)}
+                  onBlur={() => interacting.current.delete(i)}
                   onClick={() =>
                     openDetail(content.skills[i][0], content.skills[i][1])
                   }
                 >
-                  <span aria-hidden="true">✧</span>
+                  <span aria-hidden="true">
+                    <svg viewBox="0 0 40 40" fill="none">
+                      <path d="M20 3L24.5 15.5L37 20L24.5 24.5L20 37L15.5 24.5L3 20L15.5 15.5Z" />
+                      <path d="M20 12V28M12 20H28" />
+                    </svg>
+                  </span>
                 </button>
               </Html>
             </group>

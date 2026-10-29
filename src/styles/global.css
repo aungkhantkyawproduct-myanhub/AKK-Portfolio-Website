@@ -104,8 +104,44 @@ html {
   border-radius: 50%;
   background: transparent;
 }
-.hanging-marker span { opacity: 0; }
-.hanging-marker:hover, .hanging-marker:focus-visible {
+.hanging-marker span {
+  display: grid;
+  place-items: center;
+  opacity: 1;
+}
+.hanging-marker svg {
+  width: 30px;
+  height: 30px;
+  fill: #503e18e6;
+  stroke: #ffe0a1;
+  stroke-width: 1.5;
+  filter: drop-shadow(0 0 5px #edc16b);
+}
+.hanging-marker::after {
+  content: attr(aria-label);
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 6px);
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: 190px;
+  padding: 6px 9px;
+  background: #050d16ed;
+  border: 1px solid #dec39455;
+  border-radius: 3px;
+  color: #ffe6b5;
+  font-size: 11px;
+  line-height: 1.4;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+.hanging-marker:hover::after,
+.hanging-marker:focus-visible::after {
+  opacity: 1;
+}
+.hanging-marker:hover,
+.hanging-marker:focus-visible {
   background: #dec39412;
   outline: 1px solid #dec394aa;
 }

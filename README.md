@@ -29,7 +29,7 @@ Beyond the Journey blends into a distinct animated aurora backdrop. The circular
 
 ## How to tweak
 
-The biography scroll cue uses a thin white SVG arrow inside a 96px gold circle, with a 2.8-second expanding ripple and a clickable/keyboard-accessible “Scroll to continue” label. Its motion is recreated from the supplied Persepolis recording; reduced motion disables the ripple. The cue scrolls to About through Lenis. Edit it in `src/chapters/Profile.module.css` and `Profile.tsx`; its copy lives in `content.ts`.
+The biography scroll cue uses a thin white SVG arrow inside a 80px gold inner circle and a companion outer ring at least 10px away, with a 2.8-second expanding ripple and a clickable/keyboard-accessible “Scroll to continue” label. Its motion is recreated from the supplied Persepolis recording; reduced motion disables the ripple. The cue scrolls to About through Lenis. Edit it in `src/chapters/Profile.module.css` and `Profile.tsx`; its copy lives in `content.ts`.
 
 Roots share the meadow height function in `src/canvas/seed/terrain.ts`. Eight irregular buttresses split into smaller roots with tapered buried ends. The cached skeleton is shared by the tree and `Realms.tsx`, so hanging star cords attach to real branch endpoints and use the same scale as the tree. Pendulums use gentle time-based sway, disabled for reduced motion. All nine stars have 44px keyboard/touch targets and the same accessible skills panels.
 
