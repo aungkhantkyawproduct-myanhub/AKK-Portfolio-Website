@@ -15,7 +15,6 @@ const elevation = (x: number, z: number) =>
     (2.8 + Math.sin(x * 0.055 + z * 0.025) * 2.2 + Math.sin(z * 0.08) * 1.4);
 export default function Meadow() {
   const group = useRef<Group>(null);
-  const tier = useJourney((s) => s.qualityTier);
   const ground = useMemo(() => {
     const g = new PlaneGeometry(320, 320, 128, 128),
       p = g.attributes.position;
@@ -51,7 +50,7 @@ export default function Meadow() {
     }
     g.setAttribute("position", new BufferAttribute(new Float32Array(pos), 3));
     g.setAttribute("uv", new BufferAttribute(new Float32Array(uv), 2));
-    const count = tier === "low" ? 36000 : 96000,
+    const count = 48000,
       origins: number[] = [],
       traits: number[] = [];
     for (let i = 0; i < count; i++) {
@@ -77,8 +76,10 @@ export default function Meadow() {
     );
     g.instanceCount = count;
     return g;
-  }, [tier]);
+  }, []);
   useFrame(({ clock }) => {
+    const tier = useJourney.getState().qualityTier;
+    geometry.instanceCount = tier === "low" ? 18000 : tier === "medium" ? 32000 : 48000;
     if (group.current)
       group.current.visible = useJourney.getState().scrollProgress > 0.115;
     uniforms.uTime.value = useJourney.getState().reducedMotion

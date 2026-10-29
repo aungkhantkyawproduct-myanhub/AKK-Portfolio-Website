@@ -9,7 +9,8 @@ export default function Realms() {
   const group = useRef<Group>(null);
   const ring = useRef<Group>(null);
   const fruit = useRef<InstancedMesh>(null);
-  const p = useJourney((s) => s.scrollProgress);
+  const showMarkers = useJourney((s) => s.scrollProgress >= 0.9 && s.scrollProgress < 0.96);
+  const dummy = useMemo(() => new Object3D(), []);
   const points = useMemo(
     () =>
       Array.from({ length: 64 }, (_, i) => {
@@ -25,9 +26,10 @@ export default function Realms() {
   useFrame(({ clock }) => {
     if (group.current)
       group.current.visible = useJourney.getState().scrollProgress > 0.56;
+    if (!group.current?.visible) return;
     if (ring.current) ring.current.rotation.y = clock.elapsedTime * 0.08;
     if (fruit.current) {
-      const o = new Object3D();
+      const o = dummy;
       points.forEach((pos, i) => {
         o.position.set(...pos);
         o.scale.setScalar(0.085 + Math.sin(clock.elapsedTime + i) * 0.012);
@@ -65,8 +67,7 @@ export default function Realms() {
         size={1.8}
         speed={0.15}
       />
-      {p >= 0.9 &&
-        p < 0.96 &&
+      {showMarkers &&
         content.skills.map(([name, description], i) => {
           const a = (i / 9) * Math.PI * 2;
           return (

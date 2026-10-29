@@ -34,7 +34,7 @@ export default function Earth() {
     window.addEventListener("hero-reveal", reveal);
     return () => window.removeEventListener("hero-reveal", reveal);
   }, []);
-  const progress = useJourney((s) => s.scrollProgress);
+  const showMarkers = useJourney((s) => s.scrollProgress < 0.12);
   const uniforms = useMemo(
     () => ({
       uDay: { value: new Texture() },
@@ -71,7 +71,7 @@ export default function Earth() {
             uniforms={uniforms}
           />
         </mesh>
-        {progress < 0.12 &&
+        {showMarkers &&
           content.markers.map((m, i) => (
             <Html
               key={m.name}

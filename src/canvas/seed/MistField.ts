@@ -18,22 +18,38 @@ import {
 } from "three";
 
 const vertex = `varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}`;
+export const mistComposite: { texture: WebGLRenderTarget["texture"] | null; opacity: number } = { texture: null, opacity: 0 };
 const fragment = `
 uniform sampler2D uNoise,uSource;
 uniform vec2 uDirection;
 uniform float uMode,uTime,uTravel,uAspect;
 varying vec2 vUv;
+float cloud(vec2 p){
+  vec2 warp=vec2(texture2D(uNoise,p*.34+vec2(.17,uTime*.008)).r,
+    texture2D(uNoise,p*.39+vec2(.63,-uTime*.011)).r)-.5;
+  p+=warp*.8;
+  return texture2D(uNoise,p).r*.65+texture2D(uNoise,p*2.7+.31).r*.25
+    +texture2D(uNoise,p*6.1+.72).r*.1;
+}
 void main(){
   if(uMode<.5){
     vec2 p=(vUv-.5)*vec2(uAspect,1.);
-    float a=texture2D(uNoise,p*.48+vec2(uTime*.014,uTravel*.15)).r;
-    float b=texture2D(uNoise,p*.91+vec2(.37-uTime*.009,.61+uTime*.006)).r;
-    float c=texture2D(uNoise,p*1.7+vec2(.71+uTime*.006,.24-uTime*.009)).r;
-    // Continuous interpolation only: no density/color cutoffs or contour bands.
-    float n=a*.55+b*.3+c*.15;
-    float alpha=1.-exp(-(.9+n*1.8)*2.4);
-    vec3 light=mix(vec3(.32,.44,.52),vec3(.86,.9,.9),n);
-    gl_FragColor=vec4(light*alpha,alpha);
+    // Integrate overlapping, independently drifting depths. No ellipse mask,
+    // opaque baseline or clipped density contours: open pockets remain visible.
+    vec3 radiance=vec3(0.);float transmission=1.;
+    for(int i=0;i<3;i++){
+      float z=float(i);
+      vec2 q=p*(.72+z*.29)+vec2(z*.273+uTime*(.018+z*.003),z*.419-uTravel*(.22+z*.07));
+      float n=cloud(q);
+      float density=pow(smoothstep(.28,.76,n),2.)*1.7;
+      float shade=cloud(q+vec2(-.09,.12));
+      float illumination=clamp(.3+n*.6+(n-shade)*5.,.12,1.);
+      vec3 light=mix(vec3(.18,.27,.34),vec3(.87,.91,.9),illumination);
+      float a=1.-exp(-density);
+      radiance+=transmission*a*light;
+      transmission*=1.-a;
+    }
+    gl_FragColor=vec4(radiance,1.-transmission);
   }else{
     // A real separable Gaussian, applied to premultiplied color AND density.
     vec4 sum=texture2D(uSource,vUv)*.227027027;
@@ -177,7 +193,7 @@ export class MistField {
       this.width = w;
       this.height = h;
     }
-    this.softness = Math.max(18, Math.min(40, Math.min(width, height) * 0.04));
+    this.softness = Math.max(8, Math.min(14, Math.min(width, height) * 0.016));
     const target = gl.getRenderTarget(),
       auto = gl.autoClear,
       xr = gl.xr.enabled;

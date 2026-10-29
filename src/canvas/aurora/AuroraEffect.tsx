@@ -8,6 +8,7 @@ import { cursorAuroraFragment } from "../../shaders/cursorAurora";
 import { advanceAurora, auroraMotion, stopAurora } from "./motion";
 import { checkDisplayDensity } from "../../hooks/useDisplay";
 import { FluidField } from "./FluidField";
+import { mistComposite } from "../seed/MistField";
 
 export default function AuroraEffect() {
   const tier = useJourney((state) => state.qualityTier);
@@ -22,6 +23,8 @@ export default function AuroraEffect() {
       uSimTexel: new Uniform(fluid.simTexel),
       uEnergy: new Uniform(0),
       uProfile: new Uniform(0),
+      uMist: new Uniform<Texture>(fluid.empty),
+      uMistOpacity: new Uniform(0),
     }),
     [fluid],
   );
@@ -89,6 +92,8 @@ export default function AuroraEffect() {
     uniforms.uFlow.value = fluid.flowTexture;
     uniforms.uEnergy.value = fluid.active ? auroraMotion.opacity : 0;
     uniforms.uProfile.value = useJourney.getState().profileBlend;
+    uniforms.uMist.value = mistComposite.texture ?? fluid.empty;
+    uniforms.uMistOpacity.value = mistComposite.opacity;
   });
   return <primitive object={effect} />;
 }

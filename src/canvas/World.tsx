@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { memo, useEffect, useRef, useState, type ReactNode } from "react";
 import { Group } from "three";
 import { useFrame } from "@react-three/fiber";
 import { Canvas } from "@react-three/fiber";
@@ -31,22 +31,24 @@ function JourneyWorld({ children }: { children: ReactNode }) {
     </group>
   );
 }
-export default function World({ assetReady }: { assetReady: boolean }) {
+function World({ assetReady }: { assetReady: boolean }) {
   const display = useDisplay();
   const tier = useJourney((s) => s.qualityTier);
-  const hero = useJourney((s) => s.scrollProgress < 0.125);
   const requested = useJourney((s) => s.scrollProgress > 0.015);
   const [localReady, setLocalReady] = useState(false);
   useEffect(() => {
     if (requested) setLocalReady(true);
   }, [requested]);
+  useEffect(() => {
+    // Prepare geometry while the visitor reads the hero, not on first scroll.
+    const timer = window.setTimeout(() => setLocalReady(true), 900);
+    return () => clearTimeout(timer);
+  }, []);
   return (
     <Canvas
       camera={{ position: [0, 4, 12], fov: 45, near: 0.05, far: 250 }}
       dpr={
-        tier === "low" && !hero
-          ? 1
-          : Math.min(display.dpr, display.width < 600 ? 1.5 : 2)
+        Math.min(display.dpr, display.width < 600 ? 1.5 : tier === "low" ? 1.5 : 2)
       }
       gl={{
         antialias: tier !== "low",
@@ -84,3 +86,4 @@ export default function World({ assetReady }: { assetReady: boolean }) {
     </Canvas>
   );
 }
+export default memo(World);

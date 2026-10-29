@@ -67,3 +67,8 @@ Checkpoints: 0, .15, .3, .5, .65, .8, .95, 1 at 1440×900 and 390×844. Build an
 - [x] Replace direct fog shading with a continuous noise texture and a dedicated separable Gaussian blur.
 - [x] Verify actual fog-buffer gradients, animated drift, viewport/DPR resizing and desktop/mobile transitions.
 - [x] Build, capture final checkpoints, refresh archives and push the verified correction.
+
+## October 29 — cloud detail and scroll stability
+- [x] Restore variable cloud density, soft directional lighting and moving wisps without bounded masks.
+- [x] Keep render resolution and postprocessing stable across scroll; preconstruct local geometry and avoid per-progress scene rerenders.
+- [x] Verify desktop/mobile mist, continuous scroll, production build and story checkpoints; refresh release archives. Desktop performance target remains unverified on physical hardware; measured host limits are recorded in PHASES.md.

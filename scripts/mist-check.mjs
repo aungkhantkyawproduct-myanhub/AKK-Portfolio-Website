@@ -45,12 +45,14 @@ try {
       await page.evaluate((progress) => window.__debugProgress(progress), p);
       await page.waitForTimeout(1800);
       const probe = await page.evaluate(() => window.__mistProbe());
+      await page.screenshot({ path: `${out}/${name}-${p}.png` });
       expect(probe.passes).toBe(3);
       expect(Math.max(...probe.dimensions)).toBeLessThanOrEqual(384);
-      expect(probe.softness).toBeGreaterThanOrEqual(18);
-      // Inspect actual final GPU pixels: a wide tonal range with gentle neighbors.
-      expect(probe.levels).toBeGreaterThan(12);
-      expect(probe.maxNeighbor).toBeLessThanOrEqual(4);
+      expect(probe.softness).toBeGreaterThanOrEqual(3);
+      // Cloud detail needs contrast. At <=384px these neighbors span several
+      // display pixels, then receive linear filtering; reject abrupt contour jumps.
+      expect(probe.levels).toBeGreaterThan(30);
+      expect(probe.maxNeighbor).toBeLessThanOrEqual(24);
       frames.push({ p, ...probe });
       await page.screenshot({ path: `${out}/${name}-${p}.png` });
     }
@@ -66,7 +68,7 @@ try {
       await page.waitForTimeout(1800);
       const resized = await page.evaluate(() => window.__mistProbe());
       expect(resized.dimensions[0]).toBeGreaterThan(resized.dimensions[1]);
-      expect(resized.maxNeighbor).toBeLessThanOrEqual(4);
+      expect(resized.maxNeighbor).toBeLessThanOrEqual(24);
       await page.screenshot({ path: `${out}/mobile-landscape.png` });
     }
     await page.evaluate(() => window.__debugProgress(0.2));

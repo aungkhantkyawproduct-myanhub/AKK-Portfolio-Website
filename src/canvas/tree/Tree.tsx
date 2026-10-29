@@ -69,8 +69,8 @@ export default function Tree() {
         s.endRadius ?? s.radius * 0.92,
         s.radius,
         dir.length(),
-        16,
-        5,
+        s.radius > 0.22 ? 12 : s.radius > 0.07 ? 8 : 5,
+        s.radius > 0.22 ? 3 : 1,
         false,
       );
       geo.applyMatrix4(

@@ -6,6 +6,8 @@ uniform vec2 uDyeTexel;
 uniform vec2 uSimTexel;
 uniform float uEnergy;
 uniform float uProfile;
+uniform sampler2D uMist;
+uniform float uMistOpacity;
 float density(vec2 uv) {
   vec3 c = texture2D(uDye, uv).rgb;
   return max(c.r, max(c.g, c.b));
@@ -34,6 +36,11 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor)
   float alpha = worldAlpha + (1.0 - worldAlpha) * lightAlpha;
   vec3 base = scene * worldAlpha;
   vec3 combined = base + light * (1.0 - clamp(base, 0.0, 1.0));
+  // Composite after scene tone mapping: transparent mist must not be processed
+  // as opaque HDR geometry or pass through a second tone curve on low tier.
+  vec4 mist = texture2D(uMist, uv);
+  float fog = uMistOpacity * worldAlpha;
+  combined = combined * (1.0 - mist.a * fog) + mist.rgb * fog;
   outputColor = vec4(combined / max(alpha, 0.0001), alpha);
 }
 `;
