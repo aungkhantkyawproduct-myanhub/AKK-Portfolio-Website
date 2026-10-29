@@ -5,8 +5,12 @@ import {
   AdditiveBlending,
   BackSide,
   Group,
+  Mesh,
   ShaderMaterial,
   Texture,
+  TextureLoader,
+  RepeatWrapping,
+  LinearMipmapLinearFilter,
   Vector3,
 } from "three";
 import { useJourney } from "../../app/store";
@@ -23,6 +27,7 @@ const sun = new Vector3(-0.8, 0.6, 0.9).normalize();
 export default function Earth() {
   const globe = useRef<Group>(null);
   const world = useRef<Group>(null);
+  const occluder = useRef<Mesh>(null);
   const cloud = useRef<Group>(null);
   const orbitLive = useRef(
     document.documentElement.dataset.heroRevealed === "true",
@@ -45,7 +50,20 @@ export default function Earth() {
     }),
     [],
   );
-  const clouds = useMemo(() => ({ uTime: { value: 0 } }), []);
+  const clouds = useMemo(() => ({ uTime: { value: 0 }, uCloud: { value: new Texture() }, uHasCloud: { value: 0 } }), []);
+  useEffect(() => {
+    let live = true;
+    const texture = new TextureLoader().load('/textures/earth-clouds-4k.webp', map => {
+      if (!live) { map.dispose(); return; }
+      map.wrapS = RepeatWrapping;
+      map.minFilter = LinearMipmapLinearFilter;
+      map.anisotropy = 8;
+      clouds.uCloud.value.dispose();
+      clouds.uCloud.value = map;
+      clouds.uHasCloud.value = 1;
+    }, undefined, () => { /* Existing procedural shader remains a fallback. */ });
+    return () => { live = false; texture.dispose(); clouds.uCloud.value.dispose(); };
+  }, [clouds]);
   const mat = useRef<ShaderMaterial>(null);
   useEarthTextures(uniforms);
   useFrame((_, dt) => {
@@ -61,6 +79,10 @@ export default function Earth() {
   return (
     <group ref={world} position={[0, -10, 0]} rotation={[-0.95, 0, -0.4084]}>
       <group ref={globe} rotation={[0, -3.42, 0]}>
+        <mesh ref={occluder} visible={false} name="marker-occluder">
+          <sphereGeometry args={[10, 16, 12]} />
+          <meshBasicMaterial />
+        </mesh>
         <MyanmarBeacon />
         <mesh name="earth-surface">
           <sphereGeometry args={[10, 256, 128]} />
@@ -77,7 +99,7 @@ export default function Earth() {
               key={m.name}
               position={i === 0 ? [-1.7, 2.4, -9.58] : [-1.05, 2.91, -9.51]}
               center
-              occlude
+              occlude={[occluder]}
               zIndexRange={[10, 0]}
             >
               <button

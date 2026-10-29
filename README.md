@@ -29,6 +29,8 @@ Beyond the Journey blends into a distinct animated aurora backdrop. The circular
 
 ## How to tweak
 
+Hero optimization preserves the 8192×4096 day map, visible sphere geometry and canvas DPR. A lossless 4K cloud map replaces repeated procedural noise work; missing maps use the procedural fallback. Location-marker occlusion tests only a lightweight invisible globe instead of the complete hidden scene. Tree bark and cutout foliage write depth as opaque surfaces, improving overlap clarity and reducing repeated shading; the thick trunk uses 16 radial subdivisions. Low-tier foliage counts are preserved. Run `node scripts/frame-cost-check.mjs final` to record frame intervals and actual Earth/cloud/buffer dimensions; results are machine-dependent, not a universal FPS guarantee.
+
 - Copy and factual CV material: `src/content/content.ts`. Never invent metrics, dates or employers.
 - Camera path, chapter boundaries and pacing: `src/canvas/cameraPath.ts`. Development-only `window.__debugProgress(.8)` jumps to a stage.
 - Mobile subject placement: `mobileFraming` in the same file. Biography entrances: the GSAP timelines in `src/chapters/Profile.tsx`.

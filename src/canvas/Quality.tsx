@@ -17,6 +17,7 @@ export default function Quality({ assetReady }: { assetReady: boolean }) {
           if (o.material?.uniforms) materials.push(o.material.uniforms);
         });
         const earth = materials.find((u) => u.uHasDay);
+        const cloud = materials.find((u) => u.uHasCloud);
         const satellite = scene.getObjectByName("hero-satellite");
         const satellitePosition = satellite?.getWorldPosition(
           camera.position.clone(),
@@ -43,6 +44,7 @@ export default function Quality({ assetReady }: { assetReady: boolean }) {
           meadow: meadow?.matrixWorld.toArray(),
           treeVisible: tree?.visible,
           earthTextureReady: earth?.uHasDay.value === 1,
+          cloudTexture: { ready: cloud?.uHasCloud.value === 1, width: cloud?.uCloud.value.image?.width ?? 0 },
           earthTexture: {
             width: earth?.uDay.value.image?.width ?? 0,
             height: earth?.uDay.value.image?.height ?? 0,

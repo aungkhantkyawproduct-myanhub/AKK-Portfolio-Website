@@ -7,6 +7,7 @@ out.mkdir(exist_ok=True)
 root_files = ['package.json','package-lock.json','index.html','tsconfig.json','vite.config.ts','.gitignore','README.md','GITHUB-UPLOAD.md','AGENTS.md','PLAN.md','PHASES.md']
 script_files = ['checkpoints.mjs','preview.mjs','interactions.mjs','profile-check.mjs','continuous-check.mjs','audit.mjs','earth-detail-check.mjs','fog-growth-check.mjs','mist-check.mjs','hero-reveal-check.mjs','open-story-check.mjs','stable-hero-check.mjs','motion-check.mjs','aurora-cursor-check.mjs','package_release.py']
 script_files.append('scroll-budget-check.mjs')
+script_files.extend(['frame-cost-check.mjs','bake-clouds.mjs'])
 files = [root / name for name in root_files]
 files += [p for folder in ['src','public'] for p in (root / folder).rglob('*') if p.is_file()]
 files += [root / 'scripts' / name for name in script_files]

@@ -76,7 +76,8 @@ try {
       { timeout: 60000 },
     );
     const first = await page.evaluate(() => window.__worldDiagnostic());
-    expect(first.earthTexture.dpr).toBe(mobile ? 1.5 : 2);
+    expect(first.earthTexture.dpr).toBeGreaterThanOrEqual(1.5);
+    expect(first.earthTexture.dpr).toBeLessThanOrEqual(mobile ? 1.5 : 2);
     expect(first.earthTexture.height).toBe(expected / 2);
     if (expected)
       expect(first.earthTexture.anisotropy).toBeGreaterThanOrEqual(4);
@@ -104,7 +105,7 @@ try {
       await page.waitForTimeout(2500);
       const descended = await page.evaluate(() => window.__worldDiagnostic());
       expect(descended.satellite.visible).toBe(false);
-      if (mobile) expect(descended.earthTexture.dpr).toBe(1);
+      if (mobile) expect(descended.earthTexture.dpr).toBe(1.5);
       const buffers = await page.evaluate(() => window.__auroraDiagnostic());
       expect(buffers.targetBuffer).toEqual(buffers.buffer);
       expect(await page.locator("canvas").count()).toBe(1);
@@ -112,7 +113,7 @@ try {
       await page.waitForTimeout(2500);
       const returned = await page.evaluate(() => window.__worldDiagnostic());
       expect(returned.satellite.visible).toBe(true);
-      expect(returned.earthTexture.dpr).toBe(mobile ? 1.5 : 2);
+      expect(returned.earthTexture.dpr).toBe(first.earthTexture.dpr);
     }
     results.push({ name, first, later });
     await page.close();

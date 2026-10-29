@@ -69,7 +69,7 @@ export default function Tree() {
         s.endRadius ?? s.radius * 0.92,
         s.radius,
         dir.length(),
-        s.radius > 0.22 ? 12 : s.radius > 0.07 ? 8 : 5,
+        s.radius > 0.22 ? 16 : s.radius > 0.07 ? 8 : 5,
         s.radius > 0.22 ? 3 : 1,
         false,
       );
@@ -257,7 +257,6 @@ export default function Tree() {
           ref={bark}
           vertexShader={vertex}
           fragmentShader={fragment}
-          transparent
           uniforms={uniforms}
         />
       </mesh>
@@ -266,7 +265,6 @@ export default function Tree() {
           ref={leaf}
           vertexShader={leafVertex}
           fragmentShader={leafFragment}
-          transparent
           uniforms={uniforms}
           side={DoubleSide}
         />
