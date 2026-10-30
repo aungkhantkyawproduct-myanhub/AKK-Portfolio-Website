@@ -130,7 +130,7 @@ export const content = {
       dates: "Jan 2025 – Present",
       bullets: [
         "Own product roadmaps and prioritized backlogs for a SaaS gamification platform, digital wallet and sports entertainment products serving 12K+ users, alongside other consumer application initiatives.",
-        "Lead the development of a comprehensive travel platform with super-app capabilities, driving product discovery, validation, and end-to-end feature delivery.",
+        "Lead product strategy and development for a comprehensive travel platform with super-app capabilities, driving product discovery, validation, and end-to-end feature delivery.",
         "Spearhead the development of an AI-powered weather and disaster alerts app for the Google Cloud AI Builder Cup tournament.",
         "Lead discovery and validation through market research, prototypes and usability tests; reduced time-to-market by 15% for major features.",
         "Translate user and stakeholder feedback into functional requirements, user stories and acceptance criteria; coordinate sprint and release plans in Jira.",
