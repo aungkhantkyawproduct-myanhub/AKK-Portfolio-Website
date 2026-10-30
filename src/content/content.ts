@@ -17,7 +17,9 @@ export const content = {
     explore: "Meet the person behind the product ↗",
   },
   contact: {
-    action: "Start a conversation",
+    action: "Email me",
+    linkedinAction: "Connect on LinkedIn",
+    linkedinDescription: "Aung Khant Kyaw · Product Manager",
     connectLabel: "Connect",
   },
   storyNotes: [
@@ -33,11 +35,11 @@ export const content = {
   name: "Aung Khant Kyaw",
   role: "AI Product Owner · Product Manager",
   heroRole: "Product Owner · Product Manager",
-  tagline: "I grow digital products from seed to scale.",
+  tagline: "Every product has a beginning. This is how I help it grow.",
   location: "Bangkok, Thailand",
   email: "aungkhantkyaw.product@gmail.com",
   phone: "+66 61 763 8050",
-  linkedin: "https://linkedin.com/in/aungkhantkyawofficial",
+  linkedin: "https://www.linkedin.com/in/aungkhantkyawofficial/",
   status: "Open for new opportunities",
   summary:
     "Product Manager / Product Owner with 6+ years of experience translating business needs into B2C, B2B and platform products across life insurance, digital payments and SaaS. Former Senior Product Analyst at AIA Myanmar, partnering with actuarial, analytics and engineering teams on insurance product enhancements and digital journeys. Current product experience includes Travel AI Assistant and Weather & Disaster Alert AI Assistant initiatives. Strong in stakeholder discovery, roadmap and backlog ownership, requirements definition, Agile delivery, validation, product analytics and adoption. Reported outcomes include 40% insurance product revenue growth, a 2.5x increase in purchase rate and 15% faster time-to-market.",

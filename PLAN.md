@@ -92,3 +92,9 @@ Checkpoints: 0, .15, .3, .5, .65, .8, .95, 1 at 1440×900 and 390×844. Build an
 - [x] Retrieve the completed three-minute soundtrack and bundle a local MP3.
 - [x] Connect explicit sound-icon playback with fades, looping and hidden-tab pause/resume.
 - [x] Verify playback on desktop/mobile, no autoplay/audio preload, failure handling, build and checkpoints; refresh releases and GitHub.
+
+## October 30 — contact layout and chapter readability
+- [x] Replace the contact layout with full-row email/LinkedIn links and integrated arrow targets.
+- [x] Increase chapter title, body, skill, tool and label sizes; give mobile contact its own reading height.
+- [x] Rewrite the hero slogan and move the heading group upward for breathing room above Earth.
+- [x] Verify desktop/mobile links and screenshots and build; refresh archives and publish through existing GitHub auto-deployment.

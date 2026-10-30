@@ -1137,18 +1137,111 @@
 }
 
 /* Leave the living subject sharp; focus lighting starts only at the reading column. */
-.overlay::before { mask-image: linear-gradient(90deg, transparent 46%, #000 68%); }
+.overlay::before {
+  mask-image: linear-gradient(90deg, transparent 46%, #000 68%);
+}
 @media (max-width: 600px) {
-  .overlay::before { mask-image: linear-gradient(#000 0%, #000 43%, transparent 59%); }
-  .chapter:not(.hero), .chapter.right:not(.hero) { top: 12%; max-height: 43svh; }
-  .linear .chapter:not(.hero) { max-height: none; }
+  .overlay::before {
+    mask-image: linear-gradient(#000 0%, #000 43%, transparent 59%);
+  }
+  .chapter:not(.hero),
+  .chapter.right:not(.hero) {
+    top: 12%;
+    max-height: 43svh;
+  }
+  .linear .chapter:not(.hero) {
+    max-height: none;
+  }
 }
 
 /* Light is rendered between the world and readable story copy. */
-.scroll { z-index: 3; }
+.scroll {
+  z-index: 3;
+}
 
 /* The final GPU pass composes cursor light over the biography atmosphere. */
-.canvas canvas { position: relative; z-index: 3; }
+.canvas canvas {
+  position: relative;
+  z-index: 3;
+}
 
 /* The mist owns the reveal; a second canvas fade would expose an empty gap. */
-.canvas canvas { transition: none; }
+.canvas canvas {
+  transition: none;
+}
+
+/* A comfortable reading scale and clear space above the orbital horizon. */
+.chapter:not(.hero),
+.chapter.right:not(.hero) {
+  width: 37%;
+  max-width: 600px;
+  top: 16%;
+  max-height: 78svh;
+}
+.chapter:not(.hero) h2 {
+  font-size: clamp(38px, 3.5vw, 56px);
+  line-height: 1.12;
+  margin: 22px 0 26px;
+}
+.chapter:not(.hero) p {
+  font-size: clamp(18px, 1.3vw, 21px);
+  line-height: 1.75;
+  max-width: none;
+}
+.chapter:not(.hero) .eyebrow {
+  font-size: 13px;
+  line-height: 1.5;
+  letter-spacing: 0.14em;
+}
+.hero.chapter {
+  top: 18%;
+}
+.hero .tagline {
+  margin: 14px auto 0;
+  max-width: 48ch;
+  font-size: clamp(17px, 1.35vw, 21px);
+  line-height: 1.6;
+  text-wrap: balance;
+}
+@media (max-width: 600px) {
+  .chapter:not(.hero),
+  .chapter.right:not(.hero) {
+    top: 12%;
+    width: auto;
+    max-width: none;
+    max-height: 46svh;
+  }
+  .chapter:not(.hero) h2 {
+    font-size: 34px;
+    margin: 16px 0 20px;
+  }
+  .chapter:not(.hero) p {
+    font-size: 16px;
+    line-height: 1.7;
+  }
+  .chapter:not(.hero) .eyebrow {
+    font-size: 12px;
+  }
+  .hero.chapter {
+    top: 17%;
+  }
+  .hero .tagline {
+    max-width: 29ch;
+    font-size: 16px;
+    margin-top: 14px;
+  }
+  .chapter[data-chapter="7"],
+  .chapter.right[data-chapter="7"] {
+    max-height: calc(100svh - 130px);
+  }
+  .overlay[data-contact="true"]::before {
+    mask-image: linear-gradient(#000 0%, #000 82%, transparent 100%);
+    background: #030b14de;
+  }
+}
+.linear .chapter:not(.hero),
+.linear .chapter.right:not(.hero) {
+  inset: auto;
+  width: min(680px, 100%);
+  max-height: none;
+}

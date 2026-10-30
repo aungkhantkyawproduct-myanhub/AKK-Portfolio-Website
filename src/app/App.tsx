@@ -207,6 +207,7 @@ export default function App() {
             ref={overlay}
             className={s.overlay}
             data-focus={chapter > 0}
+            data-contact={chapter === 7}
             style={{
               opacity: !linear
                 ? (1 - Math.min(1, profileBlend * 2)) * passageOpacity

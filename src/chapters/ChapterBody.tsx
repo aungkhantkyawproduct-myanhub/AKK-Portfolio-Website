@@ -94,12 +94,32 @@ export default function ChapterBody({ chapter }: { chapter: number }) {
           <p className={s.status}>{c.status}</p>
           <span>{c.location}</span>
         </div>
-        <a className={s.contactAction} href={`mailto:${c.email}`}>
-          {c.contact.action}
-          <span aria-hidden="true">↗</span>
-        </a>
-        <div className={s.emailRow}>
-          <a href={`mailto:${c.email}`}>{c.email}</a>
+        <div className={s.contactActions}>
+          <a className={s.contactAction} href={`mailto:${c.email}`}>
+            <span className={s.actionText}>
+              <strong>{c.contact.action}</strong>
+              <span>{c.email}</span>
+            </span>
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+              <path d="M5 19 19 5M5 5h14v14" />
+            </svg>
+          </a>
+          <a
+            className={s.contactAction}
+            href={c.linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span className={s.actionText}>
+              <strong>{c.contact.linkedinAction}</strong>
+              <span>{c.contact.linkedinDescription}</span>
+            </span>
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+              <path d="M5 19 19 5M5 5h14v14" />
+            </svg>
+          </a>
+        </div>
+        <div className={s.contactUtility}>
           <button
             onClick={async () => {
               let text: string = c.ui.copied;
@@ -113,11 +133,6 @@ export default function ChapterBody({ chapter }: { chapter: number }) {
           >
             {c.ui.copy} ⧉
           </button>
-        </div>
-        <div className={s.contactLinks} aria-label={c.contact.connectLabel}>
-          <a href={c.linkedin} target="_blank" rel="noreferrer">
-            LinkedIn ↗
-          </a>
           <a href={`tel:${c.phone.replaceAll(" ", "")}`}>{c.phone}</a>
         </div>
         <button className={s.exploreProfile} onClick={() => navigateItem(1)}>
