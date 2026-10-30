@@ -13,7 +13,7 @@ npm run build
 npm run preview
 ```
 
-The preview uses http://127.0.0.1:5173. Build creates `dist/`. Upload its contents to a static host at the domain root. For GitHub, extract `release/akk-portfolio-source.zip` and upload its contents to the repository root; see `GITHUB-UPLOAD.md`. No backend, API keys or environment variables are required. Domain/DNS and hosting have not been changed.
+The preview uses http://127.0.0.1:5173. Build creates `dist/`. Upload its contents to a static host at the domain root. For GitHub, extract `release/akk-portfolio-source.zip` and upload its contents to the repository root; see `GITHUB-UPLOAD.md`. No backend, API keys or environment variables are required. Production uses Hostinger's existing GitHub `main` auto-deployment with `npm run build` and output directory `dist`. No DNS changes are needed for updates.
 
 ## Current design
 

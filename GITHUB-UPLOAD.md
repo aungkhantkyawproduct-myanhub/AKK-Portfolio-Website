@@ -6,7 +6,7 @@
 4. To run locally: install Node.js 22, run `npm ci`, then `npm run dev`.
 5. To build: run `npm run build`. The generated website is in dist/.
 
-The archive is source code, not an automatic deployment. Uploading it to GitHub alone does not publish a website or change your domain.
+The archive is source code. Your existing `aungkhantkyawproduct-myanhub/AKK-Portfolio-Website` repository is connected to Hostinger: pushing `main` triggers a build and publishes `dist` to aungkhantkyaw.com. Uploading to another repository does not configure hosting or change your domain.
 
 ## Hosting
 
