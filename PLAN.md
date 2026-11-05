@@ -98,3 +98,8 @@ Checkpoints: 0, .15, .3, .5, .65, .8, .95, 1 at 1440×900 and 390×844. Build an
 - [x] Increase chapter title, body, skill, tool and label sizes; give mobile contact its own reading height.
 - [x] Rewrite the hero slogan and move the heading group upward for breathing room above Earth.
 - [x] Verify desktop/mobile links and screenshots and build; refresh archives and publish through existing GitHub auto-deployment.
+
+## November 6 — cinematic text reveals
+- [x] Inspect the supplied recording and establish shared blur-to-focus word reveals with staggered labels/body text.
+- [x] Apply across hero, chapters, biography, experience, education, footer, navigation, menus and detail panels.
+- [x] Verify desktop/mobile forward/reverse motion, reduced-motion cleanup, interactions, build and sixteen chapter screenshots; refresh archives and GitHub.

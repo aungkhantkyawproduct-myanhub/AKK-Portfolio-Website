@@ -6,7 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
-import gsap from "gsap";
+import { observeText, revealText } from "../ui/textMotion";
 import { content as c } from "../content/content";
 import { useJourney } from "./store";
 import { useScrollJourney, navigate, navigateItem } from "../hooks/useJourney";
@@ -122,23 +122,17 @@ export default function App() {
     };
   }, [linear]);
   useEffect(() => {
-    const section = overlay.current?.children[chapter];
-    if (!section || reduced) return;
-    const animation = gsap.fromTo(
-      section,
-      { opacity: 0, y: 16 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.7,
-        ease: "power2.out",
-        clearProps: "transform",
-      },
-    );
-    return () => {
-      animation.kill();
-    };
-  }, [chapter, reduced]);
+    const section = linear
+      ? overlay.current
+      : overlay.current?.children[chapter];
+    if (!section || reduced || !loaded) return;
+    return observeText(section as HTMLElement);
+  }, [chapter, reduced, loaded, linear]);
+  useEffect(() => {
+    if (!loaded || reduced) return;
+    const header = document.querySelector("header");
+    if (header) return revealText(header);
+  }, [loaded, reduced]);
   return (
     <>
       <div inert={!loaded ? "" : undefined}>
@@ -227,15 +221,21 @@ export default function App() {
                   visibility: linear || chapter === i ? "visible" : "hidden",
                 }}
               >
-                {i !== 0 && <div className={s.eyebrow}>{ch.eyebrow}</div>}
+                {i !== 0 && (
+                  <div className={s.eyebrow} data-text-reveal>
+                    {ch.eyebrow}
+                  </div>
+                )}
                 {i === 0 ? (
                   <>
                     <h1>{c.name}</h1>
-                    <div className={s.identity}>{c.heroRole}</div>
+                    <div className={s.identity} data-text-reveal>
+                      {c.heroRole}
+                    </div>
                     <p className={s.tagline}>{c.tagline}</p>
                     <div className={s.heroBottom}>
-                      <span>01 — 08</span>
-                      <span>
+                      <span data-text-reveal>01 — 08</span>
+                      <span data-text-reveal>
                         {c.location}
                         <br />
                         <i /> {c.status}

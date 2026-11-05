@@ -203,3 +203,9 @@ body,
 body * {
   font-family: var(--font-family) !important;
 }
+
+/* Preserve original word spacing and defeat legacy per-character hero motion. */
+[data-reveal-word] {
+  margin: 0 !important;
+  animation: none !important;
+}

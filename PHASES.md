@@ -164,8 +164,17 @@ Production follow-up: the reported wind came from the previous deployed oscillat
 
 ## October 30 — readable chapters and direct contact links
 
+
 Replaced the contact invitation with two open, full-width action rows: Email me and Connect on LinkedIn. Each arrow belongs to its complete anchor, with mailto and the supplied canonical LinkedIn profile URL. Copy email remains a separate button alongside the phone link. Mobile contact gets enough reading height and continuous background focus lighting to avoid clipped actions. No card surfaces were added.
 
 Chapter 01–07 headings now start at 34px on mobile; story body copy starts at 16px mobile and 18px desktop, with larger chapter labels, skill buttons, tools and certification text. The hero slogan is now “Every product has a beginning. This is how I help it grow.” The heading group moves upward to leave more space above Earth's horizon; camera geometry and rendering resolution are unchanged.
 
 Verification: strict TypeScript/static build and all sixteen desktop/mobile screenshots passed with no page/shader errors. Actual arrow clicks and Enter activation dispatched the correct email/LinkedIn links without application cancellation. Tests intentionally prevented external navigation after observing the real click, so no email was sent or external profile interaction performed. Mobile copy-email/phone controls fit within the viewport; chapter typography and horizontal overflow checks passed. Physical-device rendering and external mail-client configuration are not verified. Source/static release archives refreshed.
+
+## November 6 — cinematic text reveals
+
+Inspected the supplied nine-second recording: progressively sharpening words drift into place while labels and supporting copy follow. Added a shared GSAP text-motion utility with 0.85-second easing, 0.035-second word stagger and 0.065-second block stagger. Only headings receive the small blur; body text and controls use opacity and translation. IntersectionObserver starts each reading block when visible, including content reached inside mobile chapter columns. Hero/header playback waits for loader completion. Returning to a chapter replays its reveal. Biography blocks settle once per visit instead of remaining blurred while scroll is stationary.
+
+Applied to story headings, labels, paragraphs, skills, tools, contact actions, biography, career/education text, footer, header navigation, menu and detail panels. The previous whole-section chapter tween and biography scrub effects were replaced to avoid competing transforms. Semantic selectable text and word spacing are preserved; cleanup removes generated spans and inline animation styles. Reduced motion presents plain text immediately. No permanent animation loop or shader change was added.
+
+Verification: build passed, sixteen desktop/mobile chapter screenshots reported no page/shader errors, and text-motion checks verified settled headings, reverse chapter replay, biography/footer rendering and restoration of unsplit text under reduced motion. Existing interaction checks passed menu/Escape, repeated project panels, copy email, contact links, reverse journey and fallbacks, with zero axe violations. Local physical-device FPS and live-browser rendering are not verified. Source/static archives refreshed; publishing uses the existing GitHub auto-deployment.

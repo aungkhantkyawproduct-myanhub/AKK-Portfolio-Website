@@ -1,13 +1,20 @@
 import { useEffect, useRef, useState } from "react";
 import { content } from "../content/content";
 import s from "./UI.module.css";
+import { revealText } from "./textMotion";
+import { useJourney } from "../app/store";
 export default function DetailPanel() {
   const dialog = useRef<HTMLDialogElement>(null);
+  const reduced = useJourney((v) => v.reducedMotion);
   const [detail, setDetail] = useState<{
     title: string;
     text: string;
     url?: string;
   } | null>(null);
+  useEffect(() => {
+    if (!detail || reduced || !dialog.current) return;
+    return revealText(dialog.current);
+  }, [detail, reduced]);
   useEffect(() => {
     const open = (e: Event) => {
       setDetail((e as CustomEvent).detail);

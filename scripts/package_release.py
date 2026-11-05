@@ -11,6 +11,7 @@ script_files.extend(['frame-cost-check.mjs','bake-clouds.mjs'])
 script_files.extend(['roots-cue-check.mjs','reference-motion.mjs'])
 script_files.append('audio-check.mjs')
 script_files.append('contact-reading-check.mjs')
+script_files.append('text-reveal-check.mjs')
 files = [root / name for name in root_files]
 files += [p for folder in ['src','public'] for p in (root / folder).rglob('*') if p.is_file()]
 files += [root / 'scripts' / name for name in script_files]

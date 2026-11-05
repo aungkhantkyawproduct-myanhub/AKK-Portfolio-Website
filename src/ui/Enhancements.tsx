@@ -5,6 +5,8 @@ import { navigateItem } from "../hooks/useJourney";
 import { suspendAmbient, resumeAmbient } from "../audio/ambient";
 import s from "./UI.module.css";
 import AuroraCursor from "./AuroraCursor";
+import { revealText } from "./textMotion";
+import { useJourney } from "../app/store";
 export function Menu({
   open,
   onClose,
@@ -13,10 +15,15 @@ export function Menu({
   onClose: () => void;
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
+  const reduced = useJourney((v) => v.reducedMotion);
   useEffect(() => {
     if (open) dialog.current?.showModal();
     else dialog.current?.close();
   }, [open]);
+  useEffect(() => {
+    if (!open || reduced || !dialog.current) return;
+    return revealText(dialog.current);
+  }, [open, reduced]);
   return (
     <dialog
       ref={dialog}

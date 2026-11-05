@@ -70,7 +70,7 @@ export default function ChapterBody({ chapter }: { chapter: number }) {
             </button>
           ))}
         </div>
-        <div className={s.tools} aria-label={c.ui.tools}>
+        <div className={s.tools} aria-label={c.ui.tools} data-text-reveal>
           {c.tools.map((t) => (
             <span key={t}>{t}</span>
           ))}
@@ -92,7 +92,7 @@ export default function ChapterBody({ chapter }: { chapter: number }) {
       <div className={s.contact}>
         <div className={s.contactMeta}>
           <p className={s.status}>{c.status}</p>
-          <span>{c.location}</span>
+          <span data-text-reveal>{c.location}</span>
         </div>
         <div className={s.contactActions}>
           <a className={s.contactAction} href={`mailto:${c.email}`}>
